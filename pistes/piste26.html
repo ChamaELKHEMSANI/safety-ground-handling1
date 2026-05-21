@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PISTE 26 - Le "Comptoir des râleurs"</title>
+    <style>
+        /* Styles généraux pour l'impression */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            line-height: 1.5;
+            color: #333;
+            background-color: white;
+            font-size: 10.5pt;
+            margin: 0;
+            padding: 15px;
+        }
+        
+        /* Styles pour l'impression PDF */
+        @media print {
+            body {
+                padding: 0.5cm;
+            }
+            .page-break {
+                page-break-before: always;
+            }
+            .no-break {
+                page-break-inside: avoid;
+            }
+            h1, h2, h3, h4 {
+                page-break-after: avoid;
+            }
+            table {
+                page-break-inside: avoid;
+            }
+        }
+        
+        /* En-tête du document */
+        .document-header {
+            border-bottom: 3px solid #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+        
+        .document-title {
+            font-size: 24pt;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .document-subtitle {
+            font-size: 14pt;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+        
+        .document-meta {
+            text-align: right;
+            color: #7f8c8d;
+            font-size: 10pt;
+        }
+        
+        .tagline {
+            background-color: #ecf0f1;
+            padding: 8px 15px;
+            border-left: 5px solid #e67e22;
+            margin-bottom: 20px;
+            font-weight: bold;
+            font-size: 12pt;
+        }
+        
+        /* Typographie */
+        h1 {
+            font-size: 18pt;
+            color: #2c3e50;
+            margin: 25px 0 10px 0;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #bdc3c7;
+        }
+        
+        h2 {
+            font-size: 14pt;
+            color: #34495e;
+            margin: 20px 0 10px 0;
+            padding-left: 5px;
+            border-left: 4px solid #e67e22;
+        }
+        
+        h3 {
+            font-size: 12pt;
+            color: #555;
+            margin: 15px 0 8px 0;
+            font-weight: bold;
+        }
+        
+        h4 {
+            font-size: 11pt;
+            color: #666;
+            margin: 12px 0 5px 0;
+            font-weight: bold;
+        }
+        
+        p {
+            margin-bottom: 8px;
+            text-align: justify;
+        }
+        
+        ul, ol {
+            margin: 8px 0 12px 25px;
+        }
+        
+        li {
+            margin-bottom: 3px;
+        }
+        
+        /* Boîtes d'information */
+        .encadre {
+            border: 1px solid #bdc3c7;
+            padding: 12px;
+            background-color: #f9f9f9;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        
+        .important {
+            background-color: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 8px 12px;
+            margin: 12px 0;
+        }
+        
+        .hypothese {
+            background-color: #d4edda;
+            border-left: 5px solid #28a745;
+            padding: 8px 12px;
+            margin: 12px 0;
+            font-style: italic;
+        }
+        
+        /* Tableaux */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0 18px 0;
+            font-size: 9.5pt;
+        }
+        
+        th {
+            background-color: #2c3e50;
+            color: white;
+            font-weight: bold;
+            padding: 6px 4px;
+            text-align: left;
+            border: 1px solid #34495e;
+        }
+        
+        td {
+            padding: 5px 4px;
+            border: 1px solid #ddd;
+            vertical-align: top;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        /* Tableau de cartographie des risques avec couleurs */
+        .risk-table td:nth-child(7) {
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-orange {
+            background-color: #FFA500 !important;
+            color: black;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-red {
+            background-color: #FF0000 !important;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-yellow {
+            background-color: #FFFF00 !important;
+            color: black;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-green {
+            background-color: #008000 !important;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-purple {
+            background-color: #800080 !important;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        /* Grille de cotation */
+        .cotation-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 12px 0;
+        }
+        
+        .cotation-box {
+            border: 1px solid #ddd;
+            padding: 8px;
+            background-color: #f9f9f9;
+        }
+        
+        .cotation-box h4 {
+            background-color: #2c3e50;
+            color: white;
+            padding: 4px 8px;
+            margin: -8px -8px 8px -8px;
+            font-size: 11pt;
+        }
+        
+        /* Pied de page */
+        .footer {
+            margin-top: 25px;
+            padding-top: 8px;
+            border-top: 1px solid #bdc3c7;
+            font-size: 9pt;
+            color: #7f8c8d;
+            text-align: center;
+        }
+        
+        .page-break {
+            page-break-before: always;
+        }
+        
+        /* Indicateurs */
+        .indicator-box {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 12px 0;
+        }
+        
+        .indicator-item {
+            flex: 1 1 200px;
+            background-color: #ecf0f1;
+            padding: 8px;
+            border-radius: 5px;
+            border-left: 4px solid #e67e22;
+        }
+        
+        .indicator-item strong {
+            display: block;
+            font-size: 10.5pt;
+            color: #2c3e50;
+        }
+        
+        .indicator-item span {
+            font-size: 9pt;
+            color: #555;
+        }
+        
+        /* Légende des couleurs */
+        .color-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 12px 0;
+            padding: 8px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .color-box {
+            width: 20px;
+            height: 20px;
+            border: 1px solid #333;
+        }
+        
+        /* Texte centré */
+        .text-center {
+            text-align: center;
+        }
+        
+        /* Badge */
+        .badge {
+            background-color: #e67e22;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 9pt;
+            font-weight: bold;
+            display: inline-block;
+        }
+        
+        /* Simulation de tableau de retour */
+        .feedback-wall {
+            background-color: #f0f0f0;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 15px 0;
+        }
+        .feedback-header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 5px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .feedback-content {
+            background-color: white;
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+        .feedback-item {
+            border-bottom: 1px dashed #ccc;
+            padding: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- En-tête du document -->
+    <div class="document-header">
+        <div>
+            <div class="document-title">PISTE 26</div>
+            <div class="document-subtitle">Le "Comptoir des râleurs"</div>
+        </div>
+        <div class="document-meta">
+            <div>Version 1.0</div>
+            <div>Mars 2026</div>
+            <div>CDG - CSCA</div>
+        </div>
+    </div>
+    
+    <!-- Tagline -->
+    <div class="tagline">
+        LIBÉRER LA PAROLE POUR AMÉLIORER LE SYSTÈME
+    </div>
+
+    <!-- ======================================================================== -->
+    <!-- DESCRIPTION INTRODUCTIVE (synthèse narrative) -->
+    <!-- ======================================================================== -->
+    <p style="font-size: 11pt; font-weight: bold; text-align: center; margin: 20px 0;">
+        Boîte vocale anonyme, cartons "J'râle" et tableau participatif pour transformer les plaintes en améliorations.
+    </p>
+    <p>
+        Les conducteurs râlent. Beaucoup. Dans les vestiaires, à la pause café, en fin de poste, entre eux. Ils râlent contre le matériel, l'organisation, les procédures, les autres services, la hiérarchie, les conditions de travail. Aujourd'hui, ces râles restent confinés, perçus négativement, et pourtant ils sont une mine d'or de signaux faibles. La vingt-sixième piste propose de transformer le "râleur" en "contributeur" en institutionnalisant un espace d'expression libre et anonyme : le comptoir des râleurs. L'idée n'est pas d'encourager la négativité, mais de capter l'intelligence informelle du collectif pour la transformer en actions concrètes via une boucle de retour systématique et visible.
+    </p>
+    
+    <!-- ======================================================================== -->
+    <!-- 1. PROBLÉMATIQUE ADRESSÉE -->
+    <!-- ======================================================================== -->
+    <h1>1. PROBLÉMATIQUE ADRESSÉE</h1>
+    
+    <p><strong>Constat fondamental :</strong></p>
+    <p>Les conducteurs <strong>râlent</strong>. Beaucoup. Tout le temps.</p>
+    <table>
+        <thead><tr><th>Ils râlent contre...</th><th>Exemples</th></tr></thead>
+        <tbody>
+            <tr><td>Le matériel</td><td>"Ce push freine mal", "La clim est encore en panne"</td></tr>
+            <tr><td>L'organisation</td><td>"On est encore en sous-effectif", "Y'a jamais de place au parking"</td></tr>
+            <tr><td>Les procédures</td><td>"Cette check-list est trop longue", "C'est débile de faire le tour à chaque fois"</td></tr>
+            <tr><td>Les autres services</td><td>"Le catering se gare toujours n'importe comment"</td></tr>
+            <tr><td>La hiérarchie</td><td>"Ils nous écoutent jamais", "Ils comprennent pas ce qu'on vit"</td></tr>
+            <tr><td>Les conditions</td><td>"Il fait trop chaud", "J'en peux plus des nuits"</td></tr>
+        </tbody>
+    </table>
+    <p><strong>Mais aujourd'hui :</strong></p>
+    <ul>
+        <li>Ces râles restent confinés → Personne ne les entend, personne ne les traite.</li>
+        <li>Ils sont perçus négativement → "Encore en train de râler, celui-là".</li>
+        <li>Ils créent une ambiance négative → Cercle vicieux de la plainte.</li>
+        <li>Ils sont une mine d'or ignorée → Des centaines de signaux faibles perdus.</li>
+        <li>Les conducteurs se sentent inécoutés → "À quoi bon ?".</li>
+    </ul>
+    
+    <div class="hypothese">
+        <strong>Notre hypothèse :</strong> Le râle n'est pas une nuisance, c'est un signal. Un conducteur qui râle contre un équipement défaillant <strong>anticipe une panne</strong>. Celui qui râle contre une procédure absurde <strong>identifie une optimisation</strong>. Transformer le "râleur" en "contributeur", la plainte en donnée, le vestiaire en laboratoire d'amélioration continue.
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 2. CARTOGRAPHIE DES RISQUES (MISE À JOUR POUR PISTE 26) -->
+    <!-- ======================================================================== -->
+    <h1>2. CARTOGRAPHIE DES RISQUES</h1>
+    
+    <!-- Légende des couleurs -->
+    <div class="color-legend">
+        <div class="legend-item"><div class="color-box" style="background-color: #FF0000;"></div> <strong>Rouge</strong> - Risque très élevé (intolérable)</div>
+        <div class="legend-item"><div class="color-box" style="background-color: #FFA500;"></div> <strong>Orange</strong> - Risque élevé (actions nécessaires)</div>
+        <div class="legend-item"><div class="color-box" style="background-color: #FFFF00;"></div> <strong>Jaune</strong> - Risque moyen (tolérable)</div>
+        <div class="legend-item"><div class="color-box" style="background-color: #008000;"></div> <strong>Vert</strong> - Risque faible (acceptable)</div>
+        <div class="legend-item"><div class="color-box" style="background-color: #800080;"></div> <strong>Violet</strong> - Risque informationnel / culturel</div>
+    </div>
+    
+    <table class="risk-table">
+        <thead>
+            <tr>
+                <th>Réf.</th>
+                <th>Danger</th>
+                <th>Causes</th>
+                <th>Conséquences</th>
+                <th>Gravité</th>
+                <th>Probabilité</th>
+                <th>Criticité</th>
+                <th>Barrières Piste 26</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>CUL 04.1</strong></td>
+                <td>Culture de la plainte stérile</td>
+                <td>Absence de canal d'expression, sentiment d'impuissance, frustrations accumulées</td>
+                <td>Ambiance dégradée, démotivation, turn-over, conflits internes</td>
+                <td>2 (Mineure)</td>
+                <td>A (Fréquent)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Espace dédié d'expression, canalisation des frustrations, transformation en actions</td>
+            </tr>
+            <tr>
+                <td><strong>CUL 04.2</strong></td>
+                <td>Non-dit et frustrations cachées</td>
+                <td>Peur de représailles, sentiment d'inutilité de la parole, absence de retour</td>
+                <td>Climat social délétère, risques psychosociaux, perte de confiance</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Expression anonyme garantie, boucle de retour systématique</td>
+            </tr>
+            <tr>
+                <td><strong>COM 02.4</strong></td>
+                <td>Sous-remontée des signaux faibles</td>
+                <td>Processus trop complexes, absence de canal simple, sentiment que "ça ne sert à rien"</td>
+                <td>Défauts mineurs non corrigés, dégradation progressive, incidents évitables</td>
+                <td>2 (Mineure)</td>
+                <td>A (Fréquent)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Capture des "râles" quotidiens, transformation en données exploitables</td>
+            </tr>
+            <tr>
+                <td><strong>COM 02.5</strong></td>
+                <td>Perte d'opportunités d'amélioration</td>
+                <td>Idées et observations du terrain non collectées, non capitalisées</td>
+                <td>Innovation terrain perdue, optimisations non réalisées, coûts cachés</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Analyse des tendances, identification de problèmes récurrents, actions correctives</td>
+            </tr>
+            <tr>
+                <td><strong>TEC 05.1</strong></td>
+                <td>Pannes ou dégradations non signalées</td>
+                <td>"Râles" sur le matériel non remontés formellement, absence de suivi</td>
+                <td>Aggravation des pannes, immobilisation, accident secondaire</td>
+                <td>3 (Majeure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Remontée informelle des dysfonctionnements, déclenchement d'actions correctives</td>
+            </tr>
+            <tr>
+                <td><strong>ORG 03.1</strong></td>
+                <td>Procédures inadaptées non identifiées</td>
+                <td>Écarts entre le terrain et les procédures officielles, non-dits</td>
+                <td>Non-respect chronique des règles, risques normalisés</td>
+                <td>3 (Majeure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Remontée des critiques sur les procédures, adaptation du référentiel</td>
+            </tr>
+            <tr>
+                <td><strong>HUM 03.3</strong></td>
+                <td>Sentiment de ne pas être écouté</td>
+                <td>Communication descendante uniquement, absence de dialogue</td>
+                <td>Désengagement, perte de sens, baisse de vigilance</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Preuve d'écoute via le tableau de retour, reconnaissance des contributeurs</td>
+            </tr>
+            <tr>
+                <td><strong>HUM 03.4</strong></td>
+                <td>Stigmatisation de ceux qui expriment des griefs</td>
+                <td>Culture du "tais-toi et travaille", peur d'être perçu comme un fauteur de troubles</td>
+                <td>Auto-censure, problèmes non traités jusqu'à la crise</td>
+                <td>2 (Mineure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-green">VERT</td>
+                <td>Anonymat total, valorisation de la parole comme contribution positive</td>
+            </tr>
+            <tr>
+                <td><strong>MAN 02.1</strong></td>
+                <td>Méconnaissance des problèmes terrain par l'encadrement</td>
+                <td>Distance hiérarchique, filtres informels, absence de canal direct</td>
+                <td>Décisions déconnectées du réel, incompréhension des équipes</td>
+                <td>2 (Mineure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-green">VERT</td>
+                <td>Transmission des râles analysés à la direction, visibilité des préoccupations terrain</td>
+            </tr>
+            <tr>
+                <td><strong>MAN 02.2</strong></td>
+                <td>Absence de suivi des actions correctives</td>
+                <td>Problèmes remontés mais non traités, perte de crédibilité</td>
+                <td>Démotivation, arrêt des remontées, aggravation des risques</td>
+                <td>3 (Majeure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-red">ROUGE</td>
+                <td>Boucle de retour obligatoire, affichage des réponses et actions menées</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <!-- Échelle de cotation -->
+    <h3>Échelle de cotation utilisée</h3>
+    <div class="cotation-grid">
+        <div class="cotation-box"><h4>Gravité</h4><ul><li>1 - Négligeable</li><li>2 - Mineure</li><li>3 - Majeure</li><li>4 - Catastrophique</li></ul></div>
+        <div class="cotation-box"><h4>Probabilité</h4><ul><li>A - Fréquent (quotidien)</li><li>B - Occasionnel (hebdo/mensuel)</li><li>C - Rare (annuel)</li><li>D - Très rare (>1 an)</li><li>E - Extrêmement rare</li></ul></div>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 3. CONCEPT D'ENSEMBLE -->
+    <!-- ======================================================================== -->
+    <h1>3. CONCEPT D'ENSEMBLE</h1>
+    <h2>3.1 Principe général</h2>
+    <p>Installer dans chaque salle de pause, vestiaire, zone de repos, un <strong>"Comptoir des râleurs"</strong> :</p>
+    <ul>
+        <li>Un <strong>espace dédié</strong>, identifiable, attractif.</li>
+        <li>Un <strong>support d'expression libre</strong>, anonyme et sans filtre.</li>
+        <li>Une <strong>boucle de retour</strong> systématique et visible.</li>
+        <li>Une <strong>valorisation</strong> de la parole du terrain.</li>
+    </ul>
+    <p><strong>Objectif :</strong> Capturer l'intelligence informelle du collectif et la transformer en actions concrètes.</p>
+    
+    <h2>3.2 Architecture du dispositif</h2>
+    <div style="background-color: #f0f0f0; border: 1px solid #ccc; padding: 10px; font-family: monospace; text-align: center;">
+        <p><strong>📌 1. EXPRESSION</strong> (Libre, anonyme, sans filtre) → <strong>🗳️ 2. COLLECTE</strong> (Hebdo, catégorisation) → <strong>⚙️ 3. TRAITEMENT</strong> (Analyse, transmission) → <strong>📢 4. RETOUR</strong> (Affichage visible, remerciements)</p>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 4. LES 3 FORMULES DU COMPTOIR -->
+    <!-- ======================================================================== -->
+    <h1>4. LES 3 FORMULES DU COMPTOIR</h1>
+    
+    <h2>4.1 FORMULE 1 - La boîte vocale</h2>
+    <p><strong>Principe :</strong> Un boîtier électronique simple avec un gros bouton rouge, qui enregistre un message vocal de 30 secondes maximum.</p>
+    <div style="background-color: #eee; border:1px solid #aaa; padding:8px; margin:10px 0;"><strong>🎤 COMPTOIR DES RÂLEURS</strong> [🔴 APPUYEZ ICI] "RÂLEZ EN TOUTE LIBERTÉ" - 30 sec - Anonyme. ⚠️ Pas de caméra, pas de traçage.</div>
+    <p><strong>Avantages :</strong> Immédiateté, spontanéité, riche en émotion, accessible à tous.<br><strong>Coût unitaire :</strong> 300 € (boîtier) + 50 €/mois (traitement).</p>
+    
+    <h2>4.2 FORMULE 2 - Les cartons "J'RÂLE"</h2>
+    <p><strong>Principe :</strong> Des cartons pré-imprimés, format A5, à remplir rapidement et à glisser dans une urne.</p>
+    <div style="background-color: #eee; border:1px solid #aaa; padding:8px; margin:10px 0;">
+        <strong>📢 J'RÂLE !</strong><br>
+        Aujourd'hui, je râle contre : ☐ Le matériel ☐ L'organisation ☐ La procédure ☐ Les collègues ☐ Les conditions ☐ Autre<br>
+        En deux mots : _________ . Idée : _________ . (Anonyme)
+    </div>
+    <p><strong>Avantages :</strong> Simple, rapide, catégorisation immédiate, facile à traiter.<br><strong>Coût unitaire :</strong> 0,10 €/carton.</p>
+    
+    <h2>4.3 FORMULE 3 - Le tableau "À LA BONNE HEURE"</h2>
+    <p><strong>Principe :</strong> Un tableau magnétique en liège, avec des post-it de couleur, où chacun peut écrire son râle et l'afficher.</p>
+    <div style="background-color: #eee; border:1px solid #aaa; padding:8px; margin:10px 0;">
+        <strong>📌 À LA BONNE HEURE !</strong> 🔴 MATÉRIEL • Push 247 frein | 🟠 ORGANISATION • Planning serré | 🟡 PROCÉDURES • Check-list trop longue | 🟢 CONDITIONS • Froid dans cabine | 🔵 COLLÈGUES • Catering se gare n'importe comment
+    </div>
+    <p><strong>Avantages :</strong> Visible par tous, interactif, crée du débat, transparence.<br><strong>Coût unitaire :</strong> 150 € (tableau + fournitures).</p>
+    
+    <!-- ======================================================================== -->
+    <!-- 5. LA BOUCLE DE RETOUR -->
+    <!-- ======================================================================== -->
+    <h1>5. LA BOUCLE DE RETOUR</h1>
+    <div class="important">Un râle qui n'a pas de réponse est pire qu'un râle qui n'a pas été émis. La crédibilité du dispositif repose entièrement sur la qualité et la visibilité du retour.</div>
+    <p><strong>Le tableau de retour :</strong> "VOUS AVEZ RÂLÉ - NOUS AVONS AGI". Mise à jour hebdomadaire.</p>
+    <div class="feedback-wall">
+        <div class="feedback-header">📢 SEMAINE 8 - 2026</div>
+        <div class="feedback-content">
+            <div class="feedback-item"><strong>"Le push 247 freine mal"</strong> → Diagnostic réalisé, plaquettes changées (J+2). Merci.</div>
+            <div class="feedback-item"><strong>"Check-list trop longue"</strong> → Groupe de travail constitué, nouvelle version testée M9.</div>
+            <div class="feedback-item"><strong>"Froid dans les cabines"</strong> → Réglage consigne effectué, vérification hebdo ajoutée.</div>
+        </div>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 6. DÉPLOIEMENT PAR PHASES -->
+    <!-- ======================================================================== -->
+    <h1>6. DÉPLOIEMENT PAR PHASES</h1>
+    
+    <h2> PHASE 1 - PILOTE (3 MOIS)</h2>
+    <ul><li>1 site pilote (1 entreprise, 1 vestiaire) avec les 3 formules.</li><li>Co-conception, installation, formation animateur, évaluation.</li><li><strong>Budget : 4 500 €</strong></li></ul>
+    
+    <h2> PHASE 2 - DÉPLOIEMENT CDG (12 MOIS)</h2>
+    <ul><li>Commande groupée (20 boîtiers, 20 000 cartons).</li><li>Installation dans 20 vestiaires, formation 10 animateurs.</li><li><strong>Budget : 20 000 €</strong></li></ul>
+    
+    <h2> PHASE 3 - GÉNÉRALISATION (24-36 MOIS)</h2>
+    <ul><li>Extension CDG (tous sites), Orly, province (40 sites).</li><li>Renouvellement annuel.</li><li><strong>Budget : 39 000 € + 3 k€/an</strong></li></ul>
+    
+    <p><strong>BUDGET TOTAL 3 ANS : 63 500 €</strong> (coût par site équipé : ~1 500 € + 150 €/an consommables).</p>
+    
+    <!-- ======================================================================== -->
+    <!-- 7. BÉNÉFICES ATTENDUS -->
+    <!-- ======================================================================== -->
+    <h1>7. BÉNÉFICES ATTENDUS</h1>
+    
+    <h2>7.1 Bénéfices mesurables</h2>
+    <div class="indicator-box">
+        <div class="indicator-item"><strong>Sites équipés</strong><span>Cible M36: 60</span></div>
+        <div class="indicator-item"><strong>Râles collectés / mois</strong><span>Cible M36: 300</span></div>
+        <div class="indicator-item"><strong>Taux de retour traité</strong><span>Cible M36: 95%</span></div>
+        <div class="indicator-item"><strong>Délai de traitement</strong><span>Cible M36: 3 jours</span></div>
+        <div class="indicator-item"><strong>Actions correctives / an</strong><span>Cible M36: 120</span></div>
+        <div class="indicator-item"><strong>Satisfaction "être écouté"</strong><span>Baseline 22% → Cible 65%</span></div>
+    </div>
+    
+    <h2>7.2 Bénéfices qualitatifs</h2>
+    <ul>
+        <li><strong>Défouloir contrôlé :</strong> Le râle a un espace dédié, il ne pollue pas tout l'espace.</li>
+        <li><strong>Signal faible capturé :</strong> Pannes, conflits, risques détectés avant la crise.</li>
+        <li><strong>Sentiment d'écoute :</strong> "Ils ne font peut-être pas tout, mais au moins ils répondent".</li>
+        <li><strong>Amélioration continue :</strong> Des centaines d'idées terrain gratuites.</li>
+        <li><strong>Climat social :</strong> Moins de frustration, plus de reconnaissance.</li>
+        <li><strong>Culture de transparence :</strong> On peut dire ce qui ne va pas sans peur.</li>
+    </ul>
+    
+    <!-- ======================================================================== -->
+    <!-- 8. RETOURS D'EXPÉRIENCE / 9. RISQUES / 10. CONDITIONS DE RÉUSSITE -->
+    <!-- ======================================================================== -->
+    <h1>8. RETOURS D'EXPÉRIENCE</h1>
+    <ul>
+        <li><strong>Toyota :</strong> Boîtes à suggestions omniprésentes, réponse sous 7 jours, 10 000 suggestions/an/usine. Leçon : la rapidité de réponse est plus importante que la qualité de la réponse.</li>
+        <li><strong>SNCF :</strong> "Boîte à idées" numérique, retour sous 72h, 12 000 idées/an. Leçon : l'anonymat est secondaire si le retour est visible.</li>
+        <li><strong>Aéroport de Schiphol - "Feedback wall" :</strong> Mur d'expression libre, post-it, animateur dédié. Leçon : le support physique crée du lien.</li>
+    </ul>
+    
+    <h1>9. RISQUES ET MESURES DE MITIGATION</h1>
+    <table>
+        <thead><tr><th>Risque</th><th>Prob.</th><th>Grav.</th><th>Plan d'action</th></tr></thead>
+        <tbody>
+            <tr><td>Déversoir à insultes</td><td>Moyenne</td><td>Élevée</td><td>Charte affichée, modération a posteriori, retrait des injures</td></tr>
+            <tr><td>Créer une culture du râle (on ne fait que râler)</td><td>Élevée</td><td>Élevée</td><td>Équilibre avec tableau "Vous avez fait", animation positive</td></tr>
+            <tr><td>Absence de retour (dispositif orphelin)</td><td>Élevée</td><td>Critique</td><td>Engagement direction, indicateur de taux de retour affiché, responsable désigné</td></tr>
+            <tr><td>Surcharge de traitement</td><td>Moyenne</td><td>Modérée</td><td>Catégorisation simple, délégation, réponses standardisées</td></tr>
+            <tr><td>Lassitude</td><td>Élevée</td><td>Modérée</td><td>Renouvellement supports, événements ponctuels, prix du "râle constructif"</td></tr>
+        </tbody>
+    </table>
+    
+    <h1>10. CONDITIONS DE RÉUSSITE</h1>
+    <h3>Facteurs clés</h3>
+    <ol>
+        <li><strong>Sincérité :</strong> Le retour doit être authentique, pas une réponse de communicant.</li>
+        <li><strong>Rapidité :</strong> < 7 jours, idéalement < 48h.</li>
+        <li><strong>Visibilité :</strong> Le tableau de retour doit être à côté du comptoir.</li>
+        <li><strong>Anonymat :</strong> Garanti, sans exception.</li>
+        <li><strong>Animation :</strong> Une personne référente, identifiée, formée.</li>
+        <li><strong>Proportionnalité :</strong> Ne pas promettre monts et merveilles, tenir ses engagements.</li>
+    </ol>
+    <h3>Pièges à éviter</h3>
+    <ul>
+        <li>Réponses lisses et corporate → Authenticité, ton direct, parfois de l'humour.</li>
+        <li>Promesses non tenues → "Nous allons étudier" plutôt que "Nous allons faire".</li>
+        <li>Censure → Supprimer l'injure, garder le message.</li>
+        <li>Oubli du positif → Ajouter une section "Vous avez aimé".</li>
+        <li>Dispositif trop complexe → 3 supports max, 2 couleurs, 1 animateur.</li>
+    </ol>
+    
+    <!-- ======================================================================== -->
+    <!-- 11. POSITIONNEMENT STRATÉGIQUE -->
+    <!-- ======================================================================== -->
+    <h1>11. POSITIONNEMENT STRATÉGIQUE</h1>
+    <h2>11.1 Différenciation avec la boîte à idées classique</h2>
+    <table>
+        <thead><tr><th>Critère</th><th>Boîte à idées</th><th>Comptoir des râleurs</th></tr></thead>
+        <tbody>
+            <tr><td>Ton</td><td>Positif, constructif</td><td>Libre, spontané</td></tr>
+            <tr><td>Format</td><td>Formulaire, papier</td><td>Vocal, carton, post-it</td></tr>
+            <tr><td>Attendu</td><td>Solution toute prête</td><td>Expression brute</td></tr>
+            <tr><td>Anonymat</td><td>Souvent nominatif</td><td>Total</td></tr>
+            <tr><td>Temps</td><td>Réflexion</td><td>Immédiateté</td></tr>
+            <tr><td>Émotion</td><td>Contrôlée</td><td>Authentique</td></tr>
+        </tbody>
+    </table>
+    <p><strong>Complémentarité :</strong> Le comptoir des râleurs est l'<strong>amont</strong> de la boîte à idées. On râle d'abord, on propose ensuite.</p>
+    
+    <!-- ======================================================================== -->
+    <!-- 12. EN RÉSUMÉ -->
+    <!-- ======================================================================== -->
+    <h1>12. EN RÉSUMÉ</h1>
+    <div class="encadre">
+        <p style="font-size: 12pt; font-style: italic;">
+            Le comptoir des râleurs est la piste la plus iconoclaste, la plus décomplexée. Ce n'est pas une innovation technologique, ni un outil de contrôle. C'est une invitation à râler utile, une permission de dire ce qui ne va pas. Ce que nous proposons, c'est d'écouter ce que les conducteurs ont à dire et de transformer 100 râles par semaine en 20 actions d'amélioration par mois.
+        </p>
+        <p><strong>Le coût ?</strong> 1 500 € par site. <strong>Le bénéfice ?</strong> Des conducteurs qui se sentent écoutés. Des pannes détectées avant la casse. Des procédures optimisées par ceux qui les appliquent.</p>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 13. CE QUE NOUS PROPOSONS CONCRÈTEMENT -->
+    <!-- ======================================================================== -->
+    <h1>13. CE QUE NOUS PROPOSONS CONCRÈTEMENT</h1>
+    <ol style="font-weight: bold; font-size: 12pt;">
+        <li>Installer une boîte vocale dans un vestiaire pilote.</li>
+        <li>Créer des cartons "J'râle" pré-imprimés.</li>
+        <li>Mettre en place un tableau de retour visible.</li>
+        <li>Animer le dispositif avec un référent dédié.</li>
+    </ol>
+    
+    <!-- Pied de page -->
+    <div class="footer">
+        <p>PISTE 26 - Le "Comptoir des râleurs" | Version 1.0 | Mars 2026 | CDG - CSCA</p>
+    </div>
+</body>
+</html>

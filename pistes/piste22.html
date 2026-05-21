@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PISTE 22 - Le Débrief à 360°</title>
+    <style>
+        /* Styles généraux pour l'impression */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            line-height: 1.5;
+            color: #333;
+            background-color: white;
+            font-size: 10.5pt;
+            margin: 0;
+            padding: 15px;
+        }
+        
+        /* Styles pour l'impression PDF */
+        @media print {
+            body {
+                padding: 0.5cm;
+            }
+            .page-break {
+                page-break-before: always;
+            }
+            .no-break {
+                page-break-inside: avoid;
+            }
+            h1, h2, h3, h4 {
+                page-break-after: avoid;
+            }
+            table {
+                page-break-inside: avoid;
+            }
+        }
+        
+        /* En-tête du document */
+        .document-header {
+            border-bottom: 3px solid #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+        
+        .document-title {
+            font-size: 24pt;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .document-subtitle {
+            font-size: 14pt;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+        
+        .document-meta {
+            text-align: right;
+            color: #7f8c8d;
+            font-size: 10pt;
+        }
+        
+        .tagline {
+            background-color: #ecf0f1;
+            padding: 8px 15px;
+            border-left: 5px solid #e67e22;
+            margin-bottom: 20px;
+            font-weight: bold;
+            font-size: 12pt;
+        }
+        
+        /* Typographie */
+        h1 {
+            font-size: 18pt;
+            color: #2c3e50;
+            margin: 25px 0 10px 0;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #bdc3c7;
+        }
+        
+        h2 {
+            font-size: 14pt;
+            color: #34495e;
+            margin: 20px 0 10px 0;
+            padding-left: 5px;
+            border-left: 4px solid #e67e22;
+        }
+        
+        h3 {
+            font-size: 12pt;
+            color: #555;
+            margin: 15px 0 8px 0;
+            font-weight: bold;
+        }
+        
+        h4 {
+            font-size: 11pt;
+            color: #666;
+            margin: 12px 0 5px 0;
+            font-weight: bold;
+        }
+        
+        p {
+            margin-bottom: 8px;
+            text-align: justify;
+        }
+        
+        ul, ol {
+            margin: 8px 0 12px 25px;
+        }
+        
+        li {
+            margin-bottom: 3px;
+        }
+        
+        /* Boîtes d'information */
+        .encadre {
+            border: 1px solid #bdc3c7;
+            padding: 12px;
+            background-color: #f9f9f9;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        
+        .important {
+            background-color: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 8px 12px;
+            margin: 12px 0;
+        }
+        
+        .hypothese {
+            background-color: #d4edda;
+            border-left: 5px solid #28a745;
+            padding: 8px 12px;
+            margin: 12px 0;
+            font-style: italic;
+        }
+        
+        /* Tableaux */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0 18px 0;
+            font-size: 9.5pt;
+        }
+        
+        th {
+            background-color: #2c3e50;
+            color: white;
+            font-weight: bold;
+            padding: 6px 4px;
+            text-align: left;
+            border: 1px solid #34495e;
+        }
+        
+        td {
+            padding: 5px 4px;
+            border: 1px solid #ddd;
+            vertical-align: top;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        /* Tableau de cartographie des risques avec couleurs */
+        .risk-table td:nth-child(7) {
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-orange {
+            background-color: #FFA500 !important;
+            color: black;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-red {
+            background-color: #FF0000 !important;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-yellow {
+            background-color: #FFFF00 !important;
+            color: black;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-green {
+            background-color: #008000 !important;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        /* Grille de cotation */
+        .cotation-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 12px 0;
+        }
+        
+        .cotation-box {
+            border: 1px solid #ddd;
+            padding: 8px;
+            background-color: #f9f9f9;
+        }
+        
+        .cotation-box h4 {
+            background-color: #2c3e50;
+            color: white;
+            padding: 4px 8px;
+            margin: -8px -8px 8px -8px;
+            font-size: 11pt;
+        }
+        
+        /* Pied de page */
+        .footer {
+            margin-top: 25px;
+            padding-top: 8px;
+            border-top: 1px solid #bdc3c7;
+            font-size: 9pt;
+            color: #7f8c8d;
+            text-align: center;
+        }
+        
+        .page-break {
+            page-break-before: always;
+        }
+        
+        /* Indicateurs */
+        .indicator-box {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 12px 0;
+        }
+        
+        .indicator-item {
+            flex: 1 1 200px;
+            background-color: #ecf0f1;
+            padding: 8px;
+            border-radius: 5px;
+            border-left: 4px solid #e67e22;
+        }
+        
+        .indicator-item strong {
+            display: block;
+            font-size: 10.5pt;
+            color: #2c3e50;
+        }
+        
+        .indicator-item span {
+            font-size: 9pt;
+            color: #555;
+        }
+        
+        /* Légende des couleurs */
+        .color-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 12px 0;
+            padding: 8px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .color-box {
+            width: 20px;
+            height: 20px;
+            border: 1px solid #333;
+        }
+        
+        /* Texte centré */
+        .text-center {
+            text-align: center;
+        }
+        
+        /* Badge */
+        .badge {
+            background-color: #e67e22;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 9pt;
+            font-weight: bold;
+            display: inline-block;
+        }
+        
+        /* Grille 5M */
+        .grid-5m {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .m-card {
+            border: 1px solid #3498db;
+            border-radius: 5px;
+            padding: 10px;
+            background-color: #f0f8ff;
+        }
+        
+        .m-card h4 {
+            background-color: #3498db;
+            color: white;
+            padding: 5px;
+            margin: -10px -10px 10px -10px;
+            border-radius: 5px 5px 0 0;
+            text-align: center;
+        }
+        
+        /* Déroulé type */
+        .timeline {
+            margin: 15px 0;
+        }
+        .timeline-item {
+            display: flex;
+            margin: 10px 0;
+            border-left: 4px solid #e67e22;
+            padding-left: 15px;
+        }
+        .timeline-time {
+            width: 80px;
+            font-weight: bold;
+            color: #e67e22;
+        }
+        .timeline-desc {
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+    <!-- En-tête du document -->
+    <div class="document-header">
+        <div>
+            <div class="document-title">PISTE 22</div>
+            <div class="document-subtitle">Le Débrief à 360°</div>
+        </div>
+        <div class="document-meta">
+            <div>Version 1.0</div>
+            <div>Mars 2026</div>
+            <div>CDG - CSCA</div>
+        </div>
+    </div>
+    
+    <!-- Tagline -->
+    <div class="tagline">
+        L'INTELLIGENCE COLLECTIVE AU SERVICE DU RETOUR D'EXPÉRIENCE
+    </div>
+    
+    <!-- Description -->
+    <p style="font-size: 11pt; font-weight: bold; text-align: center; margin: 20px 0;">
+        Réunion dans les 48h avec TOUS les acteurs d'un incident pour analyser collectivement.
+    </p>
+    
+    <p>
+        Aujourd'hui, quand un incident survient, le processus est descendant, cloisonné et tardif. Le rapport d'incident est rempli par le conducteur, 
+        souvent seul. L'enquête sécurité est menée par la hiérarchie, parfois des jours après les faits. L'analyse des causes est centrée sur l'erreur 
+        individuelle. Les mesures correctives sont décidées sans les opérationnels. Le retour d'information au conducteur est rare ou trop tardif. 
+        Résultat : l'analyse est incomplète, le conducteur se sent jugé, les solutions sont inadaptées au terrain, et l'occasion d'apprendre collectivement 
+        est perdue. La vingt-deuxième piste propose de renverser cette logique en faisant de l'intelligence collective le moteur du retour d'expérience.
+    </p>
+    
+    <!-- ======================================================================== -->
+    <!-- 1. PROBLÉMATIQUE ADRESSÉE -->
+    <!-- ======================================================================== -->
+    <h1>1. PROBLÉMATIQUE ADRESSÉE</h1>
+    
+    <p><strong>Constat fondamental :</strong> Aujourd'hui, quand un incident survient, le processus est <strong>descendant, cloisonné et tardif</strong>.</p>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Étape actuelle</th>
+                <th>Problème</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Rapport d'incident</td><td>Rempli par le conducteur, souvent seul</td></tr>
+            <tr><td>Enquête sécurité</td><td>Menée par la hiérarchie, parfois des jours après</td></tr>
+            <tr><td>Analyse des causes</td><td>Centrée sur l'erreur individuelle</td></tr>
+            <tr><td>Mesures correctives</td><td>Décidées sans les opérationnels</td></tr>
+            <tr><td>Retour d'information</td><td>Rare, ou trop tardif</td></tr>
+        </tbody>
+    </table>
+    
+    <p><strong>Conséquences :</strong></p>
+    <ul>
+        <li><strong>L'analyse est incomplète</strong> → On ne capture pas tous les facteurs</li>
+        <li><strong>Le conducteur se sent jugé</strong> → Il se braque, il minimise</li>
+        <li><strong>Les solutions sont hors-sol</strong> → Inadaptées à la réalité terrain</li>
+        <li><strong>L'occasion d'apprendre est perdue</strong> → Le même incident peut se reproduire</li>
+        <li><strong>La mémoire se dissout</strong> → Pas de capitalisation collective</li>
+    </ul>
+    
+    <div class="hypothese">
+        <strong>Notre hypothèse :</strong> L'intelligence collective est plus puissante que l'expertise individuelle.
+        <p>Un <strong>débrief à 360°</strong> immédiatement après l'incident, rassemblant <strong>tous les acteurs concernés</strong>, permet de :</p>
+        <ol>
+            <li><strong>Reconstituer</strong> fidèlement la situation</li>
+            <li><strong>Identifier</strong> l'ensemble des facteurs contributifs</li>
+            <li><strong>Impliquer</strong> les opérationnels dans la recherche de solutions</li>
+            <li><strong>Transformer</strong> l'incident en opportunité d'apprentissage collectif</li>
+            <li><strong>Capitaliser</strong> la mémoire de l'événement</li>
+        </ol>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 2. CARTOGRAPHIE DES RISQUES (MISE À JOUR POUR PISTE 22) -->
+    <!-- ======================================================================== -->
+    <h1>2. CARTOGRAPHIE DES RISQUES</h1>
+    
+    <!-- Légende des couleurs -->
+    <div class="color-legend">
+        <div class="legend-item"><div class="color-box" style="background-color: #FF0000;"></div> <strong>Rouge</strong> - Risque très élevé (intolérable)</div>
+        <div class="legend-item"><div class="color-box" style="background-color: #FFA500;"></div> <strong>Orange</strong> - Risque élevé (actions nécessaires)</div>
+        <div class="legend-item"><div class="color-box" style="background-color: #FFFF00;"></div> <strong>Jaune</strong> - Risque moyen (tolérable)</div>
+        <div class="legend-item"><div class="color-box" style="background-color: #008000;"></div> <strong>Vert</strong> - Risque faible (acceptable)</div>
+    </div>
+    
+    <table class="risk-table">
+        <thead>
+            <tr>
+                <th>Réf.</th>
+                <th>Danger</th>
+                <th>Causes</th>
+                <th>Conséquences</th>
+                <th>Gravité</th>
+                <th>Probabilité</th>
+                <th>Criticité</th>
+                <th>Barrières Piste 22</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>REX 01.1</strong></td>
+                <td>Analyse d'incident incomplète</td>
+                <td>Enquête menée seule par la hiérarchie, absence de vision terrain</td>
+                <td>Non-identification de tous les facteurs, récidive</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Analyse collective avec tous les acteurs, grille 5M</td>
+            </tr>
+            <tr>
+                <td><strong>REX 01.2</strong></td>
+                <td>Focalisation sur l'erreur individuelle</td>
+                <td>Culture punitive, recherche de coupable</td>
+                <td>Conducteur braqué, minimise, informations cachées</td>
+                <td>2 (Mineure)</td>
+                <td>A (Fréquent)</td>
+                <td class="risk-red">ROUGE</td>
+                <td>Débrief non-punitif, focus sur causes systémiques, pas de sanction</td>
+            </tr>
+            <tr>
+                <td><strong>REX 01.3</strong></td>
+                <td>Solutions hors-sol inadaptées</td>
+                <td>Mesures décidées sans les opérationnels</td>
+                <td>Non-application, contournement, inefficacité</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Co-construction des solutions avec les conducteurs</td>
+            </tr>
+            <tr>
+                <td><strong>REX 01.4</strong></td>
+                <td>Retard dans l'analyse post-incident</td>
+                <td>Enquête plusieurs jours après, mémoire altérée</td>
+                <td>Informations oubliées, déformées, analyse faussée</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Débrief systématique dans les 48h, mémoire fraîche</td>
+            </tr>
+            <tr>
+                <td><strong>REX 02.1</strong></td>
+                <td>Absence de retour vers le conducteur</td>
+                <td>Processus non bouclé, conducteur ignoré après l'incident</td>
+                <td>Sentiment d'injustice, perte de confiance</td>
+                <td>1 (Négligeable)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-green">VERT</td>
+                <td>Compte-rendu validé par tous, retour systématique</td>
+            </tr>
+            <tr>
+                <td><strong>REX 02.2</strong></td>
+                <td>Non-capitalisation des enseignements</td>
+                <td>Pas de base REX, pas de partage entre équipes</td>
+                <td>Répétition des mêmes erreurs</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Base REX commune, capitalisation et diffusion</td>
+            </tr>
+            <tr>
+                <td><strong>REX 02.3</strong></td>
+                <td>Non-suivi des actions correctives</td>
+                <td>Plan d'actions sans responsable ni échéance</td>
+                <td>Mesures non mises en œuvre, risques persistent</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Plan d'actions formalisé, responsable désigné, suivi</td>
+            </tr>
+            <tr>
+                <td><strong>REX 03.1</strong></td>
+                <td>Culture de la peur et du silence</td>
+                <td>Conducteurs craignent de s'exprimer</td>
+                <td>Sous-déclaration, non-remontée d'informations cruciales</td>
+                <td>3 (Majeure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-red">ROUGE</td>
+                <td>Confidentialité, non-sanction, bienveillance, confiance restaurée</td>
+            </tr>
+            <tr>
+                <td><strong>REX 03.2</strong></td>
+                <td>Perte de mémoire accidentologique</td>
+                <td>Expérience non capitalisée, départs en retraite</td>
+                <td>Leçons du passé oubliées, erreurs répétées</td>
+                <td>2 (Mineure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Capitalisation collective, mémoire vivante des incidents</td>
+            </tr>
+            <tr>
+                <td><strong>REX 04.1</strong></td>
+                <td>Dérive du débrief vers le disciplinaire</td>
+                <td>Animateur non formé, pression hiérarchique</td>
+                <td>Débrief devient un procès, parole verrouillée</td>
+                <td>2 (Mineure)</td>
+                <td>D (Très rare)</td>
+                <td class="risk-green">VERT</td>
+                <td>Formation exigeante des animateurs, séparation stricte</td>
+            </tr>
+            <tr>
+                <td><strong>ACC 01.1</strong></td>
+                <td>Récurrence du même type d'incident</td>
+                <td>Analyse insuffisante, causes non traitées</td>
+                <td>Accidents répétés</td>
+                <td>3 (Majeure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-red">ROUGE</td>
+                <td>Réduction de -50% de la récurrence grâce à l'analyse systémique</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <!-- Échelle de cotation -->
+    <h3>Échelle de cotation utilisée</h3>
+    
+    <div class="cotation-grid">
+        <div class="cotation-box">
+            <h4>Gravité</h4>
+            <ul>
+                <li><strong>1</strong> - Négligeable</li>
+                <li><strong>2</strong> - Mineure</li>
+                <li><strong>3</strong> - Majeure</li>
+                <li><strong>4</strong> - Catastrophique</li>
+            </ul>
+        </div>
+        <div class="cotation-box">
+            <h4>Probabilité</h4>
+            <ul>
+                <li><strong>A</strong> - Fréquent (quotidien)</li>
+                <li><strong>B</strong> - Occasionnel (hebdo/mensuel)</li>
+                <li><strong>C</strong> - Rare (annuel)</li>
+                <li><strong>D</strong> - Très rare (>1 an)</li>
+                <li><strong>E</strong> - Extrêmement rare (jamais observé)</li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 3. MÉTHODOLOGIE DU DÉBRIEF -->
+    <!-- ======================================================================== -->
+    <h1>3. MÉTHODOLOGIE DU DÉBRIEF</h1>
+    
+    <h2>3.1 Règles d'or de l'animation</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Règle</th>
+                <th>Explication</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>1. Neutralité absolue</td><td>L'animateur n'est pas le manager, ni l'enquêteur</td></tr>
+            <tr><td>2. Bienveillance</td><td>Personne n'est là pour juger, mais pour comprendre</td></tr>
+            <tr><td>3. Confidentialité</td><td>Ce qui se dit dans la salle n'en sort pas (sauf accord)</td></tr>
+            <tr><td>4. Écoute active</td><td>Chaque parole a la même valeur</td></tr>
+            <tr><td>5. Non-sanction</td><td>Aucune conséquence disciplinaire ne découle du débrief</td></tr>
+            <tr><td>6. Orientation solutions</td><td>On ne cherche pas un coupable, mais des améliorations</td></tr>
+        </tbody>
+    </table>
+    
+    <h2>3.2 Déroulé type (2 heures)</h2>
+    
+    <div class="timeline">
+        <div class="timeline-item"><span class="timeline-time">10 min</span><span class="timeline-desc"><strong>Introduction</strong> - Rappel des règles, objectifs, présentation</span></div>
+        <div class="timeline-item"><span class="timeline-time">30 min</span><span class="timeline-desc"><strong>Reconstitution</strong> - Chacun raconte sa version des faits (tour de table)</span></div>
+        <div class="timeline-item"><span class="timeline-time">20 min</span><span class="timeline-desc"><strong>Chronologie commune</strong> - Construction collective de la timeline</span></div>
+        <div class="timeline-item"><span class="timeline-time">30 min</span><span class="timeline-desc"><strong>Analyse des causes</strong> - Identification des facteurs contributifs (5M)</span></div>
+        <div class="timeline-item"><span class="timeline-time">20 min</span><span class="timeline-desc"><strong>Recherche de solutions</strong> - Brainstorming, priorisation</span></div>
+        <div class="timeline-item"><span class="timeline-time">10 min</span><span class="timeline-desc"><strong>Conclusion</strong> - Synthèse, engagements, suite</span></div>
+    </div>
+    
+    <h2>3.3 Grille d'analyse des causes - 5M</h2>
+    
+    <div class="grid-5m">
+        <div class="m-card">
+            <h4>1. MILIEU</h4>
+            <ul>
+                <li>Conditions météo ?</li>
+                <li>Visibilité ?</li>
+                <li>État de la piste / marquages ?</li>
+                <li>Encombrement de la zone ?</li>
+            </ul>
+        </div>
+        <div class="m-card">
+            <h4>2. MATÉRIEL</h4>
+            <ul>
+                <li>État de l'engin ?</li>
+                <li>Équipements sécurité fonctionnels ?</li>
+                <li>Maintenance à jour ?</li>
+                <li>Ergonomie / visibilité ?</li>
+            </ul>
+        </div>
+        <div class="m-card">
+            <h4>3. MÉTHODE</h4>
+            <ul>
+                <li>Procédure existante ?</li>
+                <li>Procédure adaptée ?</li>
+                <li>Procédure connue ?</li>
+                <li>Procédure respectée ?</li>
+            </ul>
+        </div>
+        <div class="m-card">
+            <h4>4. MAIN-D'ŒUVRE</h4>
+            <ul>
+                <li>Formation du conducteur ?</li>
+                <li>Expérience ?</li>
+                <li>Fatigue / stress ?</li>
+                <li>Communication ?</li>
+            </ul>
+        </div>
+        <div class="m-card" style="grid-column: span 2;">
+            <h4>5. MANAGEMENT</h4>
+            <ul>
+                <li>Pression temporelle ?</li>
+                <li>Encadrement présent ?</li>
+                <li>Consignes claires ?</li>
+                <li>Organisation du travail ?</li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 4. BUDGET -->
+    <!-- ======================================================================== -->
+    <h1>4. BUDGET</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Phase</th>
+                <th>Actions</th>
+                <th>Coût</th>
+                <th>Livrable</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>Phase 1 - Pilote</strong></td><td>Formation 3 animateurs, expérimentation 5 incidents, évaluation</td><td>8 600 €</td><td>Guide méthodologique version 1</td></tr>
+            <tr><td><strong>Phase 2 - Déploiement CDG</strong></td><td>+7 animateurs, déploiement 5 entreprises, base REX, communication</td><td>30 400 €</td><td>10 animateurs actifs, outil REX</td></tr>
+            <tr><td><strong>Phase 3 - Généralisation</strong></td><td>Orly, province, intégration CSCE, évaluation</td><td>36 800 €</td><td>Dispositif pérenne</td></tr>
+            <tr><td><strong>TOTAL 3 ANS</strong></td><td></td><td><strong>75 800 €</strong></td><td></td></tr>
+        </tbody>
+    </table>
+    
+    <p><strong>Coût par débrief (régime permanent) :</strong> ~500 € (animation + temps participants)</p>
+    
+    <!-- ======================================================================== -->
+    <!-- 5. BÉNÉFICES ATTENDUS -->
+    <!-- ======================================================================== -->
+    <h1>5. BÉNÉFICES ATTENDUS</h1>
+    
+    <h2>5.1 Bénéfices mesurables</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Indicateur</th>
+                <th>Baseline</th>
+                <th>Cible M12</th>
+                <th>Cible M24</th>
+                <th>Cible M36</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Incidents avec débrief 360°</td><td>0%</td><td>30%</td><td>60%</td><td>90%</td></tr>
+            <tr><td>Délai incident → analyse</td><td>8 jours</td><td>3 jours</td><td>2 jours</td><td>1 jour</td></tr>
+            <tr><td>Satisfaction participants</td><td>-</td><td>70%</td><td>80%</td><td>85%</td></tr>
+            <tr><td>Taux de mise en œuvre des actions</td><td>40%</td><td>60%</td><td>75%</td><td>85%</td></tr>
+            <tr><td>Récurrence du même type d'incident</td><td>-</td><td>-20%</td><td>-35%</td><td>-50%</td></tr>
+        </tbody>
+    </table>
+    
+    <!-- ======================================================================== -->
+    <!-- 6. RETOURS D'EXPÉRIENCE -->
+    <!-- ======================================================================== -->
+    <h1>6. RETOURS D'EXPÉRIENCE</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Secteur</th>
+                <th>Réalisations</th>
+                <th>Résultats</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>Air France</strong></td><td>Débriefing systématique, culture juste, analyse systémique</td><td>Taux de reporting x3, réduction incidents récurrents</td></tr>
+            <tr><td><strong>EDF - Nucléaire</strong></td><td>REX capitalisé depuis 40 ans, analyse collective, partage inter-sites</td><td>0 accident grave depuis 15 ans, 100% incidents analysés</td></tr>
+            <tr><td><strong>Heathrow Airport</strong></td><td>Pilote "Safety debrief" sur near-miss (2024)</td><td>85% participants satisfaits, 70% actions issues des débriefs</td></tr>
+        </tbody>
+    </table>
+    
+    <!-- ======================================================================== -->
+    <!-- 7. INDICATEURS DE SUIVI -->
+    <!-- ======================================================================== -->
+    <h1>7. INDICATEURS DE SUIVI</h1>
+    
+    <div class="indicator-box">
+        <div class="indicator-item">
+            <strong>Incidents avec débrief 360°</strong>
+            <span>Cible M36: 90%</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Délai incident → analyse</strong>
+            <span>Baseline: 8j | Cible M36: 1j</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Récurrence même type d'incident</strong>
+            <span>Cible M36: -50%</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Mise en œuvre des actions</strong>
+            <span>Baseline: 40% | Cible M36: 85%</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Satisfaction participants</strong>
+            <span>Cible M36: 85%</span>
+        </div>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 8. EN RÉSUMÉ -->
+    <!-- ======================================================================== -->
+    <h1>8. EN RÉSUMÉ</h1>
+    
+    <div class="encadre">
+        <p style="font-size: 12pt; font-style: italic;">
+            Le débrief à 360° est la piste de l'intelligence collective. Ce n'est pas une procédure de plus. C'est un changement de regard sur l'erreur. 
+            L'erreur n'est plus une faute. C'est une information. Le conducteur n'est plus un coupable. C'est un expert. L'incident n'est plus un échec. 
+            C'est une opportunité. Ce que nous proposons, c'est de passer d'une culture de la sanction à une culture de l'apprentissage. Ce que nous 
+            proposons, c'est de donner la parole à ceux qui sont sur le terrain. Ce que nous proposons, c'est de transformer chaque incident en leçon, 
+            chaque leçon en action, chaque action en progrès.
+        </p>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 9. CE QUE NOUS PROPOSONS CONCRÈTEMENT -->
+    <!-- ======================================================================== -->
+    <h1>9. CE QUE NOUS PROPOSONS CONCRÈTEMENT</h1>
+    
+    <ol style="font-weight: bold; font-size: 12pt;">
+        <li>Former 3 animateurs pilotes à la neutralité et aux grilles d'analyse</li>
+        <li>Expérimenter sur 5 incidents réels</li>
+        <li>Garantir la séparation stricte avec la procédure disciplinaire</li>
+        <li>Capitaliser les enseignements dans une base REX</li>
+    </ol>
+    
+    <!-- Pied de page -->
+    <div class="footer">
+        <p>PISTE 22 - Le Débrief à 360° | Version 1.0 | Mars 2026 | CDG - CSCA</p>
+    </div>
+</body>
+</html>

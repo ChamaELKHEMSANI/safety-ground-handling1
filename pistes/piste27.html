@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PISTE 27 - Brevet de conduite tout-terrain</title>
+    <style>
+        /* Styles généraux pour l'impression */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            line-height: 1.5;
+            color: #333;
+            background-color: white;
+            font-size: 10.5pt;
+            margin: 0;
+            padding: 15px;
+        }
+        
+        /* Styles pour l'impression PDF */
+        @media print {
+            body {
+                padding: 0.5cm;
+            }
+            .page-break {
+                page-break-before: always;
+            }
+            .no-break {
+                page-break-inside: avoid;
+            }
+            h1, h2, h3, h4 {
+                page-break-after: avoid;
+            }
+            table {
+                page-break-inside: avoid;
+            }
+        }
+        
+        /* En-tête du document */
+        .document-header {
+            border-bottom: 3px solid #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+        
+        .document-title {
+            font-size: 24pt;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .document-subtitle {
+            font-size: 14pt;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+        
+        .document-meta {
+            text-align: right;
+            color: #7f8c8d;
+            font-size: 10pt;
+        }
+        
+        .tagline {
+            background-color: #ecf0f1;
+            padding: 8px 15px;
+            border-left: 5px solid #e67e22;
+            margin-bottom: 20px;
+            font-weight: bold;
+            font-size: 12pt;
+        }
+        
+        /* Typographie */
+        h1 {
+            font-size: 18pt;
+            color: #2c3e50;
+            margin: 25px 0 10px 0;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #bdc3c7;
+        }
+        
+        h2 {
+            font-size: 14pt;
+            color: #34495e;
+            margin: 20px 0 10px 0;
+            padding-left: 5px;
+            border-left: 4px solid #e67e22;
+        }
+        
+        h3 {
+            font-size: 12pt;
+            color: #555;
+            margin: 15px 0 8px 0;
+            font-weight: bold;
+        }
+        
+        h4 {
+            font-size: 11pt;
+            color: #666;
+            margin: 12px 0 5px 0;
+            font-weight: bold;
+        }
+        
+        p {
+            margin-bottom: 8px;
+            text-align: justify;
+        }
+        
+        ul, ol {
+            margin: 8px 0 12px 25px;
+        }
+        
+        li {
+            margin-bottom: 3px;
+        }
+        
+        /* Boîtes d'information */
+        .encadre {
+            border: 1px solid #bdc3c7;
+            padding: 12px;
+            background-color: #f9f9f9;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        
+        .important {
+            background-color: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 8px 12px;
+            margin: 12px 0;
+        }
+        
+        .hypothese {
+            background-color: #d4edda;
+            border-left: 5px solid #28a745;
+            padding: 8px 12px;
+            margin: 12px 0;
+            font-style: italic;
+        }
+        
+        /* Tableaux */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0 18px 0;
+            font-size: 9.5pt;
+        }
+        
+        th {
+            background-color: #2c3e50;
+            color: white;
+            font-weight: bold;
+            padding: 6px 4px;
+            text-align: left;
+            border: 1px solid #34495e;
+        }
+        
+        td {
+            padding: 5px 4px;
+            border: 1px solid #ddd;
+            vertical-align: top;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        /* Tableau de cartographie des risques avec couleurs */
+        .risk-table td:nth-child(7) {
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-orange {
+            background-color: #FFA500 !important;
+            color: black;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-red {
+            background-color: #FF0000 !important;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-yellow {
+            background-color: #FFFF00 !important;
+            color: black;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-green {
+            background-color: #008000 !important;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-blue {
+            background-color: #0000FF !important;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        /* Grille de cotation */
+        .cotation-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 12px 0;
+        }
+        
+        .cotation-box {
+            border: 1px solid #ddd;
+            padding: 8px;
+            background-color: #f9f9f9;
+        }
+        
+        .cotation-box h4 {
+            background-color: #2c3e50;
+            color: white;
+            padding: 4px 8px;
+            margin: -8px -8px 8px -8px;
+            font-size: 11pt;
+        }
+        
+        /* Pied de page */
+        .footer {
+            margin-top: 25px;
+            padding-top: 8px;
+            border-top: 1px solid #bdc3c7;
+            font-size: 9pt;
+            color: #7f8c8d;
+            text-align: center;
+        }
+        
+        .page-break {
+            page-break-before: always;
+        }
+        
+        /* Indicateurs */
+        .indicator-box {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 12px 0;
+        }
+        
+        .indicator-item {
+            flex: 1 1 200px;
+            background-color: #ecf0f1;
+            padding: 8px;
+            border-radius: 5px;
+            border-left: 4px solid #e67e22;
+        }
+        
+        .indicator-item strong {
+            display: block;
+            font-size: 10.5pt;
+            color: #2c3e50;
+        }
+        
+        .indicator-item span {
+            font-size: 9pt;
+            color: #555;
+        }
+        
+        /* Légende des couleurs */
+        .color-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 12px 0;
+            padding: 8px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .color-box {
+            width: 20px;
+            height: 20px;
+            border: 1px solid #333;
+        }
+        
+        /* Texte centré */
+        .text-center {
+            text-align: center;
+        }
+        
+        /* Badge */
+        .badge {
+            background-color: #e67e22;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 9pt;
+            font-weight: bold;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <!-- En-tête du document -->
+    <div class="document-header">
+        <div>
+            <div class="document-title">PISTE 27</div>
+            <div class="document-subtitle">Brevet de conduite tout-terrain</div>
+        </div>
+        <div class="document-meta">
+            <div>Version 1.0</div>
+            <div>Mars 2026</div>
+            <div>CDG - CSCA</div>
+        </div>
+    </div>
+    
+    <!-- Tagline -->
+    <div class="tagline">
+        QUALIFIER LES CONDUCTEURS SUR TOUS LES TYPES D'ENGINS
+    </div>
+
+    <!-- ======================================================================== -->
+    <!-- DESCRIPTION INTRODUCTIVE -->
+    <!-- ======================================================================== -->
+    <p style="font-size: 11pt; font-weight: bold; text-align: center; margin: 20px 0;">
+        Certification à 3 niveaux (Bronze, Argent, Or) pour les conducteurs polyvalents.
+    </p>
+    <p>
+        Aujourd'hui, un conducteur d'engin de piste est spécialisé sur une ou deux catégories d'engins maximum. Cette spécialisation a des conséquences opérationnelles (absences non couvertes, pics d'activité) et sécuritaires (intérimaires non formés, lassitude, absence de vision globale). La vingt-septième piste propose de construire la polyvalence comme un facteur de sécurité et de performance à travers un brevet de conduite tout-terrain. Il s'agit d'un parcours de formation modulaire et progressif, reconnu par toutes les entreprises, assorti d'une valorisation salariale et symbolique, pour former des conducteurs complets, capables de comprendre l'environnement de leurs collègues et de constituer une ressource précieuse.
+    </p>
+    
+    <!-- ======================================================================== -->
+    <!-- 1. PROBLÉMATIQUE ADRESSÉE -->
+    <!-- ======================================================================== -->
+    <h1>1. PROBLÉMATIQUE ADRESSÉE</h1>
+    
+    <p><strong>Constat fondamental :</strong> Aujourd'hui, un conducteur d'engin de piste est <strong>spécialisé</strong> sur une ou deux catégories d'engins maximum.</p>
+    
+    <table>
+        <thead><tr><th>Catégorie</th><th>Formation</th><th>Habilitation</th><th>Polyvalence</th></tr></thead>
+        <tbody>
+            <tr><td>PUSH</td><td>3-5 jours</td><td>Spécifique</td><td>Faible</td></tr>
+            <tr><td>LOADER</td><td>3-5 jours</td><td>Spécifique</td><td>Faible</td></tr>
+            <tr><td>TRACTEUR BAGAGES</td><td>1-2 jours</td><td>Spécifique</td><td>Très faible</td></tr>
+            <tr><td>BUS</td><td>5 jours</td><td>Spécifique</td><td>Nulle</td></tr>
+            <tr><td>DÉGIVREUSE</td><td>2-3 jours</td><td>Spécifique</td><td>Nulle</td></tr>
+            <tr><td>TAPIS</td><td>1 jour</td><td>Spécifique</td><td>Très faible</td></tr>
+        </tbody>
+    </table>
+    
+    <p><strong>Conséquences opérationnelles :</strong> Absence = trou dans le planning ; Pic d'activité = sous-effectif ; Spécialisation = frustration ; Évolution bloquée ; Coûts de formation multipliés.</p>
+    <p><strong>Conséquences sécurité :</strong> Conducteur intérimaire non formé (risque) ; Prêt d'engin avec conducteur non qualifié ; Lassitude / routine (baisse de vigilance) ; Absence de vision globale des contraintes des autres métiers.</p>
+    
+    <div class="hypothese">
+        <strong>Notre hypothèse :</strong> La polyvalence est un facteur de sécurité ET de performance. Un conducteur qui maîtrise plusieurs engins comprend mieux l'environnement de ses collègues, varie ses activités (plus vigilant), devient une ressource précieuse et est plus fier de son métier.
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 2. CARTOGRAPHIE DES RISQUES (MISE À JOUR POUR PISTE 27) -->
+    <!-- ======================================================================== -->
+    <h1>2. CARTOGRAPHIE DES RISQUES</h1>
+    
+    <!-- Légende des couleurs -->
+    <div class="color-legend">
+        <div class="legend-item"><div class="color-box" style="background-color: #FF0000;"></div> <strong>Rouge</strong> - Risque très élevé (intolérable)</div>
+        <div class="legend-item"><div class="color-box" style="background-color: #FFA500;"></div> <strong>Orange</strong> - Risque élevé (actions nécessaires)</div>
+        <div class="legend-item"><div class="color-box" style="background-color: #FFFF00;"></div> <strong>Jaune</strong> - Risque moyen (tolérable)</div>
+        <div class="legend-item"><div class="color-box" style="background-color: #008000;"></div> <strong>Vert</strong> - Risque faible (acceptable)</div>
+        <div class="legend-item"><div class="color-box" style="background-color: #0000FF;"></div> <strong>Bleu</strong> - Risque opérationnel</div>
+    </div>
+    
+    <table class="risk-table">
+        <thead>
+            <tr>
+                <th>Réf.</th>
+                <th>Danger</th>
+                <th>Causes</th>
+                <th>Conséquences</th>
+                <th>Gravité</th>
+                <th>Probabilité</th>
+                <th>Criticité</th>
+                <th>Barrières Piste 27</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>HUM 05.1</strong></td>
+                <td>Incompétence sur engin non familier</td>
+                <td>Conducteur prêté ou intérimaire non formé sur un type d'engin spécifique</td>
+                <td>Mauvaise manipulation, accident, dommages matériels/corporels</td>
+                <td>3 (Majeure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Certification multi-engins (Bronze/Argent/Or), pool de polyvalents qualifiés</td>
+            </tr>
+            <tr>
+                <td><strong>HUM 05.2</strong></td>
+                <td>Lassitude et baisse de vigilance par monotonie</td>
+                <td>Répétition des mêmes tâches, absence de variation des activités</td>
+                <td>Erreurs d'inattention, accidents liés à la routine</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Polyvalence permettant la rotation sur différents engins, maintien de l'engagement</td>
+            </tr>
+            <tr>
+                <td><strong>HUM 05.3</strong></td>
+                <td>Méconnaissance des contraintes des autres métiers</td>
+                <td>Spécialisation excessive, travail en silo, absence de vision d'ensemble</td>
+                <td>Incompréhensions, conflits opérationnels, situations dangereuses non anticipées</td>
+                <td>2 (Mineure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Stage interservices (niveau Argent), vision globale (niveau Or)</td>
+            </tr>
+            <tr>
+                <td><strong>ORG 03.2</strong></td>
+                <td>Absence de vivier de renfort qualifié</td>
+                <td>Spécialisation, absence de polyvalence, turn-over</td>
+                <td>Impossibilité de remplacer un absent, recours à l'intérim non formé, retard</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Constitution d'un pool de polyvalents BRONZE/ARGENT/OR, réduction recours intérim</td>
+            </tr>
+            <tr>
+                <td><strong>ORG 03.3</strong></td>
+                <td>Coûts de formation démultipliés</td>
+                <td>Formations spécifiques pour chaque type d'engin, absence de capitalisation</td>
+                <td>Budget formation élevé, inefficacité</td>
+                <td>1 (Négligeable)</td>
+                <td>A (Fréquent)</td>
+                <td class="risk-green">VERT</td>
+                <td>Formation modulaire et mutualisée, coût optimisé par la polyvalence</td>
+            </tr>
+            <tr>
+                <td><strong>RH 02.1</strong></td>
+                <td>Turnover élevé chez les conducteurs</td>
+                <td>Absence de perspective d'évolution, routine, manque de reconnaissance</td>
+                <td>Perte de compétences, coûts de recrutement</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Parcours de progression visible (Bronze → Argent → Or), primes, reconnaissance</td>
+            </tr>
+            <tr>
+                <td><strong>RH 02.2</strong></td>
+                <td>Difficulté à fidéliser les conducteurs</td>
+                <td>Métier perçu comme sans avenir, sans évolution</td>
+                <td>Turnover, perte de compétences, surcoûts</td>
+                <td>2 (Mineure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-green">VERT</td>
+                <td>Valorisation du statut (badge, prime, missions d'excellence)</td>
+            </tr>
+            <tr>
+                <td><strong>FOR 02.1</strong></td>
+                <td>Formation trop théorique et déconnectée</td>
+                <td>Pas de mise en pratique sur les engins réels, scénarios limités</td>
+                <td>Conducteurs non opérationnels en situation complexe</td>
+                <td>2 (Mineure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-green">VERT</td>
+                <td>Formation pratique intensive (2/3 du temps), mise en situation complexe (examen ARGENT/OR)</td>
+            </tr>
+            <tr>
+                <td><strong>ACC 01.2</strong></td>
+                <td>Accident impliquant un conducteur intérimaire</td>
+                <td>Manque de formation spécifique à l'engin, méconnaissance des risques du site</td>
+                <td>Accident corporel ou matériel, coûts, image dégradée</td>
+                <td>3 (Majeure)</td>
+                <td>D (Très rare)</td>
+                <td class="risk-red">ROUGE</td>
+                <td>Réduction recours intérim (-40%), vivier de polyvalents internes certifiés</td>
+            </tr>
+            <tr>
+                <td><strong>ACC 01.3</strong></td>
+                <td>Accident lié à la routine et à la baisse de vigilance</td>
+                <td>Conducteur expérimenté mais lassé, erreur par automatisme</td>
+                <td>Accident évitable, souvent surprenant</td>
+                <td>3 (Majeure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Rotation des activités, maintien de la vigilance par la variété</td>
+            </tr>
+            <tr>
+                <td><strong>OPE 01.1</strong></td>
+                <td>Retard dû à l'absence d'un conducteur spécialisé</td>
+                <td>Absence non remplaçable, chaîne logistique interrompue</td>
+                <td>Retard avion, insatisfaction compagnie, pénalités</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-blue">BLEU</td>
+                <td>Polyvalence des équipes, remplacement immédiat par un collègue certifié</td>
+            </tr>
+            <tr>
+                <td><strong>OPE 01.2</strong></td>
+                <td>Sous-effectif en période de pic d'activité</td>
+                <td>Manque de personnel formé sur les engins critiques</td>
+                <td>Stress, fatigue, précipitation, accidents</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-blue">BLEU</td>
+                <td>Mobilisation d'un pool de polyvalents ARGENT/OR sur les zones critiques</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <!-- Échelle de cotation -->
+    <h3>Échelle de cotation utilisée</h3>
+    <div class="cotation-grid">
+        <div class="cotation-box"><h4>Gravité</h4><ul><li>1 - Négligeable</li><li>2 - Mineure</li><li>3 - Majeure</li><li>4 - Catastrophique</li></ul></div>
+        <div class="cotation-box"><h4>Probabilité</h4><ul><li>A - Fréquent (quotidien)</li><li>B - Occasionnel (hebdo/mensuel)</li><li>C - Rare (annuel)</li><li>D - Très rare (>1 an)</li><li>E - Extrêmement rare</li></ul></div>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 3. CONCEPT D'ENSEMBLE -->
+    <!-- ======================================================================== -->
+    <h1>3. CONCEPT D'ENSEMBLE</h1>
+    <h2>3.1 Principe général</h2>
+    <p>Créer un <strong>brevet de conduite "tout-terrain"</strong> qui qualifie un conducteur sur <strong>3, 5 ou 7 catégories d'engins</strong> différentes, avec :</p>
+    <ul>
+        <li>Un parcours de formation modulaire et progressif.</li>
+        <li>Une certification officielle reconnue par toutes les entreprises.</li>
+        <li>Une valorisation salariale et symbolique.</li>
+        <li>Un statut de conducteur expert.</li>
+        <li>Une contribution à la flexibilité et à la sécurité de la plateforme.</li>
+    </ul>
+    
+    <h2>3.2 Architecture du dispositif</h2>
+    <div style="background-color: #f0f0f0; border:1px solid #ccc; padding:10px; text-align:center;">
+        <p><strong>🥉 NIVEAU BRONZE (3 engins)</strong> → Formation 3j, prime 50€/mois<br>
+        <strong>🥈 NIVEAU ARGENT (5 engins, dont 2 critiques)</strong> → Formation 5j + stage interservices, prime 120€/mois<br>
+        <strong>🥇 NIVEAU OR (7 engins, dont PUSH, LOADER, BUS, DÉGIVREUSE)</strong> → Formation 8j + stages maintenance/exploitation/sécurité, prime 250€/mois, statut formateur</p>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 4. LES 3 NIVEAUX DE QUALIFICATION (Résumé) -->
+    <!-- ======================================================================== -->
+    <h1>4. LES 3 NIVEAUX DE QUALIFICATION</h1>
+    <ul>
+        <li><strong>BRONZE :</strong> 3 engins (principal + 2 complémentaires). Prérequis : 1 an, 0 accident/12 mois. Prime 50€/mois.</li>
+        <li><strong>ARGENT :</strong> 5 engins (dont 2 critiques). Prérequis : 3 ans, Bronze, 0 accident/24 mois. Stage interservices. Prime 120€/mois, éligibilité buddy.</li>
+        <li><strong>OR :</strong> 7 engins (dont PUSH, LOADER, BUS, DÉGIVREUSE). Prérequis : 5 ans, Argent, 0 accident/36 mois. Stages maintenance/exploitation/sécurité. Examen exigeant. Prime 250€/mois, formateur interne, missions d'excellence.</li>
+    </ul>
+    
+    <!-- ======================================================================== -->
+    <!-- 5. MODÈLE ÉCONOMIQUE -->
+    <!-- ======================================================================== -->
+    <h1>5. MODÈLE ÉCONOMIQUE</h1>
+    <p><strong>Coûts de formation :</strong> Bronze 1 200€, Argent 2 200€, Or 3 800€.<br>
+    <strong>ROI :</strong> 9 à 12 mois (économie sur intérim, flexibilité, turnover).<br>
+    <strong>Économies indirectes :</strong> Réduction recours intérim -40%, retards liés personnel -15%, turnover polyvalents -20%.</p>
+    
+    <!-- ======================================================================== -->
+    <!-- 6. DÉPLOIEMENT PAR PHASES -->
+    <!-- ======================================================================== -->
+    <h1>6. DÉPLOIEMENT PAR PHASES</h1>
+    <p><strong>PHASE 1 - Pilote (6 mois) :</strong> 20 candidats BRONZE, 2 entreprises. Budget 41 k€.<br>
+    <strong>PHASE 2 - Déploiement CDG (12 mois) :</strong> 100 BRONZE, 20 ARGENT. Budget 109 k€.<br>
+    <strong>PHASE 3 - Généralisation (24-36 mois) :</strong> 300 BRONZE, 100 ARGENT, 15 OR. Budget 399 k€.<br>
+    <strong>BUDGET TOTAL 3 ANS : 549 k€.</strong></p>
+    
+    <!-- ======================================================================== -->
+    <!-- 7. BÉNÉFICES ATTENDUS -->
+    <!-- ======================================================================== -->
+    <h1>7. BÉNÉFICES ATTENDUS</h1>
+    <h2>7.1 Bénéfices mesurables</h2>
+    <div class="indicator-box">
+        <div class="indicator-item"><strong>Conducteurs BRONZE</strong><span>Cible M36: 400</span></div>
+        <div class="indicator-item"><strong>Conducteurs ARGENT</strong><span>Cible M36: 150</span></div>
+        <div class="indicator-item"><strong>Conducteurs OR</strong><span>Cible M36: 30</span></div>
+        <div class="indicator-item"><strong>Taux de polyvalence</strong><span>Baseline 5% → Cible 40%</span></div>
+        <div class="indicator-item"><strong>Absences non couvertes</strong><span>Baseline 25% → Cible 10%</span></div>
+        <div class="indicator-item"><strong>Recours à l'intérim</strong><span>Cible -35%</span></div>
+        <div class="indicator-item"><strong>Turnover polyvalents</strong><span>Baseline 25% → Cible 15%</span></div>
+    </div>
+    <h2>7.2 Bénéfices qualitatifs</h2>
+    <ul><li>Flexibilité opérationnelle, compréhension systémique, motivation, fierté, sécurité renforcée (moins d'intérimaires), progression de carrière visible.</li></ul>
+    
+    <!-- ======================================================================== -->
+    <!-- 8. EN RÉSUMÉ -->
+    <!-- ======================================================================== -->
+    <h1>8. EN RÉSUMÉ</h1>
+    <div class="encadre">
+        <p style="font-size: 12pt; font-style: italic;">
+            Un conducteur PUSH ne devrait pas être un spécialiste aveugle. Il devrait comprendre ce que vit son collègue au LOADER, au BUS, à la DÉGIVREUSE. Parce que la sécurité, ce n'est pas seulement maîtriser son propre engin. C'est aussi anticiper les mouvements des autres, comprendre leurs contraintes, partager un langage commun. Le brevet tout-terrain, ce n'est pas former des super-conducteurs. C'est former des équipiers complets. C'est casser les silos entre métiers. C'est créer une communauté de professionnels, pas une addition de spécialistes.
+        </p>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 9. CE QUE NOUS PROPOSONS CONCRÈTEMENT -->
+    <!-- ======================================================================== -->
+    <h1>9. CE QUE NOUS PROPOSONS CONCRÈTEMENT</h1>
+    <ol style="font-weight: bold; font-size: 12pt;">
+        <li>Créer le référentiel de certification (Bronze, Argent, Or).</li>
+        <li>Développer les modules de formation pour les 3 premières combinaisons.</li>
+        <li>Former 20 conducteurs pilotes au niveau Bronze.</li>
+        <li>Évaluer l'impact sur la flexibilité et la sécurité.</li>
+    </ol>
+    
+    <!-- Pied de page -->
+    <div class="footer">
+        <p>PISTE 27 - Brevet de conduite tout-terrain | Version 1.0 | Mars 2026 | CDG - CSCA</p>
+    </div>
+</body>
+</html>

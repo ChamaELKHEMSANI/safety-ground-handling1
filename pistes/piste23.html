@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PISTE 23 - Le Contrat de Confiance</title>
+    <style>
+        /* Styles généraux pour l'impression */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            line-height: 1.5;
+            color: #333;
+            background-color: white;
+            font-size: 10.5pt;
+            margin: 0;
+            padding: 15px;
+        }
+        
+        /* Styles pour l'impression PDF */
+        @media print {
+            body {
+                padding: 0.5cm;
+            }
+            .page-break {
+                page-break-before: always;
+            }
+            .no-break {
+                page-break-inside: avoid;
+            }
+            h1, h2, h3, h4 {
+                page-break-after: avoid;
+            }
+            table {
+                page-break-inside: avoid;
+            }
+        }
+        
+        /* En-tête du document */
+        .document-header {
+            border-bottom: 3px solid #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+        
+        .document-title {
+            font-size: 24pt;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .document-subtitle {
+            font-size: 14pt;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+        
+        .document-meta {
+            text-align: right;
+            color: #7f8c8d;
+            font-size: 10pt;
+        }
+        
+        .tagline {
+            background-color: #ecf0f1;
+            padding: 8px 15px;
+            border-left: 5px solid #e67e22;
+            margin-bottom: 20px;
+            font-weight: bold;
+            font-size: 12pt;
+        }
+        
+        /* Typographie */
+        h1 {
+            font-size: 18pt;
+            color: #2c3e50;
+            margin: 25px 0 10px 0;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #bdc3c7;
+        }
+        
+        h2 {
+            font-size: 14pt;
+            color: #34495e;
+            margin: 20px 0 10px 0;
+            padding-left: 5px;
+            border-left: 4px solid #e67e22;
+        }
+        
+        h3 {
+            font-size: 12pt;
+            color: #555;
+            margin: 15px 0 8px 0;
+            font-weight: bold;
+        }
+        
+        h4 {
+            font-size: 11pt;
+            color: #666;
+            margin: 12px 0 5px 0;
+            font-weight: bold;
+        }
+        
+        p {
+            margin-bottom: 8px;
+            text-align: justify;
+        }
+        
+        ul, ol {
+            margin: 8px 0 12px 25px;
+        }
+        
+        li {
+            margin-bottom: 3px;
+        }
+        
+        /* Boîtes d'information */
+        .encadre {
+            border: 1px solid #bdc3c7;
+            padding: 12px;
+            background-color: #f9f9f9;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        
+        .important {
+            background-color: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 8px 12px;
+            margin: 12px 0;
+        }
+        
+        .hypothese {
+            background-color: #d4edda;
+            border-left: 5px solid #28a745;
+            padding: 8px 12px;
+            margin: 12px 0;
+            font-style: italic;
+        }
+        
+        /* Tableaux */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0 18px 0;
+            font-size: 9.5pt;
+        }
+        
+        th {
+            background-color: #2c3e50;
+            color: white;
+            font-weight: bold;
+            padding: 6px 4px;
+            text-align: left;
+            border: 1px solid #34495e;
+        }
+        
+        td {
+            padding: 5px 4px;
+            border: 1px solid #ddd;
+            vertical-align: top;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        /* Tableau de cartographie des risques avec couleurs */
+        .risk-table td:nth-child(7) {
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-orange {
+            background-color: #FFA500 !important;
+            color: black;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-red {
+            background-color: #FF0000 !important;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-yellow {
+            background-color: #FFFF00 !important;
+            color: black;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-green {
+            background-color: #008000 !important;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        /* Grille de cotation */
+        .cotation-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 12px 0;
+        }
+        
+        .cotation-box {
+            border: 1px solid #ddd;
+            padding: 8px;
+            background-color: #f9f9f9;
+        }
+        
+        .cotation-box h4 {
+            background-color: #2c3e50;
+            color: white;
+            padding: 4px 8px;
+            margin: -8px -8px 8px -8px;
+            font-size: 11pt;
+        }
+        
+        /* Pied de page */
+        .footer {
+            margin-top: 25px;
+            padding-top: 8px;
+            border-top: 1px solid #bdc3c7;
+            font-size: 9pt;
+            color: #7f8c8d;
+            text-align: center;
+        }
+        
+        .page-break {
+            page-break-before: always;
+        }
+        
+        /* Indicateurs */
+        .indicator-box {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 12px 0;
+        }
+        
+        .indicator-item {
+            flex: 1 1 200px;
+            background-color: #ecf0f1;
+            padding: 8px;
+            border-radius: 5px;
+            border-left: 4px solid #e67e22;
+        }
+        
+        .indicator-item strong {
+            display: block;
+            font-size: 10.5pt;
+            color: #2c3e50;
+        }
+        
+        .indicator-item span {
+            font-size: 9pt;
+            color: #555;
+        }
+        
+        /* Légende des couleurs */
+        .color-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 12px 0;
+            padding: 8px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .color-box {
+            width: 20px;
+            height: 20px;
+            border: 1px solid #333;
+        }
+        
+        /* Texte centré */
+        .text-center {
+            text-align: center;
+        }
+        
+        /* Badge */
+        .badge {
+            background-color: #e67e22;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 9pt;
+            font-weight: bold;
+            display: inline-block;
+        }
+        
+        /* Simulation du contrat */
+        .contrat-box {
+            border: 3px solid #2c3e50;
+            border-radius: 5px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            margin: 15px 0;
+        }
+        
+        .contrat-title {
+            font-size: 18pt;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        
+        .contrat-subtitle {
+            font-size: 14pt;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+            color: #e67e22;
+        }
+        
+        .regle {
+            margin: 15px 0;
+            padding: 10px;
+            border-left: 5px solid #e67e22;
+            background-color: white;
+        }
+        
+        .regle h4 {
+            color: #e67e22;
+            margin: 0 0 5px 0;
+        }
+        
+        /* Pin's design */
+        .pins-container {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+        }
+        
+        .pin {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-weight: bold;
+            border: 2px solid #333;
+        }
+        
+        .pin-argent {
+            background-color: #C0C0C0;
+            color: #333;
+        }
+        
+        .pin-or {
+            background-color: #FFD700;
+            color: #333;
+        }
+        
+        .pin-or-etoile {
+            background-color: #FFD700;
+            color: #333;
+            position: relative;
+        }
+        
+        .pin-platine {
+            background-color: #E5E4E2;
+            color: #333;
+        }
+        
+        .pin-diamant {
+            background-color: #B9F2FF;
+            color: #333;
+        }
+        
+        /* Déroulé cérémonie */
+        .ceremonie-item {
+            display: flex;
+            margin: 5px 0;
+        }
+        .ceremonie-duree {
+            width: 70px;
+            font-weight: bold;
+            color: #e67e22;
+        }
+        .ceremonie-desc {
+            flex: 1;
+        }
+        .ceremonie-acteur {
+            width: 100px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <!-- En-tête du document -->
+    <div class="document-header">
+        <div>
+            <div class="document-title">PISTE 23</div>
+            <div class="document-subtitle">Le Contrat de Confiance</div>
+        </div>
+        <div class="document-meta">
+            <div>Version 1.0</div>
+            <div>Mars 2026</div>
+            <div>CDG - CSCA</div>
+        </div>
+    </div>
+    
+    <!-- Tagline -->
+    <div class="tagline">
+        L'ENGAGEMENT SOLENNEL AU SERVICE DE LA SÉCURITÉ
+    </div>
+    
+    <!-- Description -->
+    <p style="font-size: 11pt; font-weight: bold; text-align: center; margin: 20px 0;">
+        Engagement solennel signé lors d'une cérémonie, avec remise d'un pin's.
+    </p>
+    
+    <p>
+        L'arrivée d'un nouveau conducteur est aujourd'hui une procédure essentiellement administrative et technique. On lui fait signer son contrat 
+        de travail, on lui remet ses équipements, on le forme au Permis T, on le présente à l'équipe. Mais rien, dans ce parcours, ne vient marquer 
+        symboliquement son engagement en matière de sécurité. La sécurité reste abstraite, l'engagement implicite, la transmission informelle, et 
+        la fierté n'est pas suscitée. La vingt-troisième piste propose de créer un moment fondateur, un rituel d'accueil solennel qui transforme 
+        l'arrivée d'un nouveau en un engagement moral fort.
+    </p>
+    
+    <!-- ======================================================================== -->
+    <!-- 1. PROBLÉMATIQUE ADRESSÉE -->
+    <!-- ======================================================================== -->
+    <h1>1. PROBLÉMATIQUE ADRESSÉE</h1>
+    
+    <p><strong>Constat fondamental :</strong> L'arrivée d'un nouveau conducteur est aujourd'hui <strong>administrative et technique</strong>, mais rarement <strong>symbolique et engageante</strong>.</p>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Étape actuelle</th>
+                <th>Ce qu'elle dit</th>
+                <th>Ce qu'elle ne dit pas</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Signature du contrat de travail</td><td>"Vous êtes salarié"</td><td>"Vous êtes un professionnel de la sécurité"</td></tr>
+            <tr><td>Remise des équipements</td><td>"Voici votre casque"</td><td>"Ce casque protège votre vie"</td></tr>
+            <tr><td>Formation Permis T</td><td>"Voici les règles"</td><td>"Voici pourquoi elles sont sacrées"</td></tr>
+            <tr><td>Présentation à l'équipe</td><td>"Voici vos collègues"</td><td>"Voici ceux qui veilleront sur vous"</td></tr>
+        </tbody>
+    </table>
+    
+    <p><strong>Conséquences :</strong></p>
+    <ul>
+        <li><strong>La sécurité est abstraite</strong> → Pas d'incarnation, pas de sens</li>
+        <li><strong>L'engagement est implicite</strong> → Pas de moment fondateur</li>
+        <li><strong>La transmission est informelle</strong> → Dépendante des bonnes volontés</li>
+        <li><strong>La fierté n'est pas suscitée</strong> → "C'est juste un boulot"</li>
+    </ul>
+    
+    <div class="hypothese">
+        <strong>Notre hypothèse :</strong> Un <strong>engagement solennel et collectif</strong> crée une <strong>obligation morale</strong> plus forte qu'une clause contractuelle.
+        <ul>
+            <li>Un contrat de confiance signé <strong>devant ses pairs</strong> engage plus qu'un document administratif.</li>
+            <li>Une <strong>cérémonie d'accueil</strong> marque un avant et un après.</li>
+            <li>Un <strong>pin's remis par un ancien</strong> transmet plus qu'un livret d'accueil.</li>
+        </ul>
+        <p><strong>Le symbole n'est pas un supplément d'âme. C'est le cœur de l'engagement.</strong></p>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 2. CARTOGRAPHIE DES RISQUES (MISE À JOUR POUR PISTE 23) -->
+    <!-- ======================================================================== -->
+    <h1>2. CARTOGRAPHIE DES RISQUES</h1>
+    
+    <!-- Légende des couleurs -->
+    <div class="color-legend">
+        <div class="legend-item"><div class="color-box" style="background-color: #FF0000;"></div> <strong>Rouge</strong> - Risque très élevé (intolérable)</div>
+        <div class="legend-item"><div class="color-box" style="background-color: #FFA500;"></div> <strong>Orange</strong> - Risque élevé (actions nécessaires)</div>
+        <div class="legend-item"><div class="color-box" style="background-color: #FFFF00;"></div> <strong>Jaune</strong> - Risque moyen (tolérable)</div>
+        <div class="legend-item"><div class="color-box" style="background-color: #008000;"></div> <strong>Vert</strong> - Risque faible (acceptable)</div>
+    </div>
+    
+    <table class="risk-table">
+        <thead>
+            <tr>
+                <th>Réf.</th>
+                <th>Danger</th>
+                <th>Causes</th>
+                <th>Conséquences</th>
+                <th>Gravité</th>
+                <th>Probabilité</th>
+                <th>Criticité</th>
+                <th>Barrières Piste 23</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>ACC 01.1</strong></td>
+                <td>Accueil des nouveaux sans dimension symbolique</td>
+                <td>Processus uniquement administratif, pas de moment fondateur</td>
+                <td>Nouveaux sans repères, engagement faible</td>
+                <td>2 (Mineure)</td>
+                <td>A (Fréquent)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Cérémonie d'engagement, moment solennel marquant</td>
+            </tr>
+            <tr>
+                <td><strong>ACC 01.2</strong></td>
+                <td>Absence de transmission des valeurs sécurité</td>
+                <td>Pas de passage de témoin entre anciens et nouveaux</td>
+                <td>Culture sécurité non transmise, erreurs répétées</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Remise du pin's par le buddy, témoignage d'ancien</td>
+            </tr>
+            <tr>
+                <td><strong>ACC 01.3</strong></td>
+                <td>Manque de fierté et d'appartenance</td>
+                <td>Pas de signe distinctif, pas de reconnaissance symbolique</td>
+                <td>Démotivation, turnover</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Pin's évolutif, marqueur visible d'engagement</td>
+            </tr>
+            <tr>
+                <td><strong>ACC 02.1</strong></td>
+                <td>Méconnaissance des règles fondamentales</td>
+                <td>Règles noyées dans la masse, pas de mise en avant</td>
+                <td>Infractions par ignorance, accidents</td>
+                <td>3 (Majeure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-red">ROUGE</td>
+                <td>5 règles d'or clairement énoncées, lues à voix haute</td>
+            </tr>
+            <tr>
+                <td><strong>ACC 02.2</strong></td>
+                <td>Non-respect des règles par oubli</td>
+                <td>Absence de rappel solennel, règles non ancrées</td>
+                <td>Écarts de conduite, accidents</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Mémorisation des règles d'or +70% (90% à M36)</td>
+            </tr>
+            <tr>
+                <td><strong>ACC 03.1</strong></td>
+                <td>Isolement des nouveaux conducteurs</td>
+                <td>Pas de lien fort avec l'équipe, pas de parrainage symbolique</td>
+                <td>Difficultés d'intégration, turnover</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Cérémonie collective, photo de groupe, verre de l'amitié</td>
+            </tr>
+            <tr>
+                <td><strong>ACC 03.2</strong></td>
+                <td>Absence de suivi dans la durée</td>
+                <td>Accueil ponctuel sans continuité</td>
+                <td>Engagement qui s'essouffle, perte de sens</td>
+                <td>1 (Négligeable)</td>
+                <td>C (Rare)</td>
+                <td class="risk-green">VERT</td>
+                <td>Rappel annuel, cérémonie des 1 an, évolution du pin's</td>
+            </tr>
+            <tr>
+                <td><strong>ACC 04.1</strong></td>
+                <td>Turnover élevé des nouveaux</td>
+                <td>Manque d'attachement à l'entreprise, pas de fierté</td>
+                <td>Perte de compétences, coûts de recrutement</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Réduction turnover 25% → 18% (fierté, appartenance)</td>
+            </tr>
+            <tr>
+                <td><strong>ACC 05.1</strong></td>
+                <td>Perception de la sécurité comme contrainte</td>
+                <td>Messages négatifs, absence de dimension positive</td>
+                <td>Désengagement, contournement des règles</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>"La sécurité n'est pas une contrainte, c'est un choix"</td>
+            </tr>
+            <tr>
+                <td><strong>ACC 06.1</strong></td>
+                <td>Accidents chez les nouveaux conducteurs (<1 an)</td>
+                <td>Manque d'engagement, méconnaissance, isolement</td>
+                <td>Blessures, dommages</td>
+                <td>3 (Majeure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-red">ROUGE</td>
+                <td>Réduction ciblée de -30% grâce à l'engagement renforcé</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <!-- Échelle de cotation -->
+    <h3>Échelle de cotation utilisée</h3>
+    
+    <div class="cotation-grid">
+        <div class="cotation-box">
+            <h4>Gravité</h4>
+            <ul>
+                <li><strong>1</strong> - Négligeable</li>
+                <li><strong>2</strong> - Mineure</li>
+                <li><strong>3</strong> - Majeure</li>
+                <li><strong>4</strong> - Catastrophique</li>
+            </ul>
+        </div>
+        <div class="cotation-box">
+            <h4>Probabilité</h4>
+            <ul>
+                <li><strong>A</strong> - Fréquent (quotidien)</li>
+                <li><strong>B</strong> - Occasionnel (hebdo/mensuel)</li>
+                <li><strong>C</strong> - Rare (annuel)</li>
+                <li><strong>D</strong> - Très rare (>1 an)</li>
+                <li><strong>E</strong> - Extrêmement rare (jamais observé)</li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 3. LE CONTRAT - 5 RÈGLES D'OR -->
+    <!-- ======================================================================== -->
+    <h1>3. LE CONTRAT - 5 RÈGLES D'OR</h1>
+    
+    <div class="contrat-box">
+        <div class="contrat-title">CONTRAT DE CONFIANCE</div>
+        <div class="contrat-subtitle">ENGAGÉ SÉCURITÉ</div>
+        
+        <p>Je soussigné(e) _________________________, conducteur(trice) d'engins de piste au sein de _________________________, m'engage librement et solennellement à :</p>
+        
+        <div class="regle">
+            <h4>1. RESPECTER LES RÈGLES</h4>
+            <p>• Je respecterai les limitations de vitesse<br>• Je marquerai les arrêts et priorités<br>• Je respecterai la signalisation</p>
+        </div>
+        
+        <div class="regle">
+            <h4>2. VÉRIFIER AVANT D'AGIR</h4>
+            <p>• Je vérifierai mes angles morts avant chaque manœuvre<br>• Je m'assurerai que mon engin est en état de marche<br>• Je ne prendrai jamais de risque inutile</p>
+        </div>
+        
+        <div class="regle">
+            <h4>3. PROTÉGER MES COLLÈGUES</h4>
+            <p>• Je serai attentif aux piétons et aux autres engins<br>• Je signalerai toute situation dangereuse<br>• J'alerterai un collègue qui se mettrait en danger</p>
+        </div>
+        
+        <div class="regle">
+            <h4>4. OSER DIRE NON</h4>
+            <p>• Je refuserai une tâche que j'estime dangereuse<br>• Je demanderai de l'aide en cas de doute<br>• Je prendrai le temps nécessaire à ma sécurité</p>
+        </div>
+        
+        <div class="regle">
+            <h4>5. TRANSMETTRE</h4>
+            <p>• Je serai exemplaire pour mes nouveaux collègues<br>• Je partagerai mes bonnes pratiques<br>• Je contribuerai à la culture sécurité de mon entreprise</p>
+        </div>
+        
+        <p style="text-align: right; margin-top: 20px;">Fait à _______________, le _______________<br><br>Signature du conducteur : _______________ &nbsp;&nbsp;&nbsp; Signature du manager : _______________</p>
+        <p style="text-align: center; font-style: italic; margin-top: 10px;">"La sécurité n'est pas une contrainte, c'est un choix. Aujourd'hui, je choisis de m'engager."</p>
+    </div>
+    
+    <h2>3.2 Caractéristiques du contrat</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Caractéristique</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Valeur juridique</td><td>Aucune (engagement moral, pas contractuel)</td></tr>
+            <tr><td>Valeur symbolique</td><td>Très forte</td></tr>
+            <tr><td>Support</td><td>Papier format A4, encadrement possible</td></tr>
+            <tr><td>Signataires</td><td>Conducteur + manager + témoin (buddy)</td></tr>
+            <tr><td>Exemplaires</td><td>Original pour le conducteur, copie pour l'entreprise</td></tr>
+            <tr><td>Durée</td><td>1 an (renouvellement annuel)</td></tr>
+        </tbody>
+    </table>
+    
+    <!-- ======================================================================== -->
+    <!-- 4. LE RITUEL - CÉRÉMONIE D'ENGAGEMENT -->
+    <!-- ======================================================================== -->
+    <h1>4. LE RITUEL - CÉRÉMONIE D'ENGAGEMENT</h1>
+    
+    <h2>4.2 Déroulé type (30 minutes)</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Phase</th>
+                <th>Durée</th>
+                <th>Action</th>
+                <th>Intervenant</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>1. Accueil</td><td>3 min</td><td>Mot d'accueil, présentation de la cérémonie</td><td>Manager</td></tr>
+            <tr><td>2. Lecture du contrat</td><td>5 min</td><td>Lecture à voix haute des 5 règles d'or</td><td>Un nouveau</td></tr>
+            <tr><td>3. Témoignage</td><td>5 min</td><td>Un ancien raconte pourquoi la sécurité est importante</td><td>Buddy</td></tr>
+            <tr><td>4. Signature</td><td>5 min</td><td>Signature du contrat par chaque nouveau</td><td>Tous</td></tr>
+            <tr><td>5. Remise du pin's</td><td>5 min</td><td>Remise du pin's "Engagé sécurité" par le buddy</td><td>Buddy</td></tr>
+            <tr><td>6. Photo</td><td>3 min</td><td>Photo de groupe (nouveaux + buddies)</td><td>-</td></tr>
+            <tr><td>7. Verre de l'amitié</td><td>4 min</td><td>Moment informel</td><td>Tous</td></tr>
+        </tbody>
+    </table>
+    
+    <!-- ======================================================================== -->
+    <!-- 5. LE SYMBOLE - PIN'S "ENGAGÉ SÉCURITÉ" -->
+    <!-- ======================================================================== -->
+    <h1>5. LE SYMBOLE - PIN'S "ENGAGÉ SÉCURITÉ"</h1>
+    
+    <div style="text-align: center; margin: 20px 0;">
+        <div style="display: inline-block; width: 100px; height: 100px; border-radius: 50%; background-color: #C0C0C0; border: 2px solid #333; text-align: center; line-height: 100px; font-weight: bold; margin: 0 10px;">🤝<br>ENGAGÉ(E)<br>SÉCURITÉ</div>
+    </div>
+    
+    <h2>5.2 Évolution dans le temps</h2>
+    
+    <div class="pins-container">
+        <div class="pin pin-argent">1 an<br>Argent</div>
+        <div class="pin pin-or">3 ans<br>Or</div>
+        <div class="pin pin-or-etoile">5 ans<br>Or + ⭐</div>
+        <div class="pin pin-platine">10 ans<br>Platine</div>
+        <div class="pin pin-diamant">15 ans<br>Diamant</div>
+    </div>
+    
+    <p><strong>Coût unitaire :</strong> 3,50 € (pour 1 000+ pièces) - Renouvellement : 5 € à 15 € selon niveau</p>
+    
+    <!-- ======================================================================== -->
+    <!-- 6. BUDGET -->
+    <!-- ======================================================================== -->
+    <h1>6. BUDGET</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Phase</th>
+                <th>Actions</th>
+                <th>Coût</th>
+                <th>Livrable</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>Phase 1 - Pilote</strong></td><td>Rédaction contrat, design pin's, 50 pin's, cérémonie, évaluation</td><td>4 200 €</td><td>Retour d'expérience + contrat version finale</td></tr>
+            <tr><td><strong>Phase 2 - Déploiement CDG</strong></td><td>Commande groupée 2 000 pin's, déploiement, formation, kit</td><td>20 000 €</td><td>500 conducteurs engagés</td></tr>
+            <tr><td><strong>Phase 3 - Généralisation</strong></td><td>CDG, Orly, province, renouvellement annuel</td><td>35 k€ + 3 k€/an</td><td>Dispositif pérenne</td></tr>
+            <tr><td><strong>TOTAL 3 ANS</strong></td><td></td><td><strong>59 200 €</strong></td><td></td></tr>
+        </tbody>
+    </table>
+    
+    <p><strong>Coût par conducteur engagé :</strong> ~12 € (pin's + cérémonie)</p>
+    
+    <!-- ======================================================================== -->
+    <!-- 7. BÉNÉFICES ATTENDUS -->
+    <!-- ======================================================================== -->
+    <h1>7. BÉNÉFICES ATTENDUS</h1>
+    
+    <h2>7.1 Bénéfices mesurables</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Indicateur</th>
+                <th>Baseline</th>
+                <th>Cible M12</th>
+                <th>Cible M24</th>
+                <th>Cible M36</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Nouveaux conducteurs engagés</td><td>0</td><td>200</td><td>500</td><td>1 000</td></tr>
+            <tr><td>Mémorisation des règles d'or</td><td>35%</td><td>70%</td><td>80%</td><td>90%</td></tr>
+            <tr><td>Fierté déclarée ("fier d'être conducteur")</td><td>30%</td><td>50%</td><td>65%</td><td>75%</td></tr>
+            <tr><td>Sentiment d'appartenance</td><td>40%</td><td>60%</td><td>70%</td><td>80%</td></tr>
+            <tr><td>Turnover à 1 an</td><td>25%</td><td>22%</td><td>20%</td><td>18%</td></tr>
+            <tr><td>Accidents - conducteurs < 1 an</td><td>15/an</td><td>-10%</td><td>-20%</td><td>-30%</td></tr>
+        </tbody>
+    </table>
+    
+    <!-- ======================================================================== -->
+    <!-- 8. RETOURS D'EXPÉRIENCE -->
+    <!-- ======================================================================== -->
+    <h1>8. RETOURS D'EXPÉRIENCE</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Secteur</th>
+                <th>Réalisations</th>
+                <th>Leçon</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>Armée française</strong></td><td>Cérémonie de parrainage, remise du drapeau, engagement devant les pairs</td><td>Le symbole est plus fort que le contrat</td></tr>
+            <tr><td><strong>Sécurité civile</strong></td><td>Cérémonie de baptême de promotion, remise du casque par un ancien</td><td>La transmission par l'objet est puissante</td></tr>
+            <tr><td><strong>Singapour Changi</strong></td><td>"Safety pledge", signature tableau collectif, pin's "Safety Champion"</td><td>95% participation, 88% "plus engagés"</td></tr>
+        </tbody>
+    </table>
+    
+    <!-- ======================================================================== -->
+    <!-- 9. INDICATEURS DE SUIVI -->
+    <!-- ======================================================================== -->
+    <h1>9. INDICATEURS DE SUIVI</h1>
+    
+    <div class="indicator-box">
+        <div class="indicator-item">
+            <strong>Nouveaux engagés</strong>
+            <span>Cible M36: 1 000</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Mémorisation règles d'or</strong>
+            <span>Baseline: 35% | Cible M36: 90%</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Fierté déclarée</strong>
+            <span>Baseline: 30% | Cible M36: 75%</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Turnover à 1 an</strong>
+            <span>Baseline: 25% | Cible M36: 18%</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Accidents - nouveaux</strong>
+            <span>Baseline: 15/an | Cible M36: -30%</span>
+        </div>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 10. EN RÉSUMÉ -->
+    <!-- ======================================================================== -->
+    <h1>10. EN RÉSUMÉ</h1>
+    
+    <div class="encadre">
+        <p style="font-size: 12pt; font-style: italic;">
+            Le contrat de confiance est la piste la plus symbolique, la plus humaine, la plus simple. Ce n'est pas un investissement technologique. 
+            Ce n'est pas une réforme organisationnelle. Ce n'est pas une contrainte supplémentaire. C'est une feuille de papier. C'est une cérémonie 
+            de 30 minutes. C'est un pin's de 3,50 €. Mais c'est aussi une promesse. C'est un engagement. C'est une fierté. Ce que nous proposons, 
+            c'est de dire à chaque conducteur : "Vous n'êtes pas un numéro. Vous n'êtes pas interchangeable. Vous êtes un professionnel engagé, et 
+            nous vous faisons confiance." Et de lui donner les moyens d'en être fier.
+        </p>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 11. CE QUE NOUS PROPOSONS CONCRÈTEMENT -->
+    <!-- ======================================================================== -->
+    <h1>11. CE QUE NOUS PROPOSONS CONCRÈTEMENT</h1>
+    
+    <ol style="font-weight: bold; font-size: 12pt;">
+        <li>Rédiger un contrat avec 5 règles d'or simples</li>
+        <li>Organiser une cérémonie mensuelle avec remise de pin's</li>
+        <li>Tester sur une entreprise pilote</li>
+        <li>Préparer un déploiement CDG sur la base des résultats</li>
+    </ol>
+    
+    <!-- Pied de page -->
+    <div class="footer">
+        <p>PISTE 23 - Le Contrat de Confiance | Version 1.0 | Mars 2026 | CDG - CSCA</p>
+    </div>
+</body>
+</html>

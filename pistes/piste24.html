@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PISTE 24 - Le Parking à Histoires</title>
+    <style>
+        /* Styles généraux pour l'impression */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            line-height: 1.5;
+            color: #333;
+            background-color: white;
+            font-size: 10.5pt;
+            margin: 0;
+            padding: 15px;
+        }
+        
+        /* Styles pour l'impression PDF */
+        @media print {
+            body {
+                padding: 0.5cm;
+            }
+            .page-break {
+                page-break-before: always;
+            }
+            .no-break {
+                page-break-inside: avoid;
+            }
+            h1, h2, h3, h4 {
+                page-break-after: avoid;
+            }
+            table {
+                page-break-inside: avoid;
+            }
+        }
+        
+        /* En-tête du document */
+        .document-header {
+            border-bottom: 3px solid #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+        
+        .document-title {
+            font-size: 24pt;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .document-subtitle {
+            font-size: 14pt;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+        
+        .document-meta {
+            text-align: right;
+            color: #7f8c8d;
+            font-size: 10pt;
+        }
+        
+        .tagline {
+            background-color: #ecf0f1;
+            padding: 8px 15px;
+            border-left: 5px solid #e67e22;
+            margin-bottom: 20px;
+            font-weight: bold;
+            font-size: 12pt;
+        }
+        
+        /* Typographie */
+        h1 {
+            font-size: 18pt;
+            color: #2c3e50;
+            margin: 25px 0 10px 0;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #bdc3c7;
+        }
+        
+        h2 {
+            font-size: 14pt;
+            color: #34495e;
+            margin: 20px 0 10px 0;
+            padding-left: 5px;
+            border-left: 4px solid #e67e22;
+        }
+        
+        h3 {
+            font-size: 12pt;
+            color: #555;
+            margin: 15px 0 8px 0;
+            font-weight: bold;
+        }
+        
+        h4 {
+            font-size: 11pt;
+            color: #666;
+            margin: 12px 0 5px 0;
+            font-weight: bold;
+        }
+        
+        p {
+            margin-bottom: 8px;
+            text-align: justify;
+        }
+        
+        ul, ol {
+            margin: 8px 0 12px 25px;
+        }
+        
+        li {
+            margin-bottom: 3px;
+        }
+        
+        /* Boîtes d'information */
+        .encadre {
+            border: 1px solid #bdc3c7;
+            padding: 12px;
+            background-color: #f9f9f9;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        
+        .important {
+            background-color: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 8px 12px;
+            margin: 12px 0;
+        }
+        
+        .hypothese {
+            background-color: #d4edda;
+            border-left: 5px solid #28a745;
+            padding: 8px 12px;
+            margin: 12px 0;
+            font-style: italic;
+        }
+        
+        /* Tableaux */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0 18px 0;
+            font-size: 9.5pt;
+        }
+        
+        th {
+            background-color: #2c3e50;
+            color: white;
+            font-weight: bold;
+            padding: 6px 4px;
+            text-align: left;
+            border: 1px solid #34495e;
+        }
+        
+        td {
+            padding: 5px 4px;
+            border: 1px solid #ddd;
+            vertical-align: top;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        /* Tableau de cartographie des risques avec couleurs */
+        .risk-table td:nth-child(7) {
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-orange {
+            background-color: #FFA500 !important;
+            color: black;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-red {
+            background-color: #FF0000 !important;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-yellow {
+            background-color: #FFFF00 !important;
+            color: black;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-green {
+            background-color: #008000 !important;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        /* Grille de cotation */
+        .cotation-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 12px 0;
+        }
+        
+        .cotation-box {
+            border: 1px solid #ddd;
+            padding: 8px;
+            background-color: #f9f9f9;
+        }
+        
+        .cotation-box h4 {
+            background-color: #2c3e50;
+            color: white;
+            padding: 4px 8px;
+            margin: -8px -8px 8px -8px;
+            font-size: 11pt;
+        }
+        
+        /* Pied de page */
+        .footer {
+            margin-top: 25px;
+            padding-top: 8px;
+            border-top: 1px solid #bdc3c7;
+            font-size: 9pt;
+            color: #7f8c8d;
+            text-align: center;
+        }
+        
+        .page-break {
+            page-break-before: always;
+        }
+        
+        /* Indicateurs */
+        .indicator-box {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 12px 0;
+        }
+        
+        .indicator-item {
+            flex: 1 1 200px;
+            background-color: #ecf0f1;
+            padding: 8px;
+            border-radius: 5px;
+            border-left: 4px solid #e67e22;
+        }
+        
+        .indicator-item strong {
+            display: block;
+            font-size: 10.5pt;
+            color: #2c3e50;
+        }
+        
+        .indicator-item span {
+            font-size: 9pt;
+            color: #555;
+        }
+        
+        /* Légende des couleurs */
+        .color-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 12px 0;
+            padding: 8px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .color-box {
+            width: 20px;
+            height: 20px;
+            border: 1px solid #333;
+        }
+        
+        /* Texte centré */
+        .text-center {
+            text-align: center;
+        }
+        
+        /* Badge */
+        .badge {
+            background-color: #e67e22;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 9pt;
+            font-weight: bold;
+            display: inline-block;
+        }
+        
+        /* Simulation du panneau mémoriel */
+        .panneau-memorial {
+            border: 3px solid #2c3e50;
+            border-radius: 5px;
+            padding: 20px;
+            background-color: #f5f5f5;
+            margin: 15px 0;
+        }
+        
+        .panneau-titre {
+            font-size: 16pt;
+            font-weight: bold;
+            color: #c0392b;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        
+        .panneau-date {
+            font-size: 12pt;
+            text-align: center;
+            margin-bottom: 15px;
+            font-style: italic;
+        }
+        
+        .panneau-contenu {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .panneau-image {
+            width: 120px;
+            height: 80px;
+            background-color: #bdc3c7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .panneau-description {
+            flex: 1;
+        }
+        
+        .panneau-lecon {
+            background-color: #e67e22;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        
+        .qr-code-sim {
+            width: 50px;
+            height: 50px;
+            background-color: #333;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 10px;
+        }
+        
+        /* Hotspots */
+        .hotspot-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .hotspot-card {
+            border: 1px solid #c0392b;
+            padding: 10px;
+            background-color: #fadbd8;
+        }
+        .hotspot-card h4 {
+            color: #c0392b;
+        }
+    </style>
+</head>
+<body>
+    <!-- En-tête du document -->
+    <div class="document-header">
+        <div>
+            <div class="document-title">PISTE 24</div>
+            <div class="document-subtitle">Le Parking à Histoires</div>
+        </div>
+        <div class="document-meta">
+            <div>Version 1.0</div>
+            <div>Mars 2026</div>
+            <div>CDG - CSCA</div>
+        </div>
+    </div>
+    
+    <!-- Tagline -->
+    <div class="tagline">
+        LA MÉMOIRE VIVE DES HOTSPOTS
+    </div>
+    
+    <!-- Description -->
+    <p style="font-size: 11pt; font-weight: bold; text-align: center; margin: 20px 0;">
+        Panneaux mémoriels aux hotspots racontant l'accident qui s'y est produit.
+    </p>
+    
+    <p>
+        Les accidents ne se répartissent pas aléatoirement sur la plateforme. Ils se concentrent dans des zones spécifiques, les hotspots : le parking T2E, 
+        la zone Fret Nord, le taxiway B, la zone Catering. Pourtant, ces lieux n'ont pas de mémoire. Rien ne rappelle ce qui s'y est passé. Les nouveaux 
+        conducteurs apprennent l'existence de ces zones dangereuses souvent après y avoir été impliqués, trop tard. L'histoire s'efface avec les départs en 
+        retraite. Un lieu qui raconte une histoire marque plus les esprits qu'une statistique abstraite. Un panneau qui dit "Ici, en 2025, un conducteur a 
+        été blessé" interpelle. Une photo qui montre les dégâts marque. Un témoignage qui raconte ce qui s'est passé émeut. La vingt-quatrième piste propose 
+        de donner une mémoire aux hotspots : le parking à histoires.
+    </p>
+    
+    <!-- ======================================================================== -->
+    <!-- 1. PROBLÉMATIQUE ADRESSÉE -->
+    <!-- ======================================================================== -->
+    <h1>1. PROBLÉMATIQUE ADRESSÉE</h1>
+    
+    <p><strong>Constat fondamental :</strong> Les accidents ne se répartissent pas aléatoirement sur la plateforme. Ils se concentrent dans des <strong>zones spécifiques</strong> : les hotspots.</p>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Hotspot CDG</th>
+                <th>Accidents 2024-2025</th>
+                <th>Cause principale</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Parking T2E</td><td>15</td><td>Densité trafic, vitesse</td></tr>
+            <tr><td>Zone Fret Nord</td><td>12</td><td>Co-activité, angles morts</td></tr>
+            <tr><td>Taxiway B</td><td>8</td><td>Visibilité, priorité</td></tr>
+            <tr><td>Zone Catering</td><td>4</td><td>Piétons, recul</td></tr>
+        </tbody>
+    </table>
+    
+    <div class="important">
+        <strong>Mais aujourd'hui :</strong>
+        <ul>
+            <li><strong>Ces lieux n'ont pas de mémoire</strong> → Rien ne rappelle ce qui s'est passé</li>
+            <li><strong>Les nouveaux conducteurs l'apprennent trop tard</strong> → Souvent après un incident</li>
+            <li><strong>L'histoire s'efface avec les départs</strong> → La mémoire accidentologique disparaît</li>
+            <li><strong>Les hotspots sont abstraits</strong> → "Zone rouge" ne veut rien dire</li>
+            <li><strong>Pas de transmission émotionnelle</strong> → Des chiffres, pas d'histoires</li>
+        </ul>
+    </div>
+    
+    <div class="hypothese">
+        <strong>Notre hypothèse :</strong> Un lieu qui raconte une histoire marque plus les esprits qu'une statistique.
+        <ul>
+            <li>Un panneau qui dit "Ici, en 2025, un conducteur a été blessé" <strong>interpelle</strong>.</li>
+            <li>Une photo qui montre les dégâts <strong>marque</strong>.</li>
+            <li>Un témoignage qui raconte ce qui s'est passé <strong>émeut</strong>.</li>
+        </ul>
+        <p><strong>Le parking à histoires, c'est donner une mémoire aux hotspots.</strong></p>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 2. CARTOGRAPHIE DES RISQUES (MISE À JOUR POUR PISTE 24) -->
+    <!-- ======================================================================== -->
+    <h1>2. CARTOGRAPHIE DES RISQUES</h1>
+    
+    <!-- Légende des couleurs -->
+    <div class="color-legend">
+        <div class="legend-item"><div class="color-box" style="background-color: #FF0000;"></div> <strong>Rouge</strong> - Risque très élevé (intolérable)</div>
+        <div class="legend-item"><div class="color-box" style="background-color: #FFA500;"></div> <strong>Orange</strong> - Risque élevé (actions nécessaires)</div>
+        <div class="legend-item"><div class="color-box" style="background-color: #FFFF00;"></div> <strong>Jaune</strong> - Risque moyen (tolérable)</div>
+        <div class="legend-item"><div class="color-box" style="background-color: #008000;"></div> <strong>Vert</strong> - Risque faible (acceptable)</div>
+    </div>
+    
+    <table class="risk-table">
+        <thead>
+            <tr>
+                <th>Réf.</th>
+                <th>Danger</th>
+                <th>Causes</th>
+                <th>Conséquences</th>
+                <th>Gravité</th>
+                <th>Probabilité</th>
+                <th>Criticité</th>
+                <th>Barrières Piste 24</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>MEM 01.1</strong></td>
+                <td>Mémoire accidentologique non transmise</td>
+                <td>Absence de capitalisation, départs en retraite, oubli</td>
+                <td>Répétition des mêmes erreurs, accidents évitables</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Panneaux mémoriels, récits d'accidents, transmission</td>
+            </tr>
+            <tr>
+                <td><strong>MEM 01.2</strong></td>
+                <td>Méconnaissance des hotspots par les nouveaux</td>
+                <td>Absence de signalétique mémorielle, apprentissage tardif</td>
+                <td>Accidents évitables, découverte du risque après l'incident</td>
+                <td>3 (Majeure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-red">ROUGE</td>
+                <td>Panneaux visibles, histoires marquantes, QR code</td>
+            </tr>
+            <tr>
+                <td><strong>MEM 01.3</strong></td>
+                <td>Hotspots perçus comme abstraits</td>
+                <td>Statistiques sans visage, "zone rouge" sans signification</td>
+                <td>Sous-estimation du risque, comportements inadaptés</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Récits personnalisés, conséquences humaines, photos</td>
+            </tr>
+            <tr>
+                <td><strong>MEM 02.1</strong></td>
+                <td>Absence de transmission émotionnelle</td>
+                <td>Chiffres froids, pas d'impact émotionnel</td>
+                <td>Messages non retenus, comportements inchangés</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Témoignages audio/vidéo, émotion authentique, mémorisation +60%</td>
+            </tr>
+            <tr>
+                <td><strong>MEM 02.2</strong></td>
+                <td>Non-identification aux victimes</td>
+                <td>Récits impersonnels, pas de projection</td>
+                <td>"Ça n'arrive qu'aux autres", pas de prise de conscience</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Histoires vraies, conducteurs comme nous, "ça pourrait m'arriver"</td>
+            </tr>
+            <tr>
+                <td><strong>MEM 03.1</strong></td>
+                <td>Banalisation des risques en zone hotspot</td>
+                <td>Routine quotidienne, absence de rappel émotionnel</td>
+                <td>Perte de vigilance, accidents</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Présence permanente du panneau, rappel à chaque passage</td>
+            </tr>
+            <tr>
+                <td><strong>MEM 03.2</strong></td>
+                <td>Oubli des leçons du passé</td>
+                <td>Pas de trace, pas de mémoire collective</td>
+                <td>Erreurs répétées, absence de progrès</td>
+                <td>2 (Mineure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-green">VERT</td>
+                <td>Capitalisation durable, mémoire vivante des accidents</td>
+            </tr>
+            <tr>
+                <td><strong>MEM 04.1</strong></td>
+                <td>Manque de respect des zones à risque</td>
+                <td>Lieux anonymes, pas de conscience du drame passé</td>
+                <td>Comportements dangereux, irrespect</td>
+                <td>1 (Négligeable)</td>
+                <td>C (Rare)</td>
+                <td class="risk-green">VERT</td>
+                <td>Panneaux sobres et respectueux, recueillement implicite</td>
+            </tr>
+            <tr>
+                <td><strong>MEM 05.1</strong></td>
+                <td>Perception morbide du dispositif</td>
+                <td>Mauvaise interprétation, ton inadapté</td>
+                <td>Rejet, contre-productivité</td>
+                <td>1 (Négligeable)</td>
+                <td>D (Très rare)</td>
+                <td class="risk-green">VERT</td>
+                <td>Ton sobre, focus sur la leçon, pas de sensationnalisme</td>
+            </tr>
+            <tr>
+                <td><strong>ACC 01.1</strong></td>
+                <td>Accidents en zone hotspot</td>
+                <td>Méconnaissance des risques spécifiques</td>
+                <td>Blessures, dommages</td>
+                <td>3 (Majeure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-red">ROUGE</td>
+                <td>Réduction ciblée de -30% grâce à la sensibilisation mémorielle</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <!-- Échelle de cotation -->
+    <h3>Échelle de cotation utilisée</h3>
+    
+    <div class="cotation-grid">
+        <div class="cotation-box">
+            <h4>Gravité</h4>
+            <ul>
+                <li><strong>1</strong> - Négligeable</li>
+                <li><strong>2</strong> - Mineure</li>
+                <li><strong>3</strong> - Majeure</li>
+                <li><strong>4</strong> - Catastrophique</li>
+            </ul>
+        </div>
+        <div class="cotation-box">
+            <h4>Probabilité</h4>
+            <ul>
+                <li><strong>A</strong> - Fréquent (quotidien)</li>
+                <li><strong>B</strong> - Occasionnel (hebdo/mensuel)</li>
+                <li><strong>C</strong> - Rare (annuel)</li>
+                <li><strong>D</strong> - Très rare (>1 an)</li>
+                <li><strong>E</strong> - Extrêmement rare (jamais observé)</li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 3. LE PANNEAU MÉMORIEL -->
+    <!-- ======================================================================== -->
+    <h1>3. LE PANNEAU MÉMORIEL - MODÈLE CIBLE</h1>
+    
+    <div class="panneau-memorial">
+        <div class="panneau-titre">⚠️ ZONE MÉMOIRE - HOTSPOT</div>
+        <div class="panneau-date">15 JANVIER 2025 - 08h47</div>
+        
+        <div class="panneau-contenu">
+            <div class="panneau-image">[IMAGE]</div>
+            <div class="panneau-description">
+                <p><strong>CE JOUR-LÀ, UN PUSH A HEURTÉ UN LOADER EN MANŒUVRE DE RECUL.</strong></p>
+                <p><strong>CAUSE :</strong> VITESSE EXCESSIVE (18 KM/H AU LIEU DE 10) - ANGLE MORT NON VÉRIFIÉ</p>
+                <p><strong>CONSÉQUENCES :</strong> Conducteur du loader blessé (6 mois d'ITT) - Avion immobilisé 4h - 180 000 € de dommages</p>
+            </div>
+        </div>
+        
+        <div class="panneau-lecon">
+            <strong>LA LEÇON :</strong> ✔ RALENTISSEZ (10 KM/H MAX) ✔ VÉRIFIEZ VOS ANGLES MORTS ✔ PRENEZ VOTRE TEMPS
+        </div>
+        
+        <div class="qr-code-sim">QR CODE</div>
+    </div>
+    
+    <h2>3.1 Format et emplacement</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Critère</th>
+                <th>Recommandation</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Support</td><td>Panneau aluminium 60x80 cm, format paysage</td></tr>
+            <tr><td>Emplacement</td><td>À l'entrée de la zone, côté conducteur</td></tr>
+            <tr><td>Hauteur</td><td>1,50 m (visibilité depuis l'engin)</td></tr>
+            <tr><td>Éclairage</td><td>Rétroéclairé LED (visibilité nuit)</td></tr>
+            <tr><td>Maintenance</td><td>Nettoyage mensuel, mise à jour annuelle</td></tr>
+        </tbody>
+    </table>
+    
+    <!-- ======================================================================== -->
+    <!-- 4. LES 3 NIVEAUX D'INFORMATION -->
+    <!-- ======================================================================== -->
+    <h1>4. LES 3 NIVEAUX D'INFORMATION</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Niveau</th>
+                <th>Support</th>
+                <th>Durée</th>
+                <th>Contenu</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>NIVEAU 1</strong></td><td>Panneau</td><td>30 secondes</td><td>Date, accident, causes, conséquences, 3 règles d'or</td></tr>
+            <tr><td><strong>NIVEAU 2</strong></td><td>QR Code</td><td>3 minutes</td><td>Récit détaillé, photos, témoignage audio/vidéo, analyse 5M</td></tr>
+            <tr><td><strong>NIVEAU 3</strong></td><td>Application P3</td><td>10 minutes</td><td>Module e-learning, quiz, vidéo, engagement personnel</td></tr>
+        </tbody>
+    </table>
+    
+    <!-- ======================================================================== -->
+    <!-- 5. SÉLECTION DES HISTOIRES -->
+    <!-- ======================================================================== -->
+    <h1>5. SÉLECTION DES HISTOIRES</h1>
+    
+    <h2>5.1 Critères de sélection</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Critère</th>
+                <th>Pondération</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Gravité de l'accident</td><td>40%</td></tr>
+            <tr><td>Valeur pédagogique</td><td>30%</td></tr>
+            <tr><td>Représentativité du risque</td><td>20%</td></tr>
+            <tr><td>Diversité des scénarios</td><td>10%</td></tr>
+        </tbody>
+    </table>
+    
+    <h2>5.2 Calendrier de déploiement</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Année</th>
+                <th>Thématique</th>
+                <th>Zones ciblées</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>2026</td><td>Collisions PUSH/LOADER</td><td>Parking T2E, Parking T3</td></tr>
+            <tr><td>2027</td><td>Piétons / Co-activité</td><td>Zone Catering, Zone Fret</td></tr>
+            <tr><td>2028</td><td>Recul / Angles morts</td><td>Zones de stationnement</td></tr>
+            <tr><td>2029</td><td>Conditions dégradées</td><td>Zones sensibles hiver</td></tr>
+        </tbody>
+    </table>
+    
+    <!-- ======================================================================== -->
+    <!-- 6. BUDGET -->
+    <!-- ======================================================================== -->
+    <h1>6. BUDGET</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Phase</th>
+                <th>Actions</th>
+                <th>Coût</th>
+                <th>Livrable</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>Phase 1 - Pilote</strong></td><td>3 histoires, rédaction, design, 3 panneaux, installation, QR code, évaluation</td><td>13 050 €</td><td>3 panneaux installés, REX</td></tr>
+            <tr><td><strong>Phase 2 - Déploiement CDG</strong></td><td>10 histoires, 10 panneaux, installation, QR code, communication</td><td>32 500 €</td><td>13 panneaux sur CDG</td></tr>
+            <tr><td><strong>Phase 3 - Généralisation</strong></td><td>Orly (5), province (10), mises à jour annuelles</td><td>70 k€ + 5 k€/an</td><td>28 panneaux en France</td></tr>
+            <tr><td><strong>TOTAL 3 ANS</strong></td><td></td><td><strong>115 550 €</strong></td><td></td></tr>
+        </tbody>
+    </table>
+    
+    <p><strong>Coût par panneau installé (série) :</strong> ~1 500 € (fabrication + installation + contenu)</p>
+    
+    <!-- ======================================================================== -->
+    <!-- 7. BÉNÉFICES ATTENDUS -->
+    <!-- ======================================================================== -->
+    <h1>7. BÉNÉFICES ATTENDUS</h1>
+    
+    <h2>7.1 Bénéfices mesurables</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Indicateur</th>
+                <th>Baseline</th>
+                <th>Cible M12</th>
+                <th>Cible M24</th>
+                <th>Cible M36</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Panneaux installés</td><td>0</td><td>3</td><td>13</td><td>28</td></tr>
+            <tr><td>Conducteurs connaissant les hotspots</td><td>35%</td><td>50%</td><td>70%</td><td>85%</td></tr>
+            <tr><td>Mémorisation des accidents passés</td><td>20%</td><td>40%</td><td>60%</td><td>75%</td></tr>
+            <tr><td>Scan des QR codes</td><td>-</td><td>500</td><td>2 000</td><td>5 000</td></tr>
+            <tr><td>Accidents en zones équipées</td><td>-</td><td>-10%</td><td>-20%</td><td>-30%</td></tr>
+        </tbody>
+    </table>
+    
+    <!-- ======================================================================== -->
+    <!-- 8. RETOURS D'EXPÉRIENCE -->
+    <!-- ======================================================================== -->
+    <h1>8. RETOURS D'EXPÉRIENCE</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Secteur</th>
+                <th>Réalisations</th>
+                <th>Impact</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>Sécurité routière</strong></td><td>Panneaux mémoire sur routes, nom victime, date, âge</td><td>87% conducteurs ralentissent, réduction accidents</td></tr>
+            <tr><td><strong>Industrie</strong></td><td>Stèles, plaques, arbres en mémoire d'accidents du travail</td><td>Culture sécurité renforcée, transmission</td></tr>
+            <tr><td><strong>Munich Airport</strong></td><td>"Accident markers", pilote 2 hotspots, QR code</td><td>76% changent comportement, 412 scans en 3 mois</td></tr>
+        </tbody>
+    </table>
+    
+    <!-- ======================================================================== -->
+    <!-- 9. INDICATEURS DE SUIVI -->
+    <!-- ======================================================================== -->
+    <h1>9. INDICATEURS DE SUIVI</h1>
+    
+    <div class="indicator-box">
+        <div class="indicator-item">
+            <strong>Panneaux installés</strong>
+            <span>Cible M36: 28</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Connaissances hotspots</strong>
+            <span>Baseline: 35% | Cible M36: 85%</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Mémorisation accidents</strong>
+            <span>Baseline: 20% | Cible M36: 75%</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Scans QR code</strong>
+            <span>Cible M36: 5 000/an</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Accidents zones équipées</strong>
+            <span>Cible M36: -30%</span>
+        </div>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 10. EN RÉSUMÉ -->
+    <!-- ======================================================================== -->
+    <h1>10. EN RÉSUMÉ</h1>
+    
+    <div class="encadre">
+        <p style="font-size: 12pt; font-style: italic;">
+            Le parking à histoires est la piste la plus respectueuse, la plus émotionnelle, la plus mémorielle. Ce n'est pas une innovation technologique. 
+            Ce n'est pas un outil de contrôle. Ce n'est pas une réforme organisationnelle. C'est un acte de mémoire. C'est un geste de respect. C'est une 
+            leçon pour l'avenir. Ce que nous proposons, c'est de transformer les lieux d'accidents en lieux de transmission. Ce que nous proposons, c'est 
+            de donner une voix à ceux qui ont été blessés. Ce que nous proposons, c'est de faire en sorte que personne ne traverse un hotspot sans savoir 
+            ce qui s'y est passé.
+        </p>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 11. CE QUE NOUS PROPOSONS CONCRÈTEMENT -->
+    <!-- ======================================================================== -->
+    <h1>11. CE QUE NOUS PROPOSONS CONCRÈTEMENT</h1>
+    
+    <ol style="font-weight: bold; font-size: 12pt;">
+        <li>Sélectionner 3 premières histoires (Parking T2E, Fret, Catering)</li>
+        <li>Concevoir et installer 3 panneaux pilotes</li>
+        <li>Développer les contenus QR code (récits, photos, témoignages)</li>
+        <li>Évaluer l'impact sur la connaissance des risques</li>
+    </ol>
+    
+    <!-- Pied de page -->
+    <div class="footer">
+        <p>PISTE 24 - Le Parking à Histoires | Version 1.0 | Mars 2026 | CDG - CSCA</p>
+    </div>
+</body>
+</html>

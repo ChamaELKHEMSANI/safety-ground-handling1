@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PISTE 3 - Campagnes choc personnalisées et application de reporting</title>
+    <style>
+        /* Styles généraux pour l'impression */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            line-height: 1.5;
+            color: #333;
+            background-color: white;
+            font-size: 10.5pt;
+            margin: 0;
+            padding: 15px;
+        }
+        
+        /* Styles pour l'impression PDF */
+        @media print {
+            body {
+                padding: 0.5cm;
+            }
+            .page-break {
+                page-break-before: always;
+            }
+            .no-break {
+                page-break-inside: avoid;
+            }
+            h1, h2, h3, h4 {
+                page-break-after: avoid;
+            }
+            table {
+                page-break-inside: avoid;
+            }
+        }
+        
+        /* En-tête du document */
+        .document-header {
+            border-bottom: 3px solid #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+        
+        .document-title {
+            font-size: 24pt;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .document-subtitle {
+            font-size: 14pt;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+        
+        .document-meta {
+            text-align: right;
+            color: #7f8c8d;
+            font-size: 10pt;
+        }
+        
+        .tagline {
+            background-color: #ecf0f1;
+            padding: 8px 15px;
+            border-left: 5px solid #e67e22;
+            margin-bottom: 20px;
+            font-weight: bold;
+            font-size: 12pt;
+        }
+        
+        /* Typographie */
+        h1 {
+            font-size: 18pt;
+            color: #2c3e50;
+            margin: 25px 0 10px 0;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #bdc3c7;
+        }
+        
+        h2 {
+            font-size: 14pt;
+            color: #34495e;
+            margin: 20px 0 10px 0;
+            padding-left: 5px;
+            border-left: 4px solid #e67e22;
+        }
+        
+        h3 {
+            font-size: 12pt;
+            color: #555;
+            margin: 15px 0 8px 0;
+            font-weight: bold;
+        }
+        
+        h4 {
+            font-size: 11pt;
+            color: #666;
+            margin: 12px 0 5px 0;
+            font-weight: bold;
+        }
+        
+        p {
+            margin-bottom: 8px;
+            text-align: justify;
+        }
+        
+        ul, ol {
+            margin: 8px 0 12px 25px;
+        }
+        
+        li {
+            margin-bottom: 3px;
+        }
+        
+        /* Boîtes d'information */
+        .encadre {
+            border: 1px solid #bdc3c7;
+            padding: 12px;
+            background-color: #f9f9f9;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        
+        .important {
+            background-color: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 8px 12px;
+            margin: 12px 0;
+        }
+        
+        .hypothese {
+            background-color: #d4edda;
+            border-left: 5px solid #28a745;
+            padding: 8px 12px;
+            margin: 12px 0;
+            font-style: italic;
+        }
+        
+        /* Tableaux */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0 18px 0;
+            font-size: 9.5pt;
+        }
+        
+        th {
+            background-color: #2c3e50;
+            color: white;
+            font-weight: bold;
+            padding: 6px 4px;
+            text-align: left;
+            border: 1px solid #34495e;
+        }
+        
+        td {
+            padding: 5px 4px;
+            border: 1px solid #ddd;
+            vertical-align: top;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        /* Tableau de cartographie des risques avec couleurs */
+        .risk-table td:nth-child(7) {
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-orange {
+            background-color: #FFA500 !important;
+            color: black;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-red {
+            background-color: #FF0000 !important;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-yellow {
+            background-color: #FFFF00 !important;
+            color: black;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-green {
+            background-color: #008000 !important;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-blue {
+            background-color: #0000FF !important;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        /* Grille de cotation */
+        .cotation-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 12px 0;
+        }
+        
+        .cotation-box {
+            border: 1px solid #ddd;
+            padding: 8px;
+            background-color: #f9f9f9;
+        }
+        
+        .cotation-box h4 {
+            background-color: #2c3e50;
+            color: white;
+            padding: 4px 8px;
+            margin: -8px -8px 8px -8px;
+            font-size: 11pt;
+        }
+        
+        /* Pied de page */
+        .footer {
+            margin-top: 25px;
+            padding-top: 8px;
+            border-top: 1px solid #bdc3c7;
+            font-size: 9pt;
+            color: #7f8c8d;
+            text-align: center;
+        }
+        
+        .page-break {
+            page-break-before: always;
+        }
+        
+        /* Indicateurs */
+        .indicator-box {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 12px 0;
+        }
+        
+        .indicator-item {
+            flex: 1 1 200px;
+            background-color: #ecf0f1;
+            padding: 8px;
+            border-radius: 5px;
+            border-left: 4px solid #e67e22;
+        }
+        
+        .indicator-item strong {
+            display: block;
+            font-size: 10.5pt;
+            color: #2c3e50;
+        }
+        
+        .indicator-item span {
+            font-size: 9pt;
+            color: #555;
+        }
+        
+        /* Légende des couleurs */
+        .color-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 12px 0;
+            padding: 8px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .color-box {
+            width: 20px;
+            height: 20px;
+            border: 1px solid #333;
+        }
+        
+        /* Texte centré */
+        .text-center {
+            text-align: center;
+        }
+        
+        /* Badge */
+        .badge {
+            background-color: #e67e22;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 9pt;
+            font-weight: bold;
+            display: inline-block;
+        }
+        
+        /* Simulation d'interface d'application */
+        .app-interface {
+            background-color: #f0f0f0;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            padding: 15px;
+            font-family: monospace;
+            margin: 15px 0;
+        }
+        
+        .app-header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 8px;
+            border-radius: 5px 5px 0 0;
+            font-weight: bold;
+        }
+        
+        .app-content {
+            background-color: white;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 0 0 5px 5px;
+        }
+        
+        /* Grille pour les fonctionnalités */
+        .features-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 15px 0;
+        }
+        
+        .feature-card {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            background-color: #f9f9f9;
+        }
+        
+        .feature-card h4 {
+            margin-top: 0;
+            color: #e67e22;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <!-- En-tête du document -->
+    <div class="document-header">
+        <div>
+            <div class="document-title">PISTE 3</div>
+            <div class="document-subtitle">Campagnes choc personnalisées et application de reporting</div>
+        </div>
+        <div class="document-meta">
+            <div>Version 1.0</div>
+            <div>Mars 2026</div>
+            <div>CDG - CSCA</div>
+        </div>
+    </div>
+    
+    <!-- Tagline -->
+    <div class="tagline">
+        UNE COMMUNICATION QUI TOUCHE PERSONNELLEMENT LE CONDUCTEUR
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 1. PROBLÉMATIQUE ADRESSÉE -->
+    <!-- ======================================================================== -->
+    <h1>1. PROBLÉMATIQUE ADRESSÉE</h1>
+    
+    <p><strong>Constat :</strong> Les actions de prévention actuelles sont jugées "intenses" mais leur impact n'est pas mesuré. Le nombre d'accidents continue d'augmenter.</p>
+    
+    <div class="important">
+        <strong>Paradoxe :</strong>
+        <ul>
+            <li>Des campagnes de communication existent</li>
+            <li>Mais elles sont <strong>génériques, descendantes, et peu mémorables</strong></li>
+            <li>Absence de <strong>personnalisation</strong> et de <strong>feedback individuel</strong></li>
+        </ul>
+    </div>
+    
+    <div class="hypothese">
+        <strong>Notre hypothèse :</strong> Une communication qui <strong>touche personnellement</strong> le conducteur, 
+        qui lui <strong>montre les conséquences réelles</strong> de ses actes, et qui lui <strong>permet d'agir concrètement</strong> 
+        aura un impact comportemental durable.
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 2. CONCEPT D'ENSEMBLE -->
+    <!-- ======================================================================== -->
+    <h1>2. CONCEPT D'ENSEMBLE : APPROCHE INTÉGRÉE 360°</h1>
+    
+    <table>
+        <tr>
+            <td style="width: 45%; background-color: #3498db; color: white; font-weight: bold; text-align: center; padding: 10px;">
+                CAMPAGNES CHOC
+            </td>
+            <td style="width: 10%; text-align: center; font-weight: bold; background-color: #ecf0f1;">⬅️➡️</td>
+            <td style="width: 45%; background-color: #e67e22; color: white; font-weight: bold; text-align: center; padding: 10px;">
+                APPLICATION MOBILE
+            </td>
+        </tr>
+        <tr>
+            <td style="vertical-align: top;">
+                <ul>
+                    <li>Vidéos réelles</li>
+                    <li>Témoignages</li>
+                    <li>Affichage ciblé</li>
+                    <li>Immersion VR</li>
+                </ul>
+            </td>
+            <td style="text-align: center; background-color: #ecf0f1; vertical-align: middle;">⬆️⬇️</td>
+            <td style="vertical-align: top;">
+                <ul>
+                    <li>Reporting temps réel</li>
+                    <li>Feedback individuel</li>
+                    <li>Quiz & défis</li>
+                    <li>Gamification</li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3" style="background-color: #2c3e50; color: white; text-align: center; padding: 8px;">
+                <strong>DONNÉES PERSONNALISÉES</strong> (Profil conducteur, historique incidents, type d'engin, ancienneté)
+            </td>
+        </tr>
+    </table>
+    
+    <!-- ======================================================================== -->
+    <!-- 3. CARTOGRAPHIE DES RISQUES (MISE À JOUR POUR PISTE 3) -->
+    <!-- ======================================================================== -->
+    <h1>3. CARTOGRAPHIE DES RISQUES</h1>
+    
+    <!-- Légende des couleurs -->
+    <div class="color-legend">
+        <div class="legend-item"><div class="color-box" style="background-color: #FF0000;"></div> <strong>Rouge</strong> - Risque très élevé (intolérable)</div>
+        <div class="legend-item"><div class="color-box" style="background-color: #FFA500;"></div> <strong>Orange</strong> - Risque élevé (actions nécessaires)</div>
+        <div class="legend-item"><div class="color-box" style="background-color: #FFFF00;"></div> <strong>Jaune</strong> - Risque moyen (tolérable)</div>
+        <div class="legend-item"><div class="color-box" style="background-color: #008000;"></div> <strong>Vert</strong> - Risque faible (acceptable)</div>
+        <div class="legend-item"><div class="color-box" style="background-color: #0000FF;"></div> <strong>Bleu</strong> - Risque informationnel (nouveau)</div>
+    </div>
+    
+    <table class="risk-table">
+        <thead>
+            <tr>
+                <th>Réf.</th>
+                <th>Danger</th>
+                <th>Causes</th>
+                <th>Conséquences</th>
+                <th>Gravité</th>
+                <th>Probabilité</th>
+                <th>Criticité</th>
+                <th>Barrières Piste 3</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>COM 01.1</strong></td>
+                <td>Banalisation des risques</td>
+                <td>Habituation, routine, absence de rappels percutants</td>
+                <td>Non-respect des règles, prise de risque inconsciente</td>
+                <td>3 (Majeure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Campagnes choc renouvelées, affichage changeant</td>
+            </tr>
+            <tr>
+                <td><strong>COM 01.2</strong></td>
+                <td>Déficit d'attention / distraction</td>
+                <td>Sollicitations externes, fatigue, usage téléphone</td>
+                <td>Non-détection danger, collision, heurt piéton</td>
+                <td>3 (Majeure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Vidéos choc sur conséquences distraction, rappels ciblés</td>
+            </tr>
+            <tr>
+                <td><strong>COM 01.3</strong></td>
+                <td>Méconnaissance des conséquences réelles</td>
+                <td>Formation théorique abstraite, absence de visibilité</td>
+                <td>Sous-estimation des risques, comportements inadaptés</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Vidéos réelles d'accidents, témoignages, immersion VR</td>
+            </tr>
+            <tr>
+                <td><strong>COM 02.1</strong></td>
+                <td>Sous-déclaration des near-miss</td>
+                <td>Manque de temps, peur de la sanction, absence de retour</td>
+                <td>Non-remontée d'information, perte d'opportunité prévention</td>
+                <td>2 (Mineure)</td>
+                <td>A (Fréquent)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Application mobile avec reporting < 60s, feedback systématique</td>
+            </tr>
+            <tr>
+                <td><strong>COM 02.2</strong></td>
+                <td>Non-remontée des incidents matériels</td>
+                <td>Procédure complexe, sentiment d'inutilité</td>
+                <td>Dégradation non traitée, accident secondaire</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Reporting simplifié avec photo, suivi visible</td>
+            </tr>
+            <tr>
+                <td><strong>COM 02.3</strong></td>
+                <td>Absence de feedback après signalement</td>
+                <td>Processus non bouclé, manque de ressources</td>
+                <td>Démotivation, arrêt des signalements</td>
+                <td>2 (Mineure)</td>
+                <td>A (Fréquent)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Module feedback avec réponse automatique < 48h</td>
+            </tr>
+            <tr>
+                <td><strong>COM 03.1</strong></td>
+                <td>Mauvaise perception des risques par les jeunes</td>
+                <td>Sentiment d'invulnérabilité, manque d'expérience</td>
+                <td>Prise de risque excessive, accidents évitables</td>
+                <td>3 (Majeure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Vidéos ciblées jeunes conducteurs, témoignages pairs</td>
+            </tr>
+            <tr>
+                <td><strong>COM 03.2</strong></td>
+                <td>Routine des conducteurs expérimentés</td>
+                <td>Excès de confiance, automatismes, "j'ai toujours fait comme ça"</td>
+                <td>Non-respect procédures, accident par habitude</td>
+                <td>3 (Majeure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Vidéos "accident par routine", témoignages d'experts</td>
+            </tr>
+            <tr>
+                <td><strong>COM 04.1</strong></td>
+                <td>Méconnaissance des règles d'or</td>
+                <td>Formation trop espacée, absence de rappel</td>
+                <td>Infractions par ignorance</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-green">VERT</td>
+                <td>Quiz quotidiens, rappels personnalisés dans l'appli</td>
+            </tr>
+            <tr>
+                <td><strong>COM 04.2</strong></td>
+                <td>Absence de culture de signalement</td>
+                <td>Culture du "ça ne sert à rien", absence de valorisation</td>
+                <td>Invisibilité des presque-accidents</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Gamification, points, badges, classements</td>
+            </tr>
+            <tr>
+                <td><strong>COM 05.1</strong></td>
+                <td>Fracture numérique générationnelle</td>
+                <td>Non-maîtrise des outils digitaux par les seniors</td>
+                <td>Non-utilisation de l'application, inégalité d'accès</td>
+                <td>1 (Négligeable)</td>
+                <td>C (Rare)</td>
+                <td class="risk-green">VERT</td>
+                <td>Interface ultra-simple, mode dégradé, tutoriels</td>
+            </tr>
+            <tr>
+                <td><strong>INF 01.1</strong></td>
+                <td>Défaut d'information en temps réel</td>
+                <td>Absence de système d'alerte, communication descendante lente</td>
+                <td>Conducteurs non informés des dangers immédiats</td>
+                <td>3 (Majeure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Module alertes push (hotspot, météo, incident)</td>
+            </tr>
+            <tr>
+                <td><strong>INF 01.2</strong></td>
+                <td>Mauvaise connaissance des hotspots</td>
+                <td>Formation initiale non suivie, pas de rappel</td>
+                <td>Surprise, non-anticipation du danger</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Cartographie interactive, alertes à l'approche</td>
+            </tr>
+            <tr>
+                <td><strong>PSY 01.1</strong></td>
+                <td>Stress post-accident non traité</td>
+                <td>Absence de suivi psychologique, isolement</td>
+                <td>Récidive, syndrome de stress post-traumatique</td>
+                <td>2 (Mineure)</td>
+                <td>D (Très rare)</td>
+                <td class="risk-green">VERT</td>
+                <td>Témoignages de conducteurs accidentés, lien vers P53</td>
+            </tr>
+            <tr>
+                <td><strong>VR 01.1</strong></td>
+                <td>Formation insuffisante aux situations d'urgence</td>
+                <td>Pas d'exposition pratique, scénarios théoriques</td>
+                <td>Mauvaise réaction en situation réelle</td>
+                <td>3 (Majeure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Modules VR immersifs, scénarios réalistes</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <!-- Échelle de cotation -->
+    <h3>Échelle de cotation utilisée</h3>
+    
+    <div class="cotation-grid">
+        <div class="cotation-box">
+            <h4>Gravité</h4>
+            <ul>
+                <li><strong>1</strong> - Négligeable</li>
+                <li><strong>2</strong> - Mineure</li>
+                <li><strong>3</strong> - Majeure</li>
+                <li><strong>4</strong> - Catastrophique</li>
+            </ul>
+        </div>
+        <div class="cotation-box">
+            <h4>Probabilité</h4>
+            <ul>
+                <li><strong>A</strong> - Fréquent (quotidien)</li>
+                <li><strong>B</strong> - Occasionnel (hebdo/mensuel)</li>
+                <li><strong>C</strong> - Rare (annuel)</li>
+                <li><strong>D</strong> - Très rare (>1 an)</li>
+                <li><strong>E</strong> - Extrêmement rare (jamais observé)</li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 4. AXE 1 - CAMPAGNES CHOC PERSONNALISÉES -->
+    <!-- ======================================================================== -->
+    <h1>4. AXE 1 - CAMPAGNES CHOC PERSONNALISÉES</h1>
+    
+    <h2>4.1 Principe fondamental</h2>
+    <p><strong>"Montrer la réalité, ne pas l'édulcorer"</strong></p>
+    <p>Les campagnes de prévention actuelles sont souvent trop lisses, trop institutionnelles. Elles ne créent pas de <strong>choc émotionnel</strong>.</p>
+    
+    <ul>
+        <li>L'<strong>émotion</strong> est le principal vecteur de mémorisation</li>
+        <li>Un message qui <strong>heurte</strong> marque durablement</li>
+        <li>La <strong>personnalisation</strong> multiplie l'impact par 3 à 5</li>
+    </ul>
+    
+    <h2>4.2 Typologie des campagnes proposées</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Type</th>
+                <th>Support</th>
+                <th>Cible</th>
+                <th>Fréquence</th>
+                <th>Objectif émotionnel</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Vidéos réelles</td><td>Sessions formation, affichage numérique</td><td>Tous conducteurs</td><td>Trimestrielle</td><td>Choc, identification</td></tr>
+            <tr><td>Témoignages</td><td>Intranet, application, réunions d'équipe</td><td>Conducteurs à risque</td><td>Mensuelle</td><td>Empathie, projection</td></tr>
+            <tr><td>Affichage choc</td><td>Vestiaires, salles de pause, cantines</td><td>Tous</td><td>Permanente</td><td>Rappel constant</td></tr>
+            <tr><td>Immersion VR</td><td>Formation initiale et continue</td><td>Nouveaux entrants</td><td>Ponctuelle</td><td>Expérience immersive</td></tr>
+            <tr><td>Lettres ouvertes</td><td>Distribution nominative</td><td>Conducteurs sanctionnés</td><td>Individuelle</td><td>Responsabilisation</td></tr>
+        </tbody>
+    </table>
+    
+    <h2>4.3 Personnalisation par cible</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Profil conducteur</th>
+                <th>Vidéo recommandée</th>
+                <th>Angle pédagogique</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Conducteur PUSH</td><td>Collision avec avion</td><td>Coût, danger passagers</td></tr>
+            <tr><td>Conducteur LOADER</td><td>Chute de charge</td><td>Écrasement, manutention</td></tr>
+            <tr><td>Conducteur BUS</td><td>Heurt piéton</td><td>Vulnérabilité humaine</td></tr>
+            <tr><td>Conducteur jeune (<1 an)</td><td>Témoignage conducteur accidenté</td><td>"Ça arrive aux meilleurs"</td></tr>
+            <tr><td>Conducteur expert (>10 ans)</td><td>Accident par routine</td><td>"L'habitude tue"</td></tr>
+            <tr><td>Conducteur sanctionné</td><td>Vidéo ciblée sur l'infraction</td><td>Lien cause/conséquence</td></tr>
+        </tbody>
+    </table>
+    
+    <h2>4.4 Rotation et localisation de l'affichage</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Zone</th>
+                <th>Thème prioritaire</th>
+                <th>Rotation</th>
+                <th>Responsable</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Vestiaires</td><td>Conséquences personnelles</td><td>Mensuelle</td><td>Entreprise</td></tr>
+            <tr><td>Salles de pause</td><td>Témoignages</td><td>Bimensuelle</td><td>Entreprise</td></tr>
+            <tr><td>Pointeuses</td><td>Rappels règles d'or</td><td>Hebdomadaire</td><td>CSCA</td></tr>
+            <tr><td>Cantines</td><td>Statistiques locales</td><td>Hebdomadaire</td><td>CSCA</td></tr>
+            <tr><td>Abords pistes</td><td>Alertes hotspots</td><td>Permanente</td><td>ADP</td></tr>
+        </tbody>
+    </table>
+    
+    <!-- ======================================================================== -->
+    <!-- 5. AXE 2 - APPLICATION MOBILE SAFETY HUB -->
+    <!-- ======================================================================== -->
+    <h1>5. AXE 2 - APPLICATION MOBILE DE REPORTING ET PRÉVENTION</h1>
+    
+    <h2>5.1 Pourquoi une application ?</h2>
+    <ul>
+        <li>100% des conducteurs ont un smartphone</li>
+        <li>Les outils de reporting actuels sont papier ou web (poste fixe)</li>
+        <li>Le délai entre l'incident et la déclaration est trop long</li>
+        <li>Les conducteurs ne reçoivent aucun feedback sur leurs signalements</li>
+    </ul>
+    
+    <h2>5.2 Fonctionnalités détaillées</h2>
+    
+    <div class="features-grid">
+        <div class="feature-card">
+            <h4>📱 MODULE REPORTING - "JE SIGNALE"</h4>
+            <p><strong>Objectif :</strong> Déclarer un incident en moins de 60 secondes.</p>
+            <ul>
+                <li>Type d'événement (near-miss, incident matériel, comportement, désordre)</li>
+                <li>Localisation par GPS ou photo</li>
+                <li>Description rapide (140 caractères)</li>
+                <li><strong>+1 point par signalement validé</strong></li>
+            </ul>
+        </div>
+        
+        <div class="feature-card">
+            <h4>📱 MODULE FEEDBACK - "ON M'A RÉPONDU"</h4>
+            <p><strong>Objectif :</strong> Clore la boucle de communication.</p>
+            <ul>
+                <li>Near-miss : réponse < 48h</li>
+                <li>Infrastructure : réponse < 72h</li>
+                <li>Comportement : réponse < 24h</li>
+                <li>Le conducteur se sent utile et considéré</li>
+            </ul>
+        </div>
+        
+        <div class="feature-card">
+            <h4>📚 MODULE PRÉVENTION - "JE ME FORME"</h4>
+            <p><strong>Objectif :</strong> Micro-formations personnalisées.</p>
+            <ul>
+                <li>Quiz de 5 questions (3 min)</li>
+                <li>Vidéos de 90 secondes</li>
+                <li>Infographies interactives</li>
+                <li>Défis entre collègues</li>
+            </ul>
+        </div>
+        
+        <div class="feature-card">
+            <h4>🔔 MODULE ALERTES - "ON M'INFORME"</h4>
+            <p><strong>Objectif :</strong> Diffusion en temps réel.</p>
+            <ul>
+                <li>Alerte hotspot (accident grave)</li>
+                <li>Info trafic (pic d'activité, saturation)</li>
+                <li>Rappel règle (infraction fréquente)</li>
+                <li>Météo (pluie, brouillard, neige)</li>
+            </ul>
+        </div>
+    </div>
+    
+    <h2>5.3 Budget estimé</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Poste</th>
+                <th>Description</th>
+                <th>Coût</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Phase 1 - MVP (3 mois)</td><td>Application iOS/Android basique + back-office web</td><td>80 000€</td></tr>
+            <tr><td>Phase 2 - Évolution (3 mois)</td><td>Gamification, quiz, notifications push</td><td>50 000€</td></tr>
+            <tr><td>Phase 3 - Connecteurs (3 mois)</td><td>Intégration SI entreprises, SSO</td><td>40 000€</td></tr>
+            <tr><td>Hébergement sécurisé</td><td>Cloud HDS (données de santé)</td><td>15 000€/an</td></tr>
+            <tr><td>Maintenance évolutive</td><td>TMA annuelle</td><td>25 000€/an</td></tr>
+        </tbody>
+    </table>
+    
+    <p><strong>Total investissement initial :</strong> ~170 000€<br>
+    <strong>Coût annuel :</strong> ~40 000€</p>
+    
+    <p><strong>Mutualisation inter-entreprises (10 entreprises) :</strong><br>
+    Coût par entreprise : 17 000€ (investissement) + 4 000€/an</p>
+    
+    <h2>5.4 Objectifs d'adoption</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Échéance</th>
+                <th>Taux d'installation</th>
+                <th>Taux d'utilisation hebdomadaire</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>M3</td><td>30%</td><td>20%</td></tr>
+            <tr><td>M6</td><td>60%</td><td>40%</td></tr>
+            <tr><td>M12</td><td>80%</td><td>60%</td></tr>
+        </tbody>
+    </table>
+    
+    <!-- ======================================================================== -->
+    <!-- 6. IMMERSION RÉALITÉ VIRTUELLE (VR) -->
+    <!-- ======================================================================== -->
+    <h1>6. IMMERSION RÉALITÉ VIRTUELLE (VR)</h1>
+    
+    <h2>6.1 Concept</h2>
+    <p><strong>Mettre le conducteur dans la situation réelle d'un accident, sans risque.</strong></p>
+    <p>La VR permet une immersion émotionnelle incomparable. Le cerveau réagit comme si l'événement était réel. L'apprentissage est <strong>3 fois plus rapide</strong> et <strong>5 fois mieux mémorisé</strong> qu'une formation classique.</p>
+    
+    <h2>6.2 Scénarios proposés</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Scénario VR</th>
+                <th>Durée</th>
+                <th>Compétence visée</th>
+                <th>Public prioritaire</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>"Le push trop rapide"</td><td>8 min</td><td>Vitesse, angles morts</td><td>Conducteurs PUSH</td></tr>
+            <tr><td>"Le tapis qui recule"</td><td>6 min</td><td>Co-activité, vigilance</td><td>Conducteurs TAPIS</td></tr>
+            <tr><td>"Le piéton invisible"</td><td>5 min</td><td>Angles morts BUS</td><td>Conducteurs BUS</td></tr>
+            <tr><td>"La charge instable"</td><td>7 min</td><td>Manutention LOADER</td><td>Conducteurs LOADER</td></tr>
+            <tr><td>"La fatigue"</td><td>4 min</td><td>Vigilance, sommeil</td><td>Tout conducteur (nuit)</td></tr>
+        </tbody>
+    </table>
+    
+    <h2>6.3 Déploiement VR</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Phase</th>
+                <th>Équipement</th>
+                <th>Lieux</th>
+                <th>Coût estimé</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Pilote</td><td>5 casques VR</td><td>Centre formation Air France</td><td>15 000€</td></tr>
+            <tr><td>Extension</td><td>20 casques VR</td><td>Écoles de formation partenaires</td><td>60 000€</td></tr>
+            <tr><td>Généralisation</td><td>50 casques VR</td><td>Plateformes CDG/Orly/province</td><td>150 000€</td></tr>
+            <tr><td>Contenus</td><td>Développement 5 scénarios</td><td>Prestataire spécialisé</td><td>80 000€</td></tr>
+        </tbody>
+    </table>
+    
+    <p><strong>Total investissement VR :</strong> ~150 000€</p>
+    
+    <!-- ======================================================================== -->
+    <!-- 7. INDICATEURS DE SUIVI -->
+    <!-- ======================================================================== -->
+    <h1>7. INDICATEURS DE SUIVI</h1>
+    
+    <h2>7.1 Indicateurs d'activité (application)</h2>
+    
+    <div class="indicator-box">
+        <div class="indicator-item">
+            <strong>Signalements near-miss</strong>
+            <span>Cible : > 100/mois | Fréquence : Mensuelle</span>
+        </div>
+        <div class="indicator-item">
+            <strong>% signalements avec photo</strong>
+            <span>Cible : > 80% | Fréquence : Mensuelle</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Délai moyen de réponse</strong>
+            <span>Cible : < 48h | Fréquence : Hebdomadaire</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Taux d'ouverture notifications</strong>
+            <span>Cible : > 70% | Fréquence : Hebdomadaire</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Quiz complétés</strong>
+            <span>Cible : > 500/mois | Fréquence : Mensuelle</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Satisfaction utilisateurs</strong>
+            <span>Cible : > 4,2/5 | Fréquence : Trimestrielle</span>
+        </div>
+    </div>
+    
+    <h2>7.2 Indicateurs d'impact (campagnes)</h2>
+    
+    <div class="indicator-box">
+        <div class="indicator-item">
+            <strong>Mémorisation des règles d'or</strong>
+            <span>Cible : > 90% (M24) | Source : Test annuel</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Perception du risque (enquête)</strong>
+            <span>Cible : +30% (M24) | Source : Enquête conducteurs</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Accidents liés à la distraction</strong>
+            <span>Cible : -50% (M24) | Source : Gendarmerie</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Signalements précoces d'infrastructure</strong>
+            <span>Cible : +200% (M24) | Source : Application</span>
+        </div>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 8. RISQUES ET MESURES DE MITIGATION -->
+    <!-- ======================================================================== -->
+    <h1>8. RISQUES ET MESURES DE MITIGATION</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Risque</th>
+                <th>Probabilité</th>
+                <th>Gravité</th>
+                <th>Plan d'action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Faible adoption</td><td>Élevée</td><td>Critique</td><td>Co-conception avec utilisateurs ; Ambassadeurs terrain ; Campagne de lancement forte</td></tr>
+            <tr><td>Frais de développement</td><td>Moyenne</td><td>Élevée</td><td>Démarrage MVP ; Mutualisation CSCA</td></tr>
+            <tr><td>Données personnelles</td><td>Moyenne</td><td>Élevée</td><td>Déclaration CNIL ; Anonymisation par défaut ; Droit à l'effacement</td></tr>
+            <tr><td>Fracture numérique</td><td>Faible</td><td>Modérée</td><td>Interface ultra-simple ; Mode dégradé papier ; Tutoriels vidéo</td></tr>
+            <tr><td>Saturation signalements</td><td>Faible</td><td>Faible</td><td>Critères de qualification ; Traitement gradué</td></tr>
+        </tbody>
+    </table>
+    
+    <!-- ======================================================================== -->
+    <!-- 9. COMPARAISON AVEC DISPOSITIFS EXISTANTS -->
+    <!-- ======================================================================== -->
+    <h1>9. COMPARAISON AVEC DISPOSITIFS EXISTANTS</h1>
+    
+    <h2>9.1 Dans le transport aérien</h2>
+    <p><strong>Aéroport de Munich :</strong> Application "MUC Safety" depuis 2023, 2 500 téléchargements, 450 signalements/an. Limite : pas de gamification, faible engagement durable.</p>
+    <p><strong>Air France Cargo :</strong> Application interne de reporting incidents. Utilisation principalement par encadrement (pas conducteurs).</p>
+    
+    <h2>9.2 Hors secteur aérien</h2>
+    <p><strong>SNCF :</strong> Application "Sécurité Flash" pour les agents, 10 000 signalements/an, feedback systématique sous 72h. Taux de satisfaction : 87%.</p>
+    <p><strong>TotalEnergies :</strong> Application "Safety Observer", gamification poussée (challenges entre sites), -40% d'accidents en 3 ans.</p>
+    
+    <!-- ======================================================================== -->
+    <!-- 10. PROPOSITION DE DÉPLOIEMENT PAR PHASES -->
+    <!-- ======================================================================== -->
+    <h1>10. PROPOSITION DE DÉPLOIEMENT PAR PHASES</h1>
+    
+    <h2>Phase 1 - Conception & Pilote (3-4 mois)</h2>
+    <ul>
+        <li>Ateliers utilisateurs (2 ateliers de 8 conducteurs)</li>
+        <li>Définition cahier des charges détaillé</li>
+        <li>Développement MVP (signalement + feedback)</li>
+        <li>Test pilote - 50 conducteurs volontaires</li>
+        <li>Ajustements UX/UI</li>
+    </ul>
+    
+    <h2>Phase 2 - Campagnes choc (4-8 mois)</h2>
+    <ul>
+        <li>Recueil vidéos accidents (anonymisation)</li>
+        <li>Production 3 vidéos pilotes (PUSH, LOADER, BUS)</li>
+        <li>Déploiement affichage choc CDG</li>
+        <li>Lancement officiel application V1</li>
+        <li>Campagne communication "0 accident"</li>
+    </ul>
+    
+    <h2>Phase 3 - Généralisation (8-12 mois)</h2>
+    <ul>
+        <li>Extension à Orly</li>
+        <li>Développement modules gamification</li>
+        <li>Déploiement VR (5 casques)</li>
+        <li>Évaluation impact à 1 an</li>
+        <li>Présentation résultats - Comité FNAM</li>
+    </ul>
+    
+ 
+    <!-- ======================================================================== -->
+    <!-- 11. EN RÉSUMÉ -->
+    <!-- ======================================================================== -->
+    <h1>11. EN RÉSUMÉ</h1>
+    
+    <div class="encadre">
+        <p style="font-size: 12pt; font-style: italic;">
+            Une communication qui touche personnellement le conducteur, qui lui montre les conséquences réelles de ses actes, 
+            et qui lui permet d'agir concrètement aura un impact comportemental durable. L'application Safety Hub est le 
+            point d'entrée unique du dispositif sécurité pour le conducteur.
+        </p>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 12. CE QUE NOUS PROPOSONS CONCRÈTEMENT -->
+    <!-- ======================================================================== -->
+    <h1>12. CE QUE NOUS PROPOSONS CONCRÈTEMENT</h1>
+    
+    <ol style="font-weight: bold; font-size: 12pt;">
+        <li>Co-concevoir l'application avec des conducteurs volontaires</li>
+        <li>Développer une application de reporting simple et gratifiante (MVP 80k€)</li>
+        <li>Produire 3 vidéos choc avec des images réelles d'accidents (anonymisées)</li>
+        <li>Déployer un affichage dynamique et changeant dans les vestiaires</li>
+        <li>Équiper 5 casques VR pour la formation immersive</li>
+    </ol>
+    
+    <!-- Pied de page -->
+    <div class="footer">
+        <p>PISTE 3 - Campagnes choc personnalisées et application de reporting | Version 1.0 | Mars 2026 | CDG - CSCA</p>
+    </div>
+</body>
+</html>

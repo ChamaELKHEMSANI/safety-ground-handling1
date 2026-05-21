@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PISTE 16 - Le Code de la Piste</title>
+    <style>
+        /* Styles généraux pour l'impression */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            line-height: 1.5;
+            color: #333;
+            background-color: white;
+            font-size: 10.5pt;
+            margin: 0;
+            padding: 15px;
+        }
+        
+        /* Styles pour l'impression PDF */
+        @media print {
+            body {
+                padding: 0.5cm;
+            }
+            .page-break {
+                page-break-before: always;
+            }
+            .no-break {
+                page-break-inside: avoid;
+            }
+            h1, h2, h3, h4 {
+                page-break-after: avoid;
+            }
+            table {
+                page-break-inside: avoid;
+            }
+        }
+        
+        /* En-tête du document */
+        .document-header {
+            border-bottom: 3px solid #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+        
+        .document-title {
+            font-size: 24pt;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .document-subtitle {
+            font-size: 14pt;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+        
+        .document-meta {
+            text-align: right;
+            color: #7f8c8d;
+            font-size: 10pt;
+        }
+        
+        .tagline {
+            background-color: #ecf0f1;
+            padding: 8px 15px;
+            border-left: 5px solid #e67e22;
+            margin-bottom: 20px;
+            font-weight: bold;
+            font-size: 12pt;
+        }
+        
+        /* Typographie */
+        h1 {
+            font-size: 18pt;
+            color: #2c3e50;
+            margin: 25px 0 10px 0;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #bdc3c7;
+        }
+        
+        h2 {
+            font-size: 14pt;
+            color: #34495e;
+            margin: 20px 0 10px 0;
+            padding-left: 5px;
+            border-left: 4px solid #e67e22;
+        }
+        
+        h3 {
+            font-size: 12pt;
+            color: #555;
+            margin: 15px 0 8px 0;
+            font-weight: bold;
+        }
+        
+        h4 {
+            font-size: 11pt;
+            color: #666;
+            margin: 12px 0 5px 0;
+            font-weight: bold;
+        }
+        
+        p {
+            margin-bottom: 8px;
+            text-align: justify;
+        }
+        
+        ul, ol {
+            margin: 8px 0 12px 25px;
+        }
+        
+        li {
+            margin-bottom: 3px;
+        }
+        
+        /* Boîtes d'information */
+        .encadre {
+            border: 1px solid #bdc3c7;
+            padding: 12px;
+            background-color: #f9f9f9;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        
+        .important {
+            background-color: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 8px 12px;
+            margin: 12px 0;
+        }
+        
+        .hypothese {
+            background-color: #d4edda;
+            border-left: 5px solid #28a745;
+            padding: 8px 12px;
+            margin: 12px 0;
+            font-style: italic;
+        }
+        
+        /* Tableaux */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0 18px 0;
+            font-size: 9.5pt;
+        }
+        
+        th {
+            background-color: #2c3e50;
+            color: white;
+            font-weight: bold;
+            padding: 6px 4px;
+            text-align: left;
+            border: 1px solid #34495e;
+        }
+        
+        td {
+            padding: 5px 4px;
+            border: 1px solid #ddd;
+            vertical-align: top;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        /* Tableau de cartographie des risques avec couleurs */
+        .risk-table td:nth-child(7) {
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-orange {
+            background-color: #FFA500 !important;
+            color: black;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-red {
+            background-color: #FF0000 !important;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-yellow {
+            background-color: #FFFF00 !important;
+            color: black;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-green {
+            background-color: #008000 !important;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        /* Grille de cotation */
+        .cotation-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 12px 0;
+        }
+        
+        .cotation-box {
+            border: 1px solid #ddd;
+            padding: 8px;
+            background-color: #f9f9f9;
+        }
+        
+        .cotation-box h4 {
+            background-color: #2c3e50;
+            color: white;
+            padding: 4px 8px;
+            margin: -8px -8px 8px -8px;
+            font-size: 11pt;
+        }
+        
+        /* Pied de page */
+        .footer {
+            margin-top: 25px;
+            padding-top: 8px;
+            border-top: 1px solid #bdc3c7;
+            font-size: 9pt;
+            color: #7f8c8d;
+            text-align: center;
+        }
+        
+        .page-break {
+            page-break-before: always;
+        }
+        
+        /* Indicateurs */
+        .indicator-box {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 12px 0;
+        }
+        
+        .indicator-item {
+            flex: 1 1 200px;
+            background-color: #ecf0f1;
+            padding: 8px;
+            border-radius: 5px;
+            border-left: 4px solid #e67e22;
+        }
+        
+        .indicator-item strong {
+            display: block;
+            font-size: 10.5pt;
+            color: #2c3e50;
+        }
+        
+        .indicator-item span {
+            font-size: 9pt;
+            color: #555;
+        }
+        
+        /* Légende des couleurs */
+        .color-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 12px 0;
+            padding: 8px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .color-box {
+            width: 20px;
+            height: 20px;
+            border: 1px solid #333;
+        }
+        
+        /* Texte centré */
+        .text-center {
+            text-align: center;
+        }
+        
+        /* Badge */
+        .badge {
+            background-color: #e67e22;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 9pt;
+            font-weight: bold;
+            display: inline-block;
+        }
+        
+        /* Simulation de panneaux */
+        .panneau-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .panneau-card {
+            border: 2px solid #333;
+            border-radius: 5px;
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .panneau-danger {
+            background-color: #FFE55C;
+            border-color: #FF0000;
+        }
+        
+        .panneau-interdiction {
+            background-color: white;
+            border-color: #FF0000;
+            color: #FF0000;
+        }
+        
+        .panneau-obligation {
+            background-color: #0000FF;
+            color: white;
+        }
+        
+        .panneau-info {
+            background-color: #0000FF;
+            color: white;
+        }
+        
+        /* Code couleur sol */
+        .color-sample {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            margin-right: 5px;
+            border: 1px solid #333;
+        }
+    </style>
+</head>
+<body>
+    <!-- En-tête du document -->
+    <div class="document-header">
+        <div>
+            <div class="document-title">PISTE 16</div>
+            <div class="document-subtitle">Le Code de la Piste</div>
+        </div>
+        <div class="document-meta">
+            <div>Version 1.0</div>
+            <div>Mars 2026</div>
+            <div>CDG - CSCA</div>
+        </div>
+    </div>
+    
+    <!-- Tagline -->
+    <div class="tagline">
+        UN LANGAGE VISUEL UNIVERSEL POUR TOUTES LES PLATEFORMES
+    </div>
+    
+    <!-- Description -->
+    <p style="font-size: 11pt; font-weight: bold; text-align: center; margin: 20px 0;">
+        Langage visuel universel pour toutes les plateformes françaises.
+    </p>
+    
+    <p>
+        Aujourd'hui, chaque plateforme aéroportuaire, voire chaque zone, utilise sa propre signalétique. Un conducteur intérimaire ou en mobilité 
+        entre aéroports doit sans cesse réapprendre des codes différents. Là où le code de la route permet à un conducteur français de comprendre 
+        immédiatement la signalisation à Rome, Barcelone ou Berlin, un conducteur de PUSH formé à CDG se retrouve désorienté en arrivant à Marseille 
+        ou Nice. Cette absence de standard national est source de confusion, d'erreurs et, in fine, d'accidents. La seizième piste propose de 
+        créer un langage visuel universel pour toutes les plateformes françaises : le Code de la piste.
+    </p>
+    
+    <!-- ======================================================================== -->
+    <!-- 1. PROBLÉMATIQUE ADRESSÉE -->
+    <!-- ======================================================================== -->
+    <h1>1. PROBLÉMATIQUE ADRESSÉE</h1>
+    
+    <p><strong>Constat fondamental :</strong> Aujourd'hui, chaque plateforme aéroportuaire, chaque entreprise, voire chaque zone, utilise sa <strong>propre signalétique</strong>.</p>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Problème</th>
+                <th>Conséquence</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Panneaux différents selon les aéroports</td><td>Un conducteur intérimaire ou en mobilité doit réapprendre les codes</td></tr>
+            <tr><td>Absence de standard national</td><td>Chaque plateforme réinvente sa signalétique</td></tr>
+            <tr><td>Langage trop technique</td><td>Incompréhensible pour les nouveaux embauchés</td></tr>
+            <tr><td>Trop de textes, pas assez de pictogrammes</td><td>Temps de lecture trop long</td></tr>
+            <tr><td>Signalétique statique</td><td>Ne s'adapte pas aux conditions changeantes</td></tr>
+        </tbody>
+    </table>
+    
+    <div class="important">
+        <strong>Paradoxe :</strong> Sur la route, un conducteur français arrive à Rome, Barcelone ou Berlin et <strong>comprend immédiatement</strong> la signalétique (stop, priorité, sens interdit, stationnement).
+        <p><strong>Sur les pistes des aéroports français, ce n'est pas le cas.</strong></p>
+    </div>
+    
+    <div class="hypothese">
+        <strong>Notre hypothèse :</strong> Créer un <strong>CODE DE LA PISTE</strong> inspiré du code de la route, avec des <strong>panneaux et marquages universels, normalisés, intuitifs</strong>, applicables sur <strong>toutes les plateformes françaises</strong>.
+        <p>Un conducteur formé à CDG devient <strong>immédiatement opérationnel</strong> à Marseille, Nice, Lyon ou Orly.</p>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 2. CARTOGRAPHIE DES RISQUES (MISE À JOUR POUR PISTE 16) -->
+    <!-- ======================================================================== -->
+    <h1>2. CARTOGRAPHIE DES RISQUES</h1>
+    
+    <!-- Légende des couleurs -->
+    <div class="color-legend">
+        <div class="legend-item"><div class="color-box" style="background-color: #FF0000;"></div> <strong>Rouge</strong> - Risque très élevé (intolérable)</div>
+        <div class="legend-item"><div class="color-box" style="background-color: #FFA500;"></div> <strong>Orange</strong> - Risque élevé (actions nécessaires)</div>
+        <div class="legend-item"><div class="color-box" style="background-color: #FFFF00;"></div> <strong>Jaune</strong> - Risque moyen (tolérable)</div>
+        <div class="legend-item"><div class="color-box" style="background-color: #008000;"></div> <strong>Vert</strong> - Risque faible (acceptable)</div>
+    </div>
+    
+    <table class="risk-table">
+        <thead>
+            <tr>
+                <th>Réf.</th>
+                <th>Danger</th>
+                <th>Causes</th>
+                <th>Conséquences</th>
+                <th>Gravité</th>
+                <th>Probabilité</th>
+                <th>Criticité</th>
+                <th>Barrières Piste 16</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>SIG 01.1</strong></td>
+                <td>Signalétique hétérogène entre aéroports</td>
+                <td>Absence de standard national, chaque plateforme a ses propres codes</td>
+                <td>Confusion des conducteurs en mobilité, erreurs de conduite</td>
+                <td>3 (Majeure)</td>
+                <td>A (Fréquent)</td>
+                <td class="risk-red">ROUGE</td>
+                <td>Code de la piste national, uniformisation des panneaux et marquages</td>
+            </tr>
+            <tr>
+                <td><strong>SIG 01.2</strong></td>
+                <td>Méconnaissance des lieux par les conducteurs intérimaires</td>
+                <td>Pas de repères communs, signalétique locale non intuitive</td>
+                <td>Erreurs de cheminement, incursions, accidents</td>
+                <td>3 (Majeure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-red">ROUGE</td>
+                <td>Pictogrammes universels, compréhension immédiate sans formation locale</td>
+            </tr>
+            <tr>
+                <td><strong>SIG 01.3</strong></td>
+                <td>Signalétique trop textuelle</td>
+                <td>Panneaux avec textes longs, pas de pictogrammes</td>
+                <td>Temps de lecture trop long, incompréhension des non-francophones</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Pictogrammes universels, texte secondaire, compréhension < 1 seconde</td>
+            </tr>
+            <tr>
+                <td><strong>SIG 02.1</strong></td>
+                <td>Signalétique statique inadaptée aux conditions changeantes</td>
+                <td>Panneaux fixes, ne tiennent pas compte du trafic ou de la météo</td>
+                <td>Informations non pertinentes, risques ignorés</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Balises lumineuses dynamiques, panneaux à messages variables</td>
+            </tr>
+            <tr>
+                <td><strong>SIG 02.2</strong></td>
+                <td>Visibilité réduite la nuit ou par mauvais temps</td>
+                <td>Signalétique non rétroéclairée, absence de balisage lumineux</td>
+                <td>Non-perception des dangers, accidents</td>
+                <td>3 (Majeure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Balisage LED au sol, panneaux rétroéclairés, guidage nocturne</td>
+            </tr>
+            <tr>
+                <td><strong>SIG 03.1</strong></td>
+                <td>Absence de signalétique temporaire pour zones de chantier</td>
+                <td>Pas de kit standardisé, signalisation improvisée</td>
+                <td>Risques pour les conducteurs et les équipes de maintenance</td>
+                <td>2 (Mineure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Kit "intervention rapide" avec cônes, panneaux aimantés, balises LED</td>
+            </tr>
+            <tr>
+                <td><strong>INF 01.1</strong></td>
+                <td>Confusion sur les zones de stationnement avion</td>
+                <td>Marquages au sol différents selon les aéroports</td>
+                <td>Erreurs de positionnement, dommages aux avions</td>
+                <td>3 (Majeure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Marquage universel "🛩️ + ⏹️" pour positionnement avion</td>
+            </tr>
+            <tr>
+                <td><strong>INF 01.2</strong></td>
+                <td>Confusion sur les zones de co-activité piétons/engins</td>
+                <td>Absence de signalétique spécifique, zones non matérialisées</td>
+                <td>Heurts de piétons, accidents</td>
+                <td>3 (Majeure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-red">ROUGE</td>
+                <td>Pictogramme "👤 + 🚛", cheminements piétons verts sécurisés</td>
+            </tr>
+            <tr>
+                <td><strong>ACC 01.1</strong></td>
+                <td>Accidents liés à la méconnaissance des lieux</td>
+                <td>Conducteurs intérimaires ou en mobilité non familiarisés</td>
+                <td>Collisions, dommages matériels et corporels</td>
+                <td>3 (Majeure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-red">ROUGE</td>
+                <td>Réduction ciblée de -50% grâce à l'uniformisation</td>
+            </tr>
+            <tr>
+                <td><strong>ACC 01.2</strong></td>
+                <td>Accidents en zone hotspot</td>
+                <td>Signalétique insuffisante, non-adaptée à la densité de trafic</td>
+                <td>Collisions, blessures</td>
+                <td>3 (Majeure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Balises dynamiques rouges en cas de densité critique</td>
+            </tr>
+            <tr>
+                <td><strong>ERG 01.1</strong></td>
+                <td>Stress lié à la navigation dans un environnement inconnu</td>
+                <td>Absence de repères clairs, signalétique non intuitive</td>
+                <td>Fatigue mentale, erreurs de jugement</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Signalétique rassurante, codes universels, réduction du stress</td>
+            </tr>
+            <tr>
+                <td><strong>ORG 01.1</strong></td>
+                <td>Hétérogénéité des standards entre entreprises</td>
+                <td>Chaque handler a ses propres procédures et signalétique</td>
+                <td>Difficultés de coordination, risques accrus</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Standards communs à toutes les entreprises sur toutes les plateformes</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <!-- Échelle de cotation -->
+    <h3>Échelle de cotation utilisée</h3>
+    
+    <div class="cotation-grid">
+        <div class="cotation-box">
+            <h4>Gravité</h4>
+            <ul>
+                <li><strong>1</strong> - Négligeable</li>
+                <li><strong>2</strong> - Mineure</li>
+                <li><strong>3</strong> - Majeure</li>
+                <li><strong>4</strong> - Catastrophique</li>
+            </ul>
+        </div>
+        <div class="cotation-box">
+            <h4>Probabilité</h4>
+            <ul>
+                <li><strong>A</strong> - Fréquent (quotidien)</li>
+                <li><strong>B</strong> - Occasionnel (hebdo/mensuel)</li>
+                <li><strong>C</strong> - Rare (annuel)</li>
+                <li><strong>D</strong> - Très rare (>1 an)</li>
+                <li><strong>E</strong> - Extrêmement rare (jamais observé)</li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 3. CONCEPT D'ENSEMBLE -->
+    <!-- ======================================================================== -->
+    <h1>3. CONCEPT D'ENSEMBLE</h1>
+    
+    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 20px 0;">
+        <div style="border: 2px solid #2c3e50; padding: 10px; text-align: center; background-color: #ecf0f1;">
+            <strong>1. PANNEAUX VERTICAUX</strong><br>
+            Danger, Priorité, Interdiction, Obligation, Information
+        </div>
+        <div style="border: 2px solid #2c3e50; padding: 10px; text-align: center; background-color: #ecf0f1;">
+            <strong>2. MARQUAGES AU SOL</strong><br>
+            Lignes, zébras, flèches, codes couleur par fonction
+        </div>
+        <div style="border: 2px solid #2c3e50; padding: 10px; text-align: center; background-color: #ecf0f1;">
+            <strong>3. BALISES LUMINEUSES</strong><br>
+            Signalisation dynamique, guidage nuit/intempéries
+        </div>
+        <div style="border: 2px solid #2c3e50; padding: 10px; text-align: center; background-color: #ecf0f1;">
+            <strong>4. SIGNALÉTIQUE TEMPORAIRE</strong><br>
+            Zones chantier, déviation, intervention rapide
+        </div>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 4. AXE 1 - PANNEAUX DE SIGNALISATION VERTICAUX -->
+    <!-- ======================================================================== -->
+    <h1>4. AXE 1 - PANNEAUX DE SIGNALISATION VERTICAUX</h1>
+    
+    <h2>4.1 Nomenclature et codes</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Famille</th>
+                <th>Forme</th>
+                <th>Couleur fond</th>
+                <th>Couleur bord/liseré</th>
+                <th>Exemples</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Danger</td><td>Triangle</td><td>Jaune</td><td>Rouge</td><td>Croisement avion, zone glissante, hotspot</td></tr>
+            <tr><td>Priorité</td><td>Losange</td><td>Blanc</td><td>Rouge</td><td>Cédez le passage, stop</td></tr>
+            <tr><td>Interdiction</td><td>Rond</td><td>Blanc</td><td>Rouge + barre</td><td>Sens interdit, vitesse limitée</td></tr>
+            <tr><td>Obligation</td><td>Rond</td><td>Bleu</td><td>Blanc</td><td>Direction obligatoire</td></tr>
+            <tr><td>Information</td><td>Carré</td><td>Bleu</td><td>Blanc</td><td>Parking avion, zone technique</td></tr>
+        </tbody>
+    </table>
+    
+    <h2>4.2 Panneaux spécifiques</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Pictogramme</th>
+                <th>Signification</th>
+                <th>Emplacement type</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>🛩️ + ⚠️</td><td>Attention : avion en circulation</td><td>Parking, taxiway</td></tr>
+            <tr><td>🛑 + 🅿️</td><td>Stop avant pénétration parking</td><td>Entrées zones stationnement</td></tr>
+            <tr><td>👤 + 🚛</td><td>Zone de co-activité piétons/engins</td><td>Zones catering, fret</td></tr>
+            <tr><td>⛽ + 🔥</td><td>Zone avitaillement - interdiction fumer</td><td>Postes carburant</td></tr>
+            <tr><td>🧊 + ⚠️</td><td>Zone dégivrage - sol glissant</td><td>Portes sensibles hiver</td></tr>
+            <tr><td>📏 + 5m</td><td>Distance de sécurité minimale</td><td>Zones denses</td></tr>
+        </tbody>
+    </table>
+    
+    <!-- ======================================================================== -->
+    <!-- 5. AXE 2 - MARQUAGES AU SOL -->
+    <!-- ======================================================================== -->
+    <h1>5. AXE 2 - MARQUAGES AU SOL</h1>
+    
+    <h2>5.1 Code couleur universel</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Couleur</th>
+                <th>Signification</th>
+                <th>Utilisation</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td><span class="color-sample" style="background-color: #FFFF00;"></span> 🟡 Jaune</td><td>Circulation engins</td><td>Voies principales, axes structurants</td></tr>
+            <tr><td><span class="color-sample" style="background-color: #FFFFFF; border: 1px solid #333;"></span> ⚪ Blanc</td><td>Stationnement / Attente</td><td>Zones parking avion, points d'attente</td></tr>
+            <tr><td><span class="color-sample" style="background-color: #0000FF;"></span> 🔵 Bleu</td><td>Équipements spécifiques</td><td>Zones catering, fret, technique</td></tr>
+            <tr><td><span class="color-sample" style="background-color: #00FF00;"></span> 🟢 Vert</td><td>Cheminements piétons sécurisés</td><td>Traversées protégées</td></tr>
+            <tr><td><span class="color-sample" style="background-color: #FF0000;"></span> 🔴 Rouge</td><td>Interdiction / Danger</td><td>Zones interdites, hotspots critiques</td></tr>
+        </tbody>
+    </table>
+    
+    <!-- ======================================================================== -->
+    <!-- 6. AXE 3 - BALISES LUMINEUSES -->
+    <!-- ======================================================================== -->
+    <h1>6. AXE 3 - BALISES LUMINEUSES</h1>
+    
+    <h2>6.2 Exemple : Hotspot dynamique</h2>
+    
+    <div style="border: 2px solid #2c3e50; padding: 15px; margin: 15px 0;">
+        <p><strong>SITUATION NORMALE (06h00 - 18h00)</strong></p>
+        <p style="font-size: 24pt;">🟡 🟡 🟡</p>
+        <p>Balises jaunes - Vigilance normale</p>
+        
+        <p><strong>SITUATION DENSE (VAGUE AF)</strong></p>
+        <p style="font-size: 24pt;">🔴 🔴 🔴</p>
+        <p>Balises rouges clignotantes - DANGER - Message : "RALENTISSEZ - DENSITÉ MAXIMALE"</p>
+        
+        <p><strong>SITUATION DÉGRADÉE (NUIT + PLUIE)</strong></p>
+        <p style="font-size: 24pt;">🔵 🔵 🔵</p>
+        <p>Balises bleues - Guidage renforcé - Message : "VISIBILITÉ RÉDUITE - SUIVEZ LES BALISES"</p>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 7. BUDGET -->
+    <!-- ======================================================================== -->
+    <h1>7. BUDGET</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Phase</th>
+                <th>Actions</th>
+                <th>Coût</th>
+                <th>Livrable</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>Phase 1 - Conception</strong></td><td>Groupe de travail national, benchmark, rédaction code, co-conception visuelle, consultation</td><td>45 k€</td><td>Référentiel version 1.0</td></tr>
+            <tr><td><strong>Phase 2 - Pilote CDG</strong></td><td>Zone pilote T2E, panneaux prototypes, marquages, balises, expérimentation 6 mois</td><td>100 k€</td><td>Retour d'expérience + ajustements</td></tr>
+            <tr><td><strong>Phase 3 - Déploiement CDG</strong></td><td>200 panneaux, marquages zones prioritaires, 20 balises, formation e-learning</td><td>385 k€</td><td>CDG 100% aux normes</td></tr>
+            <tr><td><strong>Phase 4 - Extension nationale</strong></td><td>Orly + 10 aéroports province, intégration certification, communication</td><td>780 k€</td><td>Tous aéroports français aux normes</td></tr>
+            <tr><td><strong>TOTAL 3 ANS</strong></td><td></td><td><strong>1,31 M€</strong></td><td></td></tr>
+        </tbody>
+    </table>
+    
+    <!-- ======================================================================== -->
+    <!-- 8. BÉNÉFICES ATTENDUS -->
+    <!-- ======================================================================== -->
+    <h1>8. BÉNÉFICES ATTENDUS</h1>
+    
+    <h2>8.1 Bénéfices sécurité</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Indicateur</th>
+                <th>Baseline</th>
+                <th>Cible M24</th>
+                <th>Cible M36</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Accidents liés à la méconnaissance des lieux</td><td>12/an</td><td>-30%</td><td>-50%</td></tr>
+            <tr><td>Accidents en zone hotspot</td><td>15/an</td><td>-25%</td><td>-40%</td></tr>
+            <tr><td>Accidents de nuit</td><td>8/an</td><td>-20%</td><td>-35%</td></tr>
+            <tr><td>Erreurs de cheminement (conducteurs extérieurs)</td><td>30/an</td><td>-50%</td><td>-70%</td></tr>
+        </tbody>
+    </table>
+    
+    <h2>8.2 Bénéfices opérationnels</h2>
+    
+    <ul>
+        <li><strong>Fluidité du trafic :</strong> Moins d'hésitations, moins de blocages</li>
+        <li><strong>Temps de roulage :</strong> Réduction estimée -10%</li>
+        <li><strong>Intégration des intérimaires :</strong> Opérationnels en 1 jour au lieu de 3</li>
+        <li><strong>Mobilité inter-entreprises :</strong> Facilitée, sécurisée</li>
+    </ul>
+    
+    <!-- ======================================================================== -->
+    <!-- 9. RETOURS D'EXPÉRIENCE -->
+    <!-- ======================================================================== -->
+    <h1>9. RETOURS D'EXPÉRIENCE</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Aéroport</th>
+                <th>Réalisations</th>
+                <th>Résultats</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>Francfort (FRA)</strong></td><td>Signalétique unifiée, code couleur par fonction, balises dynamiques</td><td>-22% incidents, 94% conducteurs rassurés, déploiement 2,1 M€</td></tr>
+            <tr><td><strong>Singapour (Changi)</strong></td><td>Signalétique "silencieuse", pictogrammes, codes couleurs métro</td><td>0 accident signalétique depuis 2022, temps intégration /2</td></tr>
+        </tbody>
+    </table>
+    
+    <!-- ======================================================================== -->
+    <!-- 10. INDICATEURS DE SUIVI -->
+    <!-- ======================================================================== -->
+    <h1>10. INDICATEURS DE SUIVI</h1>
+    
+    <div class="indicator-box">
+        <div class="indicator-item">
+            <strong>Accidents méconnaissance lieux</strong>
+            <span>Baseline: 12/an | Cible M24: -30% | M36: -50%</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Erreurs cheminement conducteurs extérieurs</strong>
+            <span>Baseline: 30/an | Cible M24: -50% | M36: -70%</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Temps intégration intérimaires</strong>
+            <span>Baseline: 3 jours | Cible: 1 jour</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Temps de roulage moyen</strong>
+            <span>Cible: -10%</span>
+        </div>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 11. EN RÉSUMÉ -->
+    <!-- ======================================================================== -->
+    <h1>11. EN RÉSUMÉ</h1>
+    
+    <div class="encadre">
+        <p style="font-size: 12pt; font-style: italic;">
+            Le Code de la piste est la piste la plus structurante et la plus durable. Ce n'est pas un équipement qu'on installe et qu'on oublie. 
+            C'est une <strong>norme</strong> qui s'inscrit dans la durée. C'est un <strong>langage commun</strong> qui facilite la mobilité et la sécurité. 
+            C'est un <strong>standard national</strong> qui fait rayonner l'excellence française.
+        </p>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 12. CE QUE NOUS PROPOSONS CONCRÈTEMENT -->
+    <!-- ======================================================================== -->
+    <h1>12. CE QUE NOUS PROPOSONS CONCRÈTEMENT</h1>
+    
+    <ol style="font-weight: bold; font-size: 12pt;">
+        <li>Lancer un groupe de travail national avec ADP, DSAC, CSAE</li>
+        <li>Créer 20 panneaux universels avec pictogrammes normalisés</li>
+        <li>Tester sur une zone pilote à CDG (Parking T2E)</li>
+        <li>Préparer un déploiement national sur 3 ans</li>
+    </ol>
+    
+    <!-- Pied de page -->
+    <div class="footer">
+        <p>PISTE 16 - Le Code de la Piste | Version 1.0 | Mars 2026 | CDG - CSCA</p>
+    </div>
+</body>
+</html>

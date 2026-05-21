@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PISTE 21 - Le Parrainage d'Engin</title>
+    <style>
+        /* Styles généraux pour l'impression */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            line-height: 1.5;
+            color: #333;
+            background-color: white;
+            font-size: 10.5pt;
+            margin: 0;
+            padding: 15px;
+        }
+        
+        /* Styles pour l'impression PDF */
+        @media print {
+            body {
+                padding: 0.5cm;
+            }
+            .page-break {
+                page-break-before: always;
+            }
+            .no-break {
+                page-break-inside: avoid;
+            }
+            h1, h2, h3, h4 {
+                page-break-after: avoid;
+            }
+            table {
+                page-break-inside: avoid;
+            }
+        }
+        
+        /* En-tête du document */
+        .document-header {
+            border-bottom: 3px solid #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+        
+        .document-title {
+            font-size: 24pt;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .document-subtitle {
+            font-size: 14pt;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+        
+        .document-meta {
+            text-align: right;
+            color: #7f8c8d;
+            font-size: 10pt;
+        }
+        
+        .tagline {
+            background-color: #ecf0f1;
+            padding: 8px 15px;
+            border-left: 5px solid #e67e22;
+            margin-bottom: 20px;
+            font-weight: bold;
+            font-size: 12pt;
+        }
+        
+        /* Typographie */
+        h1 {
+            font-size: 18pt;
+            color: #2c3e50;
+            margin: 25px 0 10px 0;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #bdc3c7;
+        }
+        
+        h2 {
+            font-size: 14pt;
+            color: #34495e;
+            margin: 20px 0 10px 0;
+            padding-left: 5px;
+            border-left: 4px solid #e67e22;
+        }
+        
+        h3 {
+            font-size: 12pt;
+            color: #555;
+            margin: 15px 0 8px 0;
+            font-weight: bold;
+        }
+        
+        h4 {
+            font-size: 11pt;
+            color: #666;
+            margin: 12px 0 5px 0;
+            font-weight: bold;
+        }
+        
+        p {
+            margin-bottom: 8px;
+            text-align: justify;
+        }
+        
+        ul, ol {
+            margin: 8px 0 12px 25px;
+        }
+        
+        li {
+            margin-bottom: 3px;
+        }
+        
+        /* Boîtes d'information */
+        .encadre {
+            border: 1px solid #bdc3c7;
+            padding: 12px;
+            background-color: #f9f9f9;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        
+        .important {
+            background-color: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 8px 12px;
+            margin: 12px 0;
+        }
+        
+        .hypothese {
+            background-color: #d4edda;
+            border-left: 5px solid #28a745;
+            padding: 8px 12px;
+            margin: 12px 0;
+            font-style: italic;
+        }
+        
+        /* Tableaux */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0 18px 0;
+            font-size: 9.5pt;
+        }
+        
+        th {
+            background-color: #2c3e50;
+            color: white;
+            font-weight: bold;
+            padding: 6px 4px;
+            text-align: left;
+            border: 1px solid #34495e;
+        }
+        
+        td {
+            padding: 5px 4px;
+            border: 1px solid #ddd;
+            vertical-align: top;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        /* Tableau de cartographie des risques avec couleurs */
+        .risk-table td:nth-child(7) {
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-orange {
+            background-color: #FFA500 !important;
+            color: black;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-red {
+            background-color: #FF0000 !important;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-yellow {
+            background-color: #FFFF00 !important;
+            color: black;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-green {
+            background-color: #008000 !important;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        /* Grille de cotation */
+        .cotation-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 12px 0;
+        }
+        
+        .cotation-box {
+            border: 1px solid #ddd;
+            padding: 8px;
+            background-color: #f9f9f9;
+        }
+        
+        .cotation-box h4 {
+            background-color: #2c3e50;
+            color: white;
+            padding: 4px 8px;
+            margin: -8px -8px 8px -8px;
+            font-size: 11pt;
+        }
+        
+        /* Pied de page */
+        .footer {
+            margin-top: 25px;
+            padding-top: 8px;
+            border-top: 1px solid #bdc3c7;
+            font-size: 9pt;
+            color: #7f8c8d;
+            text-align: center;
+        }
+        
+        .page-break {
+            page-break-before: always;
+        }
+        
+        /* Indicateurs */
+        .indicator-box {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 12px 0;
+        }
+        
+        .indicator-item {
+            flex: 1 1 200px;
+            background-color: #ecf0f1;
+            padding: 8px;
+            border-radius: 5px;
+            border-left: 4px solid #e67e22;
+        }
+        
+        .indicator-item strong {
+            display: block;
+            font-size: 10.5pt;
+            color: #2c3e50;
+        }
+        
+        .indicator-item span {
+            font-size: 9pt;
+            color: #555;
+        }
+        
+        /* Légende des couleurs */
+        .color-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 12px 0;
+            padding: 8px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .color-box {
+            width: 20px;
+            height: 20px;
+            border: 1px solid #333;
+        }
+        
+        /* Texte centré */
+        .text-center {
+            text-align: center;
+        }
+        
+        /* Badge */
+        .badge {
+            background-color: #e67e22;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 9pt;
+            font-weight: bold;
+            display: inline-block;
+        }
+        
+        /* Simulation d'adhésif de porte */
+        .adhesif {
+            border: 2px solid #2c3e50;
+            border-radius: 5px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+        }
+        
+        .adhesif-title {
+            font-size: 16pt;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .adhesif-name {
+            font-size: 24pt;
+            font-weight: bold;
+            color: #e67e22;
+            margin: 10px 0;
+        }
+        
+        .adhesif-stars {
+            font-size: 18pt;
+            color: #f1c40f;
+        }
+        
+        /* Grille d'évaluation concours */
+        .concours-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .concours-item {
+            border: 1px solid #ddd;
+            padding: 8px;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <!-- En-tête du document -->
+    <div class="document-header">
+        <div>
+            <div class="document-title">PISTE 21</div>
+            <div class="document-subtitle">Le Parrainage d'Engin</div>
+        </div>
+        <div class="document-meta">
+            <div>Version 1.0</div>
+            <div>Mars 2026</div>
+            <div>CDG - CSCA</div>
+        </div>
+    </div>
+    
+    <!-- Tagline -->
+    <div class="tagline">
+        ICI COMMENCE LE TRAVAIL DE THOMAS
+    </div>
+    
+    <!-- Description -->
+    <p style="font-size: 11pt; font-weight: bold; text-align: center; margin: 20px 0;">
+        Chaque engin porte le prénom de son conducteur référent.
+    </p>
+    
+    <p>
+        Les engins de piste sont aujourd'hui des outils anonymes et interchangeables. Un conducteur de poids lourd a son camion, parfois avec son 
+        prénom sur la cabine. Un conducteur de bus a son véhicule, avec une affectation durable. Un agriculteur a son tracteur, parfois depuis vingt ans. 
+        Un conducteur de PUSH à CDG, lui, n'a rien. Il monte chaque jour dans une machine différente, sans aucun lien avec elle. Cette absence 
+        d'appropriation a des conséquences directes : "Ce n'est pas le mien, je m'en fous", personne ne sait qui a conduit quoi, l'état de propreté 
+        et d'entretien est variable, et les dégradations restent anonymes. La vingt et unième piste propose de créer un lien affectif et responsable 
+        entre un conducteur et "son" engin : le parrainage.
+    </p>
+    
+    <!-- ======================================================================== -->
+    <!-- 1. PROBLÉMATIQUE ADRESSÉE -->
+    <!-- ======================================================================== -->
+    <h1>1. PROBLÉMATIQUE ADRESSÉE</h1>
+    
+    <p><strong>Constat fondamental :</strong> Les engins de piste sont aujourd'hui des <strong>outils anonymes et interchangeables</strong>.</p>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Situation actuelle</th>
+                <th>Conséquence</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Pas de lien entre le conducteur et l'engin</td><td>"C'est pas le mien, je m'en fous"</td></tr>
+            <tr><td>Aucune traçabilité émotionnelle</td><td>Personne ne sait qui conduisait quoi</td></tr>
+            <tr><td>État variable</td><td>Propreté, entretien, petits défauts</td></tr>
+            <tr><td>Rotation permanente</td><td>Pas de responsabilité individuelle</td></tr>
+            <tr><td>Anonymat des dégradations</td><td>"C'était pas moi, c'était l'autre"</td></tr>
+        </tbody>
+    </table>
+    
+    <div class="important">
+        <strong>Paradoxe :</strong>
+        <ul>
+            <li>Un conducteur de poids lourd a <strong>SON camion</strong> (parfois même prénom sur la cabine).</li>
+            <li>Un conducteur de bus a <strong>SON véhicule</strong> (affectation durable).</li>
+            <li>Un agriculteur a <strong>SON tracteur</strong> (parfois depuis 20 ans).</li>
+            <li><strong>Un conducteur de PUSH à CDG n'a RIEN.</strong></li>
+        </ul>
+    </div>
+    
+    <div class="hypothese">
+        <strong>Notre hypothèse :</strong> L'appropriation est un puissant levier de responsabilisation.
+        <ul>
+            <li>On ne maltraite pas "son" outil.</li>
+            <li>On est fier de montrer "son" engin.</li>
+            <li>On prend soin de ce qui nous appartient (même symboliquement).</li>
+        </ul>
+        <p><strong>Le parrainage d'engin, c'est créer un lien affectif et responsable entre un conducteur et "son" engin.</strong></p>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 2. CARTOGRAPHIE DES RISQUES (MISE À JOUR POUR PISTE 21) -->
+    <!-- ======================================================================== -->
+    <h1>2. CARTOGRAPHIE DES RISQUES</h1>
+    
+    <!-- Légende des couleurs -->
+    <div class="color-legend">
+        <div class="legend-item"><div class="color-box" style="background-color: #FF0000;"></div> <strong>Rouge</strong> - Risque très élevé (intolérable)</div>
+        <div class="legend-item"><div class="color-box" style="background-color: #FFA500;"></div> <strong>Orange</strong> - Risque élevé (actions nécessaires)</div>
+        <div class="legend-item"><div class="color-box" style="background-color: #FFFF00;"></div> <strong>Jaune</strong> - Risque moyen (tolérable)</div>
+        <div class="legend-item"><div class="color-box" style="background-color: #008000;"></div> <strong>Vert</strong> - Risque faible (acceptable)</div>
+    </div>
+    
+    <table class="risk-table">
+        <thead>
+            <tr>
+                <th>Réf.</th>
+                <th>Danger</th>
+                <th>Causes</th>
+                <th>Conséquences</th>
+                <th>Gravité</th>
+                <th>Probabilité</th>
+                <th>Criticité</th>
+                <th>Barrières Piste 21</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>APP 01.1</strong></td>
+                <td>Absence d'appropriation des engins</td>
+                <td>Engins anonymes, interchangeables, pas de lien conducteur-machine</td>
+                <td>Négligence, manque de soin, dégradations</td>
+                <td>2 (Mineure)</td>
+                <td>A (Fréquent)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Parrainage nominatif, prénom sur l'engin, lien affectif</td>
+            </tr>
+            <tr>
+                <td><strong>APP 01.2</strong></td>
+                <td>Non-responsabilisation individuelle</td>
+                <td>Rotation permanente, absence de traçabilité</td>
+                <td>Personne ne se sent responsable de l'état des engins</td>
+                <td>2 (Mineure)</td>
+                <td>A (Fréquent)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Responsabilité nominative, charte du parrain, engagement</td>
+            </tr>
+            <tr>
+                <td><strong>APP 01.3</strong></td>
+                <td>Anonymat des dégradations</td>
+                <td>Pas de suivi individuel, "ce n'était pas moi"</td>
+                <td>Impossibilité de sanctionner, répétition des dégradations</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Traçabilité par parrain, signalement des anomalies</td>
+            </tr>
+            <tr>
+                <td><strong>APP 02.1</strong></td>
+                <td>Mauvaise maintenance préventive</td>
+                <td>Petites anomalies non remontées, absence de vigilance</td>
+                <td>Pannes imprévues, immobilisations, accidents</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Remontée systématique des anomalies par le parrain (+60%)</td>
+            </tr>
+            <tr>
+                <td><strong>APP 02.2</strong></td>
+                <td>Dégradations intérieures fréquentes</td>
+                <td>Sièges sales, planchers, tableaux de bord négligés</td>
+                <td>Inconfort, image dégradée, coûts de nettoyage</td>
+                <td>1 (Négligeable)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-green">VERT</td>
+                <td>Responsabilisation sur la propreté, concours, note /5</td>
+            </tr>
+            <tr>
+                <td><strong>APP 03.1</strong></td>
+                <td>Absence de fierté professionnelle</td>
+                <td>Outils anonymes, pas de reconnaissance du travail</td>
+                <td>Démotivation, turnover</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Fierté de "son" engin, reconnaissance par les pairs</td>
+            </tr>
+            <tr>
+                <td><strong>APP 03.2</strong></td>
+                <td>Manque de transmission des spécificités</td>
+                <td>Conducteurs occasionnels non informés des particularités</td>
+                <td>Mauvaise utilisation, usure prématurée</td>
+                <td>1 (Négligeable)</td>
+                <td>C (Rare)</td>
+                <td class="risk-green">VERT</td>
+                <td>Le parrain forme les utilisateurs occasionnels</td>
+            </tr>
+            <tr>
+                <td><strong>APP 04.1</strong></td>
+                <td>Iniquité entre conducteurs</td>
+                <td>Certains ont un engin attitré, d'autres non</td>
+                <td>Sentiment d'injustice, tensions</td>
+                <td>1 (Négligeable)</td>
+                <td>C (Rare)</td>
+                <td class="risk-green">VERT</td>
+                <td>Rotation possible, valorisation des "suppléants"</td>
+            </tr>
+            <tr>
+                <td><strong>MAI 01.1</strong></td>
+                <td>Détection tardive des anomalies</td>
+                <td>Absence de vigilance quotidienne, non-remontée</td>
+                <td>Pannes graves, immobilisations longues</td>
+                <td>2 (Mineure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Signalements précoces, maintenance anticipée</td>
+            </tr>
+            <tr>
+                <td><strong>COU 01.1</strong></td>
+                <td>Absence de culture de la propreté</td>
+                <td>Engins sales, entretien négligé</td>
+                <td>Image dégradée, inconfort, usure</td>
+                <td>1 (Négligeable)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-green">VERT</td>
+                <td>Concours de l'engin le plus propre, émulation positive</td>
+            </tr>
+            <tr>
+                <td><strong>ACC 01.1</strong></td>
+                <td>Accidents liés au mauvais état des engins</td>
+                <td>Dégradations non signalées, maintenance insuffisante</td>
+                <td>Blessures, dommages matériels</td>
+                <td>3 (Majeure)</td>
+                <td>D (Très rare)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Détection précoce des anomalies, réduction des dégradations (-35%)</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <!-- Échelle de cotation -->
+    <h3>Échelle de cotation utilisée</h3>
+    
+    <div class="cotation-grid">
+        <div class="cotation-box">
+            <h4>Gravité</h4>
+            <ul>
+                <li><strong>1</strong> - Négligeable</li>
+                <li><strong>2</strong> - Mineure</li>
+                <li><strong>3</strong> - Majeure</li>
+                <li><strong>4</strong> - Catastrophique</li>
+            </ul>
+        </div>
+        <div class="cotation-box">
+            <h4>Probabilité</h4>
+            <ul>
+                <li><strong>A</strong> - Fréquent (quotidien)</li>
+                <li><strong>B</strong> - Occasionnel (hebdo/mensuel)</li>
+                <li><strong>C</strong> - Rare (annuel)</li>
+                <li><strong>D</strong> - Très rare (>1 an)</li>
+                <li><strong>E</strong> - Extrêmement rare (jamais observé)</li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 3. LE PARRAINAGE - MODALITÉS -->
+    <!-- ======================================================================== -->
+    <h1>3. LE PARRAINAGE - MODALITÉS</h1>
+    
+    <h2>3.1 Critères d'attribution</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Critère</th>
+                <th>Condition</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Volontariat</td><td>Le conducteur doit être volontaire</td></tr>
+            <tr><td>Ancienneté</td><td>> 1 an sur la catégorie d'engin</td></tr>
+            <tr><td>Discipline</td><td>0 accident responsable sur 12 mois</td></tr>
+            <tr><td>Permis à points</td><td>Solde > 10/12 (si dispositif actif)</td></tr>
+            <tr><td>Engagement</td><td>Signature d'une charte du parrain</td></tr>
+        </tbody>
+    </table>
+    
+    <h2>3.2 Charte du parrain</h2>
+    
+    <div style="border: 2px solid #2c3e50; padding: 15px; margin: 15px 0;">
+        <h3 style="text-align: center;">CHARTE DU PARRAIN D'ENGIN</h3>
+        <p>En tant que parrain de l'engin n°247, je m'engage à :</p>
+        <p><strong>1. MAINTENIR MON ENGIN PROPRE</strong><br>• Nettoyage intérieur hebdomadaire<br>• Nettoyage extérieur mensuel<br>• Signalement des dégradations</p>
+        <p><strong>2. ÊTRE EXEMPLAIRE AU VOLANT</strong><br>• Respect scrupuleux des règles<br>• Conduite apaisée et courtoise<br>• Zéro accident</p>
+        <p><strong>3. TRANSMETTRE AUX AUTRES</strong><br>• Expliquer les spécificités de l'engin<br>• Partager les bonnes pratiques<br>• Accueillir les utilisateurs occasionnels</p>
+        <p><strong>4. ÊTRE FIER DE MON ENGIN</strong><br>• En prendre soin comme du mien<br>• Le représenter avec fierté<br>• Participer aux concours de propreté</p>
+        <p style="text-align: right;">Fait à CDG, le ___________<br>Signature conducteur : ___________  Signature manager : ___________</p>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 4. LA SIGNALÉTIQUE DE PARRAINAGE -->
+    <!-- ======================================================================== -->
+    <h1>4. LA SIGNALÉTIQUE DE PARRAINAGE</h1>
+    
+    <div class="adhesif">
+        <div class="adhesif-title">ICI COMMENCE LE TRAVAIL DE</div>
+        <div class="adhesif-name">◇ THOMAS D. ◇</div>
+        <div class="adhesif-stars">⭐⭐⭐⭐⭐ 4,8/5 - PROPRE</div>
+        <div>Parrain depuis 15/03/2026</div>
+    </div>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Support</th>
+                <th>Format</th>
+                <th>Emplacement</th>
+                <th>Coût unitaire</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Adhésif de porte</td><td>30x15 cm</td><td>Portière conducteur</td><td>15 €</td></tr>
+            <tr><td>Plaque tableau de bord</td><td>10x5 cm</td><td>Tableau de bord</td><td>12 €</td></tr>
+            <tr><td>Housse de siège personnalisée</td><td>Universelle</td><td>Siège conducteur</td><td>80 €</td></tr>
+        </tbody>
+    </table>
+    
+    <!-- ======================================================================== -->
+    <!-- 5. LE CONCOURS DE L'ENGIN LE PLUS PROPRE -->
+    <!-- ======================================================================== -->
+    <h1>5. LE CONCOURS DE L'ENGIN LE PLUS PROPRE</h1>
+    
+    <h2>5.2 Grille d'évaluation</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Critère</th>
+                <th>Pondération</th>
+                <th>Points</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td colspan="3"><strong>Propreté intérieure (25%)</strong></td></tr>
+            <tr><td>• Siège propre</td><td>5</td><td>/5</td></tr>
+            <tr><td>• Plancher balayé</td><td>5</td><td>/5</td></tr>
+            <tr><td>• Vitres sans traces</td><td>5</td><td>/5</td></tr>
+            <tr><td>• Tableau de bord rangé</td><td>5</td><td>/5</td></tr>
+            <tr><td>• Pas d'odeur</td><td>5</td><td>/5</td></tr>
+            <tr><td colspan="3"><strong>Propreté extérieure (25%)</strong></td></tr>
+            <tr><td>• Carrosserie lavée</td><td>10</td><td>/10</td></tr>
+            <tr><td>• Vitres propres</td><td>5</td><td>/5</td></tr>
+            <tr><td>• Pneus / jantes</td><td>5</td><td>/5</td></tr>
+            <tr><td>• Phares / feux</td><td>5</td><td>/5</td></tr>
+            <tr><td colspan="3"><strong>État général (30%)</strong></td></tr>
+            <tr><td>• Pas de dégradation</td><td>10</td><td>/10</td></tr>
+            <tr><td>• Petites réparations effectuées</td><td>10</td><td>/10</td></tr>
+            <tr><td>• Signalements traités</td><td>10</td><td>/10</td></tr>
+            <tr><td colspan="3"><strong>Détails / Fierté (20%)</strong></td></tr>
+            <tr><td>• Personnalisation soignée</td><td>10</td><td>/10</td></tr>
+            <tr><td>• Fierté du parrain</td><td>10</td><td>/10</td></tr>
+            <tr><td><strong>TOTAL</strong></td><td><strong>100%</strong></td><td><strong>/100</strong></td></tr>
+        </tbody>
+    </table>
+    
+    <h2>5.3 Récompenses</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Classement</th>
+                <th>Récompense</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>🥇 1er prix</td><td>Trophée + 300 € + Place de parking premium (1 mois)</td></tr>
+            <tr><td>🥈 2e prix</td><td>150 € + Kit de nettoyage premium</td></tr>
+            <tr><td>🥉 3e prix</td><td>100 € + Produits d'entretien</td></tr>
+            <tr><td>Prix spécial du jury</td><td>100 € + Visibilité</td></tr>
+        </tbody>
+    </table>
+    
+    <p><strong>Coût par concours :</strong> 1 500 € (2 concours / an = 3 000 €)</p>
+    
+    <!-- ======================================================================== -->
+    <!-- 6. BUDGET -->
+    <!-- ======================================================================== -->
+    <h1>6. BUDGET</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Phase</th>
+                <th>Actions</th>
+                <th>Coût</th>
+                <th>Livrable</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>Phase 1 - Pilote</strong></td><td>20 engins, signalétique, formation, concours, évaluation</td><td>8 100 €</td><td>Retour d'expérience + impact mesuré</td></tr>
+            <tr><td><strong>Phase 2 - Déploiement CDG</strong></td><td>300 engins, communication, concours semestriel</td><td>21 500 €</td><td>300 engins parrainés</td></tr>
+            <tr><td><strong>Phase 3 - Généralisation</strong></td><td>1 000 engins, Orly, province, concours annuel</td><td>50 k€ + 3 k€/an</td><td>Dispositif pérenne</td></tr>
+            <tr><td><strong>TOTAL 3 ANS</strong></td><td></td><td><strong>79 600 €</strong></td><td></td></tr>
+        </tbody>
+    </table>
+    
+    <p><strong>Coût par engin parrainé :</strong> 30 € (signalétique + suivi)</p>
+    
+    <!-- ======================================================================== -->
+    <!-- 7. BÉNÉFICES ATTENDUS -->
+    <!-- ======================================================================== -->
+    <h1>7. BÉNÉFICES ATTENDUS</h1>
+    
+    <h2>7.1 Bénéfices mesurables</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Indicateur</th>
+                <th>Baseline</th>
+                <th>Cible M12</th>
+                <th>Cible M24</th>
+                <th>Cible M36</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Engins parrainés</td><td>0</td><td>100</td><td>500</td><td>1 000</td></tr>
+            <tr><td>Conducteurs volontaires</td><td>0</td><td>100</td><td>450</td><td>850</td></tr>
+            <tr><td>Propreté déclarée (note /5)</td><td>3,2</td><td>3,8</td><td>4,2</td><td>4,5</td></tr>
+            <tr><td>Dégradations constatées</td><td>12/an</td><td>-15%</td><td>-25%</td><td>-35%</td></tr>
+            <tr><td>Petites maintenances anticipées</td><td>-</td><td>+20%</td><td>+40%</td><td>+60%</td></tr>
+            <tr><td>Satisfaction conducteurs (fierté)</td><td>30%</td><td>50%</td><td>65%</td><td>75%</td></tr>
+        </tbody>
+    </table>
+    
+    <!-- ======================================================================== -->
+    <!-- 8. RETOURS D'EXPÉRIENCE -->
+    <!-- ======================================================================== -->
+    <h1>8. RETOURS D'EXPÉRIENCE</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Secteur</th>
+                <th>Réalisations</th>
+                <th>Résultats</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>Transport routier</strong></td><td>Affectation nominative camions, prénom sur cabine, concours "Truck Beauty"</td><td>-40% dégradations intérieures, -25% petits sinistres, fierté conducteurs</td></tr>
+            <tr><td><strong>Armée française</strong></td><td>Nom du chef de char sur l'engin, responsabilité collective équipage</td><td>Tradition, fierté, transmission, symbole > contrat</td></tr>
+            <tr><td><strong>Munich Airport - "My GSE"</strong></td><td>Pilote 50 engins, adhésifs nominatifs, housses siège</td><td>92% satisfaits, 0 engin dégradé en 6 mois</td></tr>
+        </tbody>
+    </table>
+    
+    <!-- ======================================================================== -->
+    <!-- 9. INDICATEURS DE SUIVI -->
+    <!-- ======================================================================== -->
+    <h1>9. INDICATEURS DE SUIVI</h1>
+    
+    <div class="indicator-box">
+        <div class="indicator-item">
+            <strong>Engins parrainés</strong>
+            <span>Cible M36: 1 000</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Dégradations constatées</strong>
+            <span>Baseline: 12/an | Cible M36: -35%</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Petites maintenances anticipées</strong>
+            <span>Baseline: - | Cible M36: +60%</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Propreté déclarée</strong>
+            <span>Baseline: 3,2/5 | Cible M36: 4,5/5</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Satisfaction (fierté)</strong>
+            <span>Baseline: 30% | Cible M36: 75%</span>
+        </div>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 10. EN RÉSUMÉ -->
+    <!-- ======================================================================== -->
+    <h1>10. EN RÉSUMÉ</h1>
+    
+    <div class="encadre">
+        <p style="font-size: 12pt; font-style: italic;">
+            Le parrainage d'engin est la piste la plus simple, la plus concrète, la plus visible. Ce n'est pas une révolution technologique. 
+            Ce n'est pas un investissement massif. Ce n'est pas une réforme organisationnelle complexe. C'est juste un prénom sur une porte. 
+            Mais ce prénom, c'est la reconnaissance que le travail a un visage. Que l'engin n'est pas une machine anonyme, mais l'outil d'un 
+            homme ou d'une femme. Que la propreté, l'entretien, la vigilance, ça n'est pas l'affaire de "quelqu'un", mais l'affaire de Thomas, 
+            de Sarah, de Karim.
+        </p>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 11. CE QUE NOUS PROPOSONS CONCRÈTEMENT -->
+    <!-- ======================================================================== -->
+    <h1>11. CE QUE NOUS PROPOSONS CONCRÈTEMENT</h1>
+    
+    <ol style="font-weight: bold; font-size: 12pt;">
+        <li>Lancer un pilote sur 20 engins avec des conducteurs volontaires</li>
+        <li>Concevoir une signalétique personnalisée (nom, date de parrainage)</li>
+        <li>Organiser le premier concours de l'engin le plus propre</li>
+        <li>Mesurer l'impact sur la propreté et les dégradations</li>
+    </ol>
+    
+    <!-- Pied de page -->
+    <div class="footer">
+        <p>PISTE 21 - Le Parrainage d'Engin | Version 1.0 | Mars 2026 | CDG - CSCA</p>
+
+    </div>
+</body>
+</html>

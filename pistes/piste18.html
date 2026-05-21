@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PISTE 18 - Le Miroir à Émotions</title>
+    <style>
+        /* Styles généraux pour l'impression */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            line-height: 1.5;
+            color: #333;
+            background-color: white;
+            font-size: 10.5pt;
+            margin: 0;
+            padding: 15px;
+        }
+        
+        /* Styles pour l'impression PDF */
+        @media print {
+            body {
+                padding: 0.5cm;
+            }
+            .page-break {
+                page-break-before: always;
+            }
+            .no-break {
+                page-break-inside: avoid;
+            }
+            h1, h2, h3, h4 {
+                page-break-after: avoid;
+            }
+            table {
+                page-break-inside: avoid;
+            }
+        }
+        
+        /* En-tête du document */
+        .document-header {
+            border-bottom: 3px solid #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+        
+        .document-title {
+            font-size: 24pt;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .document-subtitle {
+            font-size: 14pt;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+        
+        .document-meta {
+            text-align: right;
+            color: #7f8c8d;
+            font-size: 10pt;
+        }
+        
+        .tagline {
+            background-color: #ecf0f1;
+            padding: 8px 15px;
+            border-left: 5px solid #e67e22;
+            margin-bottom: 20px;
+            font-weight: bold;
+            font-size: 12pt;
+        }
+        
+        /* Typographie */
+        h1 {
+            font-size: 18pt;
+            color: #2c3e50;
+            margin: 25px 0 10px 0;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #bdc3c7;
+        }
+        
+        h2 {
+            font-size: 14pt;
+            color: #34495e;
+            margin: 20px 0 10px 0;
+            padding-left: 5px;
+            border-left: 4px solid #e67e22;
+        }
+        
+        h3 {
+            font-size: 12pt;
+            color: #555;
+            margin: 15px 0 8px 0;
+            font-weight: bold;
+        }
+        
+        h4 {
+            font-size: 11pt;
+            color: #666;
+            margin: 12px 0 5px 0;
+            font-weight: bold;
+        }
+        
+        p {
+            margin-bottom: 8px;
+            text-align: justify;
+        }
+        
+        ul, ol {
+            margin: 8px 0 12px 25px;
+        }
+        
+        li {
+            margin-bottom: 3px;
+        }
+        
+        /* Boîtes d'information */
+        .encadre {
+            border: 1px solid #bdc3c7;
+            padding: 12px;
+            background-color: #f9f9f9;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        
+        .important {
+            background-color: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 8px 12px;
+            margin: 12px 0;
+        }
+        
+        .hypothese {
+            background-color: #d4edda;
+            border-left: 5px solid #28a745;
+            padding: 8px 12px;
+            margin: 12px 0;
+            font-style: italic;
+        }
+        
+        /* Tableaux */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0 18px 0;
+            font-size: 9.5pt;
+        }
+        
+        th {
+            background-color: #2c3e50;
+            color: white;
+            font-weight: bold;
+            padding: 6px 4px;
+            text-align: left;
+            border: 1px solid #34495e;
+        }
+        
+        td {
+            padding: 5px 4px;
+            border: 1px solid #ddd;
+            vertical-align: top;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        /* Tableau de cartographie des risques avec couleurs */
+        .risk-table td:nth-child(7) {
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-orange {
+            background-color: #FFA500 !important;
+            color: black;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-red {
+            background-color: #FF0000 !important;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-yellow {
+            background-color: #FFFF00 !important;
+            color: black;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-green {
+            background-color: #008000 !important;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        /* Grille de cotation */
+        .cotation-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 12px 0;
+        }
+        
+        .cotation-box {
+            border: 1px solid #ddd;
+            padding: 8px;
+            background-color: #f9f9f9;
+        }
+        
+        .cotation-box h4 {
+            background-color: #2c3e50;
+            color: white;
+            padding: 4px 8px;
+            margin: -8px -8px 8px -8px;
+            font-size: 11pt;
+        }
+        
+        /* Pied de page */
+        .footer {
+            margin-top: 25px;
+            padding-top: 8px;
+            border-top: 1px solid #bdc3c7;
+            font-size: 9pt;
+            color: #7f8c8d;
+            text-align: center;
+        }
+        
+        .page-break {
+            page-break-before: always;
+        }
+        
+        /* Indicateurs */
+        .indicator-box {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 12px 0;
+        }
+        
+        .indicator-item {
+            flex: 1 1 200px;
+            background-color: #ecf0f1;
+            padding: 8px;
+            border-radius: 5px;
+            border-left: 4px solid #e67e22;
+        }
+        
+        .indicator-item strong {
+            display: block;
+            font-size: 10.5pt;
+            color: #2c3e50;
+        }
+        
+        .indicator-item span {
+            font-size: 9pt;
+            color: #555;
+        }
+        
+        /* Légende des couleurs */
+        .color-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 12px 0;
+            padding: 8px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .color-box {
+            width: 20px;
+            height: 20px;
+            border: 1px solid #333;
+        }
+        
+        /* Texte centré */
+        .text-center {
+            text-align: center;
+        }
+        
+        /* Badge */
+        .badge {
+            background-color: #e67e22;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 9pt;
+            font-weight: bold;
+            display: inline-block;
+        }
+        
+        /* Simulation de miroir */
+        .mirror-dialog {
+            border: 2px solid #3498db;
+            border-radius: 10px;
+            padding: 15px;
+            background-color: #f0f8ff;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .mirror-speaker {
+            color: #3498db;
+            font-weight: bold;
+        }
+        
+        .user-speaker {
+            color: #e67e22;
+            font-weight: bold;
+        }
+        
+        .emotion-indicator {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            font-size: 20px;
+            margin-right: 10px;
+        }
+        
+        .emotion-positif { background-color: #2ecc71; }
+        .emotion-neutre { background-color: #95a5a6; }
+        .emotion-fatigue { background-color: #f39c12; }
+        .emotion-stress { background-color: #e67e22; }
+        .emotion-tristesse { background-color: #3498db; }
+        .emotion-colere { background-color: #e74c3c; }
+        
+        /* Niveaux d'intervention */
+        .level-box {
+            border: 2px solid #2c3e50;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        .level-1 { border-left: 10px solid #2ecc71; }
+        .level-2 { border-left: 10px solid #f39c12; }
+        .level-3 { border-left: 10px solid #e74c3c; }
+    </style>
+</head>
+<body>
+    <!-- En-tête du document -->
+    <div class="document-header">
+        <div>
+            <div class="document-title">PISTE 18</div>
+            <div class="document-subtitle">Le Miroir à Émotions</div>
+        </div>
+        <div class="document-meta">
+            <div>Version 1.0</div>
+            <div>Mars 2026</div>
+            <div>CDG - CSCA</div>
+        </div>
+    </div>
+    
+    <!-- Tagline -->
+    <div class="tagline">
+        L'IA BIENVEILLANTE AU SERVICE DU BIEN-ÊTRE
+    </div>
+    
+    <!-- Description -->
+    <p style="font-size: 11pt; font-weight: bold; text-align: center; margin: 20px 0;">
+        IA bienveillante dans les vestiaires qui détecte la fatigue/le stress et propose de l'aide.
+    </p>
+    
+    <p>
+        Un conducteur fatigué, stressé, préoccupé ou en colère est dangereux. Son temps de réaction augmente, sa prise de risque s'accroît, 
+        son attention diminue. Pourtant, personne ne lui demande jamais comment il va avant qu'il ne prenne son poste. Il n'ose pas dire qu'il 
+        n'est pas en état, de peur d'être jugé ou stigmatisé. Aucun outil ne permet de détecter précocement ces fragilités. La dix-huitième 
+        piste propose de combler ce vide avec un dispositif bienveillant et confidentiel : le miroir à émotions.
+    </p>
+    
+    <!-- ======================================================================== -->
+    <!-- 1. PROBLÉMATIQUE ADRESSÉE -->
+    <!-- ======================================================================== -->
+    <h1>1. PROBLÉMATIQUE ADRESSÉE</h1>
+    
+    <p><strong>Constat fondamental :</strong> Un conducteur fatigué, stressé, préoccupé ou en colère est <strong>dangereux</strong>.</p>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>État émotionnel</th>
+                <th>Impact sur la conduite</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Fatigue</td><td>Temps de réaction +40%, micro-sommeils</td></tr>
+            <tr><td>Stress</td><td>Prise de risque accrue, irritabilité</td></tr>
+            <tr><td>Préoccupation</td><td>Inattention, distraction, oubli des procédures</td></tr>
+            <tr><td>Colère</td><td>Agressivité, vitesse excessive, non-respect</td></tr>
+            <tr><td>Tristesse</td><td>Lenteur, apathie, désengagement</td></tr>
+        </tbody>
+    </table>
+    
+    <div class="important">
+        <strong>Mais aujourd'hui :</strong>
+        <ul>
+            <li>Personne ne demande au conducteur comment il va → Ses difficultés restent invisibles</li>
+            <li>Le conducteur n'ose pas dire qu'il n'est pas en état → Peur d'être jugé, stigmatisé</li>
+            <li>Aucun outil de détection précoce → On attend l'incident pour agir</li>
+            <li>La fatigue est taboue → "Je tiens le coup"</li>
+        </ul>
+    </div>
+    
+    <div class="hypothese">
+        <strong>Notre hypothèse :</strong> Si nous offrons au conducteur un <strong>miroir intelligent, bienveillant et confidentiel</strong> qui l'aide à <strong>prendre conscience</strong> de son état émotionnel et lui propose <strong>des solutions discrètes</strong>, nous pouvons :
+        <ol>
+            <li><strong>Prévenir</strong> les accidents liés aux états émotionnels dégradés</li>
+            <li><strong>Prendre soin</strong> des conducteurs sans les stigmatiser</li>
+            <li><strong>Créer</strong> une culture de la bienveillance et non du jugement</li>
+            <li><strong>Détecter</strong> précocement les situations de mal-être</li>
+        </ol>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 2. CARTOGRAPHIE DES RISQUES (MISE À JOUR POUR PISTE 18) -->
+    <!-- ======================================================================== -->
+    <h1>2. CARTOGRAPHIE DES RISQUES</h1>
+    
+    <!-- Légende des couleurs -->
+    <div class="color-legend">
+        <div class="legend-item"><div class="color-box" style="background-color: #FF0000;"></div> <strong>Rouge</strong> - Risque très élevé (intolérable)</div>
+        <div class="legend-item"><div class="color-box" style="background-color: #FFA500;"></div> <strong>Orange</strong> - Risque élevé (actions nécessaires)</div>
+        <div class="legend-item"><div class="color-box" style="background-color: #FFFF00;"></div> <strong>Jaune</strong> - Risque moyen (tolérable)</div>
+        <div class="legend-item"><div class="color-box" style="background-color: #008000;"></div> <strong>Vert</strong> - Risque faible (acceptable)</div>
+    </div>
+    
+    <table class="risk-table">
+        <thead>
+            <tr>
+                <th>Réf.</th>
+                <th>Danger</th>
+                <th>Causes</th>
+                <th>Conséquences</th>
+                <th>Gravité</th>
+                <th>Probabilité</th>
+                <th>Criticité</th>
+                <th>Barrières Piste 18</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>EMO 01.1</strong></td>
+                <td>Conduite en état de fatigue avancée</td>
+                <td>Manque de sommeil, nuits consécutives, absence de détection</td>
+                <td>Micro-sommeils, perte de contrôle, accident</td>
+                <td>3 (Majeure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-red">ROUGE</td>
+                <td>Détection précoce des signes de fatigue, proposition de pause/café</td>
+            </tr>
+            <tr>
+                <td><strong>EMO 01.2</strong></td>
+                <td>Conduite sous stress intense</td>
+                <td>Pression temporelle, conflits, surcharge mentale</td>
+                <td>Prise de risque accrue, irritabilité, erreurs</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Détection stress, exercices respiration, orientation relais bien-être</td>
+            </tr>
+            <tr>
+                <td><strong>EMO 01.3</strong></td>
+                <td>Conduite avec préoccupations personnelles</td>
+                <td>Problèmes familiaux, financiers, santé</td>
+                <td>Inattention, distraction, oubli procédures</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Détection tristesse/préoccupation, orientation service d'aide (P53)</td>
+            </tr>
+            <tr>
+                <td><strong>EMO 01.4</strong></td>
+                <td>Conduite en état de colère</td>
+                <td>Conflits, frustration, agressivité</td>
+                <td>Vitesse excessive, non-respect règles, agressivité au volant</td>
+                <td>3 (Majeure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Détection colère, proposition pause calme, exercice apaisement</td>
+            </tr>
+            <tr>
+                <td><strong>EMO 01.5</strong></td>
+                <td>Non-détection des fragilités psychologiques</td>
+                <td>Absence d'outil, non-dit, peur du jugement</td>
+                <td>Burn-out, dépression, accidents graves</td>
+                <td>3 (Majeure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-red">ROUGE</td>
+                <td>Alerte silencieuse après détections répétées, lien médecine du travail</td>
+            </tr>
+            <tr>
+                <td><strong>EMO 02.1</strong></td>
+                <td>Tabou de la fatigue et du mal-être</td>
+                <td>Culture du "je tiens le coup", peur du jugement</td>
+                <td>Sous-déclaration, non-prise en charge</td>
+                <td>2 (Mineure)</td>
+                <td>A (Fréquent)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Déstigmatisation par dispositif neutre et bienveillant</td>
+            </tr>
+            <tr>
+                <td><strong>EMO 02.2</strong></td>
+                <td>Absence de soutien psychologique</td>
+                <td>Pas de dispositif d'écoute, isolement</td>
+                <td>Détresse non traitée, risques psychosociaux</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Orientation vers relais bien-être, services sociaux, psychologues</td>
+            </tr>
+            <tr>
+                <td><strong>EMO 03.1</strong></td>
+                <td>Stress chronique non détecté</td>
+                <td>Accumulation quotidienne, absence de régulation</td>
+                <td>Burn-out, absentéisme, turnover</td>
+                <td>2 (Mineure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Suivi des tendances anonymes, alerte sur situations durables</td>
+            </tr>
+            <tr>
+                <td><strong>ACC 01.1</strong></td>
+                <td>Accidents liés à la fatigue</td>
+                <td>Conduite en état de somnolence non détecté</td>
+                <td>Collisions, dommages matériels et corporels</td>
+                <td>3 (Majeure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-red">ROUGE</td>
+                <td>Réduction ciblée de -35% grâce à la détection précoce</td>
+            </tr>
+            <tr>
+                <td><strong>ACC 01.2</strong></td>
+                <td>Accidents liés au stress</td>
+                <td>Prise de risque, irritabilité, inattention</td>
+                <td>Collisions, erreurs</td>
+                <td>2 (Mineure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Réduction ciblée de -30% grâce à la régulation émotionnelle</td>
+            </tr>
+            <tr>
+                <td><strong>ETH 01.1</strong></td>
+                <td>Rejet du dispositif pour raisons éthiques</td>
+                <td>Crainte de surveillance, "Big Brother"</td>
+                <td>Non-utilisation, rejet, méfiance</td>
+                <td>2 (Mineure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-green">VERT</td>
+                <td>Transparence totale, absence stockage, traitement local, charte éthique</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <!-- Échelle de cotation -->
+    <h3>Échelle de cotation utilisée</h3>
+    
+    <div class="cotation-grid">
+        <div class="cotation-box">
+            <h4>Gravité</h4>
+            <ul>
+                <li><strong>1</strong> - Négligeable</li>
+                <li><strong>2</strong> - Mineure</li>
+                <li><strong>3</strong> - Majeure</li>
+                <li><strong>4</strong> - Catastrophique</li>
+            </ul>
+        </div>
+        <div class="cotation-box">
+            <h4>Probabilité</h4>
+            <ul>
+                <li><strong>A</strong> - Fréquent (quotidien)</li>
+                <li><strong>B</strong> - Occasionnel (hebdo/mensuel)</li>
+                <li><strong>C</strong> - Rare (annuel)</li>
+                <li><strong>D</strong> - Très rare (>1 an)</li>
+                <li><strong>E</strong> - Extrêmement rare (jamais observé)</li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 3. FONCTIONNEMENT DÉTAILLÉ -->
+    <!-- ======================================================================== -->
+    <h1>3. FONCTIONNEMENT DÉTAILLÉ</h1>
+    
+    <h2>3.1 Analyse émotionnelle</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>État détecté</th>
+                <th>Signes visuels</th>
+                <th>Seuil de détection</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>😊 Positif</td><td>Sourire, regard vif, symétrie</td><td>≥ 70%</td></tr>
+            <tr><td>😐 Neutre</td><td>Expression calme, détendue</td><td>≥ 60%</td></tr>
+            <tr><td>😴 Fatigue</td><td>Paupières tombantes, bâillements, regards lointains</td><td>≥ 65%</td></tr>
+            <tr><td>😟 Stress</td><td>Front plissé, mâchoires serrées, clignement rapide</td><td>≥ 65%</td></tr>
+            <tr><td>😔 Tristesse</td><td>Commissures des lèvres abaissées, regard baissé</td><td>≥ 60%</td></tr>
+            <tr><td>😠 Colère</td><td>Sourcils froncés, narines dilatées, mâchoire tendue</td><td>≥ 70%</td></tr>
+        </tbody>
+    </table>
+    
+    <h2>3.2 Scénarios d'interaction</h2>
+    
+    <div class="mirror-dialog">
+        <p><span class="mirror-speaker">[MIROIR]</span> Bonjour Thomas ! Vous avez l'air en forme aujourd'hui.</p>
+        <p><span class="user-speaker">[THOMAS]</span> Oui, ça va bien !</p>
+        <p><span class="mirror-speaker">[MIROIR]</span> Parfait ! N'oubliez pas votre pause café dans 2 heures. Bonne journée !</p>
+        <p><span class="user-speaker">[THOMAS]</span> Merci, à toi aussi !</p>
+    </div>
+    
+    <div class="mirror-dialog">
+        <p><span class="mirror-speaker">[MIROIR]</span> Bonjour Thomas. Je détecte que vous semblez fatigué. Est-ce que ça va ?</p>
+        <p><span class="user-speaker">[THOMAS]</span> ... Oui, ça va. J'ai juste mal dormi.</p>
+        <p><span class="mirror-speaker">[MIROIR]</span> Je comprends. Voulez-vous : 1. Un café offert au self ? 2. 5 minutes de pause avant de commencer ? 3. Discuter avec le relais bien-être ?</p>
+        <p><span class="user-speaker">[THOMAS]</span> Option 1.</p>
+        <p><span class="mirror-speaker">[MIROIR]</span> Code café : ☕ CAFE-8F3Z. Valable au self jusqu'à 10h. Prenez soin de vous.</p>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 4. LES 3 NIVEAUX D'INTERVENTION -->
+    <!-- ======================================================================== -->
+    <h1>4. LES 3 NIVEAUX D'INTERVENTION</h1>
+    
+    <div class="level-box level-1">
+        <h3>NIVEAU 1 - PRÉVENTION IMMÉDIATE</h3>
+        <p>• Café offert • Pause supplémentaire • Exercice de respiration • Étirements guidés • Message de soutien</p>
+    </div>
+    
+    <div class="level-box level-2">
+        <h3>NIVEAU 2 - ACCOMPAGNEMENT</h3>
+        <p>• Orientation vers relais bien-être • Proposition de rencontre avec manager • Information sur services sociaux • Accès à application de méditation</p>
+    </div>
+    
+    <div class="level-box level-3">
+        <h3>NIVEAU 3 - ALERTE SILENCIEUSE</h3>
+        <p>• Signalement anonyme au service de santé • Proposition de visite médicale spontanée • Suivi dans le temps (sans stigmatisation)</p>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 5. BUDGET -->
+    <!-- ======================================================================== -->
+    <h1>5. BUDGET</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Phase</th>
+                <th>Actions</th>
+                <th>Coût</th>
+                <th>Livrable</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>Phase 1 - Conception & Prototypage</strong></td><td>Étude éthique, développement IA, design, 2 prototypes, tests laboratoire</td><td>81 k€</td><td>Prototype fonctionnel validé</td></tr>
+            <tr><td><strong>Phase 2 - Pilote terrain</strong></td><td>Installation 2 miroirs, expérimentation 4 mois, évaluation</td><td>25 k€</td><td>Retour d'expérience + ROI mesuré</td></tr>
+            <tr><td><strong>Phase 3 - Déploiement CDG</strong></td><td>20 miroirs, formation relais, communication</td><td>155 k€</td><td>20 miroirs déployés</td></tr>
+            <tr><td><strong>Phase 4 - Extension</strong></td><td>Orly (10), province (20), évaluation</td><td>195 k€</td><td>50 miroirs en France</td></tr>
+            <tr><td><strong>TOTAL 3 ANS</strong></td><td></td><td><strong>456 k€</strong></td><td></td></tr>
+        </tbody>
+    </table>
+    
+    <p><strong>Coût par miroir (série) :</strong> 5 000 € (matériel + installation)<br>
+    <strong>Coût de fonctionnement :</strong> 500 €/an/miroir (maintenance)</p>
+    
+    <!-- ======================================================================== -->
+    <!-- 6. BÉNÉFICES ATTENDUS -->
+    <!-- ======================================================================== -->
+    <h1>6. BÉNÉFICES ATTENDUS</h1>
+    
+    <h2>6.1 Bénéfices mesurables</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Indicateur</th>
+                <th>Baseline</th>
+                <th>Cible M12</th>
+                <th>Cible M24</th>
+                <th>Cible M36</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Conducteurs se sentant soutenus</td><td>35%</td><td>50%</td><td>65%</td><td>75%</td></tr>
+            <tr><td>Stress perçu (échelle)</td><td>6,2/10</td><td>5,8/10</td><td>5,4/10</td><td>5,0/10</td></tr>
+            <tr><td>Fatigue déclarée en début de poste</td><td>48%</td><td>42%</td><td>38%</td><td>35%</td></tr>
+            <tr><td>Accidents liés à la fatigue</td><td>8/an</td><td>-15%</td><td>-25%</td><td>-35%</td></tr>
+            <tr><td>Accidents liés au stress</td><td>6/an</td><td>-10%</td><td>-20%</td><td>-30%</td></tr>
+            <tr><td>Absentéisme</td><td>5%</td><td>4,8%</td><td>4,5%</td><td>4,2%</td></tr>
+        </tbody>
+    </table>
+    
+    <!-- ======================================================================== -->
+    <!-- 7. ÉTHIQUE ET CONFIDENTIALITÉ -->
+    <!-- ======================================================================== -->
+    <h1>7. ÉTHIQUE ET CONFIDENTIALITÉ</h1>
+    
+    <div style="border: 2px solid #e67e22; padding: 15px; margin: 15px 0;">
+        <h3 style="color: #e67e22;">🔐 CONFIDENTIALITÉ ABSOLUE</h3>
+        <ul>
+            <li>✓ Aucune image enregistrée, stockée ou transmise</li>
+            <li>✓ Aucune donnée nominative collectée</li>
+            <li>✓ Conducteur libre d'interagir ou non</li>
+            <li>✓ Fonctionnement expliqué et documenté</li>
+            <li>✓ Finalité exclusive d'aide, jamais de sanction</li>
+            <li>✓ Possibilité de vérifier le code source</li>
+        </ul>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 8. RETOURS D'EXPÉRIENCE -->
+    <!-- ======================================================================== -->
+    <h1>8. RETOURS D'EXPÉRIENCE</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Secteur</th>
+                <th>Réalisations</th>
+                <th>Résultats</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>Toyota (Japon)</strong></td><td>Miroirs connectés vestiaires, détection fatigue faciale, pause auto</td><td>-28% accidents fatigue, 82% satisfaits, ROI 14 mois</td></tr>
+            <tr><td><strong>Centre hospitalier (France)</strong></td><td>Borne bien-être soignants, questionnaire émotionnel pré-poste</td><td>12 burn-out détectés, 91% recommandent</td></tr>
+            <tr><td><strong>Munich Airport</strong></td><td>Projet "Mood Mirror", 6 mois, 1 miroir, 150 agents</td><td>68% interaction positive, 23 cafés/semaine, 0 réclamation</td></tr>
+        </tbody>
+    </table>
+    
+    <!-- ======================================================================== -->
+    <!-- 9. INDICATEURS DE SUIVI -->
+    <!-- ======================================================================== -->
+    <h1>9. INDICATEURS DE SUIVI</h1>
+    
+    <div class="indicator-box">
+        <div class="indicator-item">
+            <strong>Conducteurs se sentant soutenus</strong>
+            <span>Baseline: 35% | Cible M36: 75%</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Stress perçu</strong>
+            <span>Baseline: 6,2/10 | Cible M36: 5,0/10</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Fatigue déclarée début poste</strong>
+            <span>Baseline: 48% | Cible M36: 35%</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Accidents liés fatigue</strong>
+            <span>Baseline: 8/an | Cible M36: -35%</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Accidents liés stress</strong>
+            <span>Baseline: 6/an | Cible M36: -30%</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Absentéisme</strong>
+            <span>Baseline: 5% | Cible M36: 4,2%</span>
+        </div>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 10. EN RÉSUMÉ -->
+    <!-- ======================================================================== -->
+    <h1>10. EN RÉSUMÉ</h1>
+    
+    <div class="encadre">
+        <p style="font-size: 12pt; font-style: italic;">
+            Le miroir à émotions est la piste la plus audacieuse, la plus innovante, la plus "futuriste". Mais c'est aussi la piste la plus humaine. 
+            Elle ne vise pas à contrôler, mais à <strong>prendre soin</strong>. Elle ne vise pas à sanctionner, mais à <strong>aider</strong>. 
+            Elle ne vise pas à remplacer l'humain, mais à <strong>le révéler à lui-même</strong>. Ce que nous proposons, c'est de mettre l'intelligence 
+            artificielle au service de l'intelligence émotionnelle. Ce que nous proposons, c'est d'utiliser la technologie pour créer du lien, 
+            pas de la défiance. Ce que nous proposons, c'est de dire à chaque conducteur : "Vous n'êtes pas seul. Votre bien-être compte. Nous sommes là."
+        </p>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 11. CE QUE NOUS PROPOSONS CONCRÈTEMENT -->
+    <!-- ======================================================================== -->
+    <h1>11. CE QUE NOUS PROPOSONS CONCRÈTEMENT</h1>
+    
+    <ol style="font-weight: bold; font-size: 12pt;">
+        <li>Développer un prototype avec un prestataire spécialisé en IA émotionnelle</li>
+        <li>Garantir l'absence de stockage d'images et l'anonymat total</li>
+        <li>Tester sur 200 conducteurs volontaires pendant 3 mois</li>
+        <li>Évaluer l'impact sur le bien-être et la vigilance</li>
+    </ol>
+    
+    <!-- Pied de page -->
+    <div class="footer">
+        <p>PISTE 18 - Le Miroir à Émotions | Version 1.0 | Mars 2026 | CDG - CSCA</p>
+    </div>
+</body>
+</html>

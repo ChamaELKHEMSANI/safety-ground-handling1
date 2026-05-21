@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PISTE 12 - Alerte Sonore Intelligente</title>
+    <style>
+        /* Styles généraux pour l'impression */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            line-height: 1.5;
+            color: #333;
+            background-color: white;
+            font-size: 10.5pt;
+            margin: 0;
+            padding: 15px;
+        }
+        
+        /* Styles pour l'impression PDF */
+        @media print {
+            body {
+                padding: 0.5cm;
+            }
+            .page-break {
+                page-break-before: always;
+            }
+            .no-break {
+                page-break-inside: avoid;
+            }
+            h1, h2, h3, h4 {
+                page-break-after: avoid;
+            }
+            table {
+                page-break-inside: avoid;
+            }
+        }
+        
+        /* En-tête du document */
+        .document-header {
+            border-bottom: 3px solid #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+        
+        .document-title {
+            font-size: 24pt;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .document-subtitle {
+            font-size: 14pt;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+        
+        .document-meta {
+            text-align: right;
+            color: #7f8c8d;
+            font-size: 10pt;
+        }
+        
+        .tagline {
+            background-color: #ecf0f1;
+            padding: 8px 15px;
+            border-left: 5px solid #e67e22;
+            margin-bottom: 20px;
+            font-weight: bold;
+            font-size: 12pt;
+        }
+        
+        /* Typographie */
+        h1 {
+            font-size: 18pt;
+            color: #2c3e50;
+            margin: 25px 0 10px 0;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #bdc3c7;
+        }
+        
+        h2 {
+            font-size: 14pt;
+            color: #34495e;
+            margin: 20px 0 10px 0;
+            padding-left: 5px;
+            border-left: 4px solid #e67e22;
+        }
+        
+        h3 {
+            font-size: 12pt;
+            color: #555;
+            margin: 15px 0 8px 0;
+            font-weight: bold;
+        }
+        
+        h4 {
+            font-size: 11pt;
+            color: #666;
+            margin: 12px 0 5px 0;
+            font-weight: bold;
+        }
+        
+        p {
+            margin-bottom: 8px;
+            text-align: justify;
+        }
+        
+        ul, ol {
+            margin: 8px 0 12px 25px;
+        }
+        
+        li {
+            margin-bottom: 3px;
+        }
+        
+        /* Boîtes d'information */
+        .encadre {
+            border: 1px solid #bdc3c7;
+            padding: 12px;
+            background-color: #f9f9f9;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        
+        .important {
+            background-color: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 8px 12px;
+            margin: 12px 0;
+        }
+        
+        .hypothese {
+            background-color: #d4edda;
+            border-left: 5px solid #28a745;
+            padding: 8px 12px;
+            margin: 12px 0;
+            font-style: italic;
+        }
+        
+        /* Tableaux */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0 18px 0;
+            font-size: 9.5pt;
+        }
+        
+        th {
+            background-color: #2c3e50;
+            color: white;
+            font-weight: bold;
+            padding: 6px 4px;
+            text-align: left;
+            border: 1px solid #34495e;
+        }
+        
+        td {
+            padding: 5px 4px;
+            border: 1px solid #ddd;
+            vertical-align: top;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        /* Tableau de cartographie des risques avec couleurs */
+        .risk-table td:nth-child(7) {
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-orange {
+            background-color: #FFA500 !important;
+            color: black;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-red {
+            background-color: #FF0000 !important;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-yellow {
+            background-color: #FFFF00 !important;
+            color: black;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-green {
+            background-color: #008000 !important;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        /* Grille de cotation */
+        .cotation-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 12px 0;
+        }
+        
+        .cotation-box {
+            border: 1px solid #ddd;
+            padding: 8px;
+            background-color: #f9f9f9;
+        }
+        
+        .cotation-box h4 {
+            background-color: #2c3e50;
+            color: white;
+            padding: 4px 8px;
+            margin: -8px -8px 8px -8px;
+            font-size: 11pt;
+        }
+        
+        /* Pied de page */
+        .footer {
+            margin-top: 25px;
+            padding-top: 8px;
+            border-top: 1px solid #bdc3c7;
+            font-size: 9pt;
+            color: #7f8c8d;
+            text-align: center;
+        }
+        
+        .page-break {
+            page-break-before: always;
+        }
+        
+        /* Indicateurs */
+        .indicator-box {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 12px 0;
+        }
+        
+        .indicator-item {
+            flex: 1 1 200px;
+            background-color: #ecf0f1;
+            padding: 8px;
+            border-radius: 5px;
+            border-left: 4px solid #e67e22;
+        }
+        
+        .indicator-item strong {
+            display: block;
+            font-size: 10.5pt;
+            color: #2c3e50;
+        }
+        
+        .indicator-item span {
+            font-size: 9pt;
+            color: #555;
+        }
+        
+        /* Légende des couleurs */
+        .color-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 12px 0;
+            padding: 8px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .color-box {
+            width: 20px;
+            height: 20px;
+            border: 1px solid #333;
+        }
+        
+        /* Texte centré */
+        .text-center {
+            text-align: center;
+        }
+        
+        /* Badge */
+        .badge {
+            background-color: #e67e22;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 9pt;
+            font-weight: bold;
+            display: inline-block;
+        }
+        
+        /* Matrice sonore */
+        .sound-matrix {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .sound-card {
+            border: 1px solid #3498db;
+            border-radius: 5px;
+            padding: 8px;
+            background-color: #f0f8ff;
+        }
+        
+        .sound-card h4 {
+            color: #3498db;
+            margin: 0 0 5px 0;
+        }
+        
+        /* Hiérarchie sonore */
+        .sound-level {
+            display: flex;
+            align-items: center;
+            margin: 5px 0;
+            padding: 5px;
+            border-radius: 3px;
+        }
+        
+        .level-1 { background-color: #ADD8E6; }
+        .level-2 { background-color: #FFFF00; }
+        .level-3 { background-color: #FFA500; }
+        .level-4 { background-color: #FF0000; color: white; }
+        
+        .level-indicator {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- En-tête du document -->
+    <div class="document-header">
+        <div>
+            <div class="document-title">PISTE 12</div>
+            <div class="document-subtitle">Alerte Sonore Intelligente</div>
+        </div>
+        <div class="document-meta">
+            <div>Version 1.0</div>
+            <div>Mars 2026</div>
+            <div>CDG - CSCA</div>
+        </div>
+    </div>
+    
+    <!-- Tagline -->
+    <div class="tagline">
+        COMMUNIQUER AVEC L'ENGIN, PAS CONTRE LUI
+    </div>
+    
+    <!-- Description -->
+    <p style="font-size: 11pt; font-weight: bold; text-align: center; margin: 20px 0;">
+        Sons distincts et messages vocaux contextualisés (plus de bip strident ignoré).
+    </p>
+    
+    <p>
+        Les alarmes sonores sur les engins de piste sont aujourd'hui archaïques, anxiogènes et, paradoxalement, inefficaces. Tous les dangers 
+        ont le même son strident, ce qui conduit le conducteur à les ignorer par habituation. Le volume excessif génère une fatigue auditive 
+        et un stress chronique, sans jamais informer sur la nature ou la localisation du danger. Aucun message vocal ne vient contextualiser 
+        l'alerte. La douzième piste propose de repenser de fond en comble ce canal d'information essentiel, pour transformer une nuisance en 
+        une aide précieuse à la conduite.
+    </p>
+    
+    <!-- ======================================================================== -->
+    <!-- 1. PROBLÉMATIQUE ADRESSÉE -->
+    <!-- ======================================================================== -->
+    <h1>1. PROBLÉMATIQUE ADRESSÉE</h1>
+    
+    <p><strong>Constat fondamental :</strong> Aujourd'hui, les alarmes sonores sur les engins de piste sont <strong>archaïques, anxiogènes et inefficaces</strong>.</p>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Problème</th>
+                <th>Conséquence</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Tous les dangers ont le même son</td><td>Le conducteur ne sait pas si c'est un obstacle, une panne, ou le recul</td></tr>
+            <tr><td>Les alarmes sont permanentes</td><td>Le conducteur les ignore (phénomène d'habituation)</td></tr>
+            <tr><td>Le volume est excessif</td><td>Fatigue auditive, stress, agressivité</td></tr>
+            <tr><td>Aucun message vocal</td><td>Pas d'information sur la nature du danger</td></tr>
+            <tr><td>Aucune contextualisation</td><td>Même alerte en zone dégagée et en hotspot</td></tr>
+        </tbody>
+    </table>
+    
+    <p><strong>Chiffres clés :</strong></p>
+    <table>
+        <thead>
+            <tr>
+                <th>Indicateur</th>
+                <th>Valeur</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Conducteurs admettant ignorer les alarmes</td><td><strong>72%</strong></td></tr>
+            <tr><td>Conducteurs stressés par le bruit des alarmes</td><td><strong>68%</strong></td></tr>
+            <tr><td>Accidents où une alarme était présente mais ignorée</td><td><strong>41%</strong></td></tr>
+            <tr><td>Temps moyen d'habituation à une alarme continue</td><td><strong>47 secondes</strong></td></tr>
+        </tbody>
+    </table>
+    
+    <div class="hypothese">
+        <strong>Notre hypothèse :</strong> L'alarme sonore n'est pas un mal nécessaire. C'est un <strong>outil de communication</strong> entre l'engin et le conducteur.
+        <p><strong>Si cet outil est bien conçu, il devient une aide, pas une nuisance.</strong></p>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 2. CARTOGRAPHIE DES RISQUES (MISE À JOUR POUR PISTE 12) -->
+    <!-- ======================================================================== -->
+    <h1>2. CARTOGRAPHIE DES RISQUES</h1>
+    
+    <!-- Légende des couleurs -->
+    <div class="color-legend">
+        <div class="legend-item"><div class="color-box" style="background-color: #FF0000;"></div> <strong>Rouge</strong> - Risque très élevé (intolérable)</div>
+        <div class="legend-item"><div class="color-box" style="background-color: #FFA500;"></div> <strong>Orange</strong> - Risque élevé (actions nécessaires)</div>
+        <div class="legend-item"><div class="color-box" style="background-color: #FFFF00;"></div> <strong>Jaune</strong> - Risque moyen (tolérable)</div>
+        <div class="legend-item"><div class="color-box" style="background-color: #008000;"></div> <strong>Vert</strong> - Risque faible (acceptable)</div>
+    </div>
+    
+    <table class="risk-table">
+        <thead>
+            <tr>
+                <th>Réf.</th>
+                <th>Danger</th>
+                <th>Causes</th>
+                <th>Conséquences</th>
+                <th>Gravité</th>
+                <th>Probabilité</th>
+                <th>Criticité</th>
+                <th>Barrières Piste 12</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>SON 01.1</strong></td>
+                <td>Habituation aux alarmes sonores</td>
+                <td>Sons identiques pour tous les dangers, permanence des alertes</td>
+                <td>Alarmes ignorées, non-réaction en situation critique</td>
+                <td>3 (Majeure)</td>
+                <td>A (Fréquent)</td>
+                <td class="risk-red">ROUGE</td>
+                <td>Sons distincts par type de danger, variation des alertes</td>
+            </tr>
+            <tr>
+                <td><strong>SON 01.2</strong></td>
+                <td>Non-identification du type de danger</td>
+                <td>Absence de différenciation sonore, pas de message vocal</td>
+                <td>Confusion, mauvaise réaction, perte de temps</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Signature acoustique unique par situation, messages vocaux</td>
+            </tr>
+            <tr>
+                <td><strong>SON 01.3</strong></td>
+                <td>Non-localisation du danger</td>
+                <td>Alerte non directionnelle, pas d'information spatiale</td>
+                <td>Incapacité à orienter son attention</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Messages vocaux avec localisation ("à droite", "à gauche")</td>
+            </tr>
+            <tr>
+                <td><strong>SON 02.1</strong></td>
+                <td>Fatigue auditive</td>
+                <td>Volume excessif (>90 dB), exposition prolongée</td>
+                <td>Stress, irritabilité, baisse de vigilance</td>
+                <td>2 (Mineure)</td>
+                <td>A (Fréquent)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Volume adaptatif (55-75 dB selon conditions), réduction exposition</td>
+            </tr>
+            <tr>
+                <td><strong>SON 02.2</strong></td>
+                <td>Stress lié aux alarmes</td>
+                <td>Sons stridents imprévisibles, agression sonore</td>
+                <td>Anxiété, prise de décision altérée</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Sons psychoacoustiques étudiés pour minimiser le stress</td>
+            </tr>
+            <tr>
+                <td><strong>SON 02.3</strong></td>
+                <td>Gêne pour la communication radio</td>
+                <td>Alarmes trop fortes, masquage des communications</td>
+                <td>Mauvaise coordination, informations manquées</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Volume adaptatif, fréquences non perturbatrices</td>
+            </tr>
+            <tr>
+                <td><strong>SON 03.1</strong></td>
+                <td>Nuisances sonores nocturnes</td>
+                <td>Alarmes aussi fortes la nuit que le jour</td>
+                <td>Plaintes riverains, impact environnemental</td>
+                <td>1 (Négligeable)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-green">VERT</td>
+                <td>Volume réduit la nuit (55 dB), préservation environnement sonore</td>
+            </tr>
+            <tr>
+                <td><strong>ACC 01.1</strong></td>
+                <td>Collisions par recul</td>
+                <td>Alerte de recul ignorée, non-perçue</td>
+                <td>Heurts d'obstacles, de piétons, d'engins</td>
+                <td>3 (Majeure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-red">ROUGE</td>
+                <td>Réduction ciblée de -50% grâce à l'alerte intelligente</td>
+            </tr>
+            <tr>
+                <td><strong>ACC 01.2</strong></td>
+                <td>Collisions liées aux angles morts</td>
+                <td>Absence d'alerte spécifique, conducteur non informé</td>
+                <td>Heurts de piétons, d'engins</td>
+                <td>3 (Majeure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-red">ROUGE</td>
+                <td>Son spécifique angle mort, message vocal directionnel</td>
+            </tr>
+            <tr>
+                <td><strong>ACC 01.3</strong></td>
+                <td>Accidents liés à la vitesse excessive</td>
+                <td>Pas d'alerte spécifique, conducteur inconscient du danger</td>
+                <td>Perte de contrôle, collision</td>
+                <td>3 (Majeure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Alerte sonore spécifique, message "Ralentissez, zone parking"</td>
+            </tr>
+            <tr>
+                <td><strong>ERG 01.1</strong></td>
+                <td>Rejet du nouveau système par les conducteurs</td>
+                <td>Changement perçu comme gadget, méconnaissance</td>
+                <td>Non-utilisation, retour aux anciennes habitudes</td>
+                <td>1 (Négligeable)</td>
+                <td>C (Rare)</td>
+                <td class="risk-green">VERT</td>
+                <td>Co-conception phase 1, tests utilisateurs, formation 15 min</td>
+            </tr>
+            <tr>
+                <td><strong>TEC 01.1</strong></td>
+                <td>Non-reconnaissance des nouveaux sons</td>
+                <td>Période de transition insuffisante, absence de communication</td>
+                <td>Confusion, mauvaise interprétation</td>
+                <td>1 (Négligeable)</td>
+                <td>C (Rare)</td>
+                <td class="risk-green">VERT</td>
+                <td>Campagne communication, période transition, formation</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <!-- Échelle de cotation -->
+    <h3>Échelle de cotation utilisée</h3>
+    
+    <div class="cotation-grid">
+        <div class="cotation-box">
+            <h4>Gravité</h4>
+            <ul>
+                <li><strong>1</strong> - Négligeable</li>
+                <li><strong>2</strong> - Mineure</li>
+                <li><strong>3</strong> - Majeure</li>
+                <li><strong>4</strong> - Catastrophique</li>
+            </ul>
+        </div>
+        <div class="cotation-box">
+            <h4>Probabilité</h4>
+            <ul>
+                <li><strong>A</strong> - Fréquent (quotidien)</li>
+                <li><strong>B</strong> - Occasionnel (hebdo/mensuel)</li>
+                <li><strong>C</strong> - Rare (annuel)</li>
+                <li><strong>D</strong> - Très rare (>1 an)</li>
+                <li><strong>E</strong> - Extrêmement rare (jamais observé)</li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 3. BIBLIOTHÈQUE DE SONS INTELLIGENTS -->
+    <!-- ======================================================================== -->
+    <h1>3. BIBLIOTHÈQUE DE SONS INTELLIGENTS</h1>
+    
+    <h2>3.1 Matrice sonore par type de danger</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Situation</th>
+                <th>Son</th>
+                <th>Message vocal</th>
+                <th>Urgence</th>
+                <th>Fréquence</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Recul standard</td><td>Bip lent grave (1/s)</td><td>-</td><td>ℹ️ Information</td><td>Continue</td></tr>
+            <tr><td>Obstacle proche (2-5m)</td><td>Bip rapide (3/s)</td><td>"Obstacle 3 mètres"</td><td>⚠️ Vigilance</td><td>Temporaire</td></tr>
+            <tr><td>Obstacle critique (<2m)</td><td>Son continu descendant</td><td>"DANGER - Arrêt immédiat"</td><td>🔴 Urgence</td><td>Jusqu'à arrêt</td></tr>
+            <tr><td>Angle mort droit</td><td>Son spécifique 3 tons</td><td>"Vérifiez angle droit"</td><td>⚠️ Action requise</td><td>3 fois</td></tr>
+            <tr><td>Angle mort gauche</td><td>Son spécifique inverse</td><td>"Vérifiez angle gauche"</td><td>⚠️ Action requise</td><td>3 fois</td></tr>
+            <tr><td>Vitesse excessive</td><td>Son descendant répété</td><td>"Ralentissez, zone parking"</td><td>🟠 Alerte</td><td>Continue</td></tr>
+            <tr><td>Dépassement zone</td><td>Son de limite</td><td>"Zone interdite"</td><td>🔴 Urgence</td><td>Continue</td></tr>
+            <tr><td>Départ sécurisé</td><td>Son mélodieux</td><td>"Bonne journée"</td><td>✅ Confirmation</td><td>1 fois</td></tr>
+            <tr><td>Maintenance</td><td>Son neutre</td><td>"Maintenance requise"</td><td>ℹ️ Information</td><td>3 fois</td></tr>
+        </tbody>
+    </table>
+    
+    <h2>3.2 Hiérarchie sonore (psychoacoustique)</h2>
+    
+    <div class="sound-level level-1">
+        <div class="level-indicator" style="background-color: #ADD8E6;"></div>
+        <div><strong>NIVEAU 1 - INFORMATION (bleu)</strong> - Recul standard : bip grave lent • Départ sécurisé : son mélodieux • Maintenance : son neutre • Volume : 65 dB</div>
+    </div>
+    <div class="sound-level level-2">
+        <div class="level-indicator" style="background-color: #FFFF00;"></div>
+        <div><strong>NIVEAU 2 - VIGILANCE (jaune)</strong> - Obstacle proche : bip rapide • Angle mort : son spécifique 3 tons • Volume : 75 dB • Fréquence : 500-1500 Hz</div>
+    </div>
+    <div class="sound-level level-3">
+        <div class="level-indicator" style="background-color: #FFA500;"></div>
+        <div><strong>NIVEAU 3 - ALERTE (orange)</strong> - Vitesse excessive : son descendant répété • Volume : 80 dB • Fréquence : 1000-2000 Hz</div>
+    </div>
+    <div class="sound-level level-4">
+        <div class="level-indicator" style="background-color: #FF0000;"></div>
+        <div><strong>NIVEAU 4 - URGENCE (rouge)</strong> - Obstacle critique : son continu descendant • Zone interdite : son de limite • Volume : 85 dB • Fréquence : 2000-3000 Hz</div>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 4. MESSAGES VOCAUX CONTEXTUELS -->
+    <!-- ======================================================================== -->
+    <h1>4. MESSAGES VOCAUX CONTEXTUELS</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Situation</th>
+                <th>Message vocal</th>
+                <th>Voix</th>
+                <th>Langue</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Obstacle proche</td><td>"Obstacle 3 mètres"</td><td>Neutre F</td><td>FR/EN</td></tr>
+            <tr><td>Obstacle critique</td><td>"DANGER - Arrêt immédiat"</td><td>Grave M</td><td>FR/EN</td></tr>
+            <tr><td>Angle mort droit</td><td>"Vérifiez angle droit"</td><td>Neutre F</td><td>FR/EN</td></tr>
+            <tr><td>Angle mort gauche</td><td>"Vérifiez angle gauche"</td><td>Neutre F</td><td>FR/EN</td></tr>
+            <tr><td>Vitesse</td><td>"Ralentissez, zone parking"</td><td>Calme M</td><td>FR/EN</td></tr>
+            <tr><td>Zone interdite</td><td>"Zone non autorisée"</td><td>Ferme M</td><td>FR/EN</td></tr>
+            <tr><td>Ceinture</td><td>"Bouclez votre ceinture"</td><td>Neutre F</td><td>FR/EN</td></tr>
+            <tr><td>Frein parking</td><td>"Frein de parking serré"</td><td>Neutre F</td><td>FR/EN</td></tr>
+            <tr><td>Départ</td><td>"Bonne journée"</td><td>Chaleureux F</td><td>FR/EN</td></tr>
+            <tr><td>Fin de poste</td><td>"Merci, à demain"</td><td>Chaleureux F</td><td>FR/EN</td></tr>
+        </tbody>
+    </table>
+    
+    <!-- ======================================================================== -->
+    <!-- 5. VOLUME ADAPTATIF -->
+    <!-- ======================================================================== -->
+    <h1>5. VOLUME ADAPTATIF</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Condition ambiante</th>
+                <th>Volume alarme</th>
+                <th>Volume vocal</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Jour - Cabine fermée</td><td>65 dB</td><td>60 dB</td></tr>
+            <tr><td>Jour - Cabine ouverte</td><td>70 dB</td><td>65 dB</td></tr>
+            <tr><td>Nuit - Calme</td><td>55 dB</td><td>50 dB</td></tr>
+            <tr><td>Nuit - Zone active</td><td>60 dB</td><td>55 dB</td></tr>
+            <tr><td>Intempéries</td><td>+5 dB</td><td>+5 dB</td></tr>
+            <tr><td>Casque anti-bruit</td><td>85 dB</td><td>80 dB</td></tr>
+        </tbody>
+    </table>
+    
+    <!-- ======================================================================== -->
+    <!-- 6. BUDGET -->
+    <!-- ======================================================================== -->
+    <h1>6. BUDGET</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Phase</th>
+                <th>Actions</th>
+                <th>Coût</th>
+                <th>Livrable</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>Phase 1 - Conception & Prototypage</strong></td><td>Étude psychoacoustique, co-conception, 15 sons, messages vocaux, prototype</td><td>68 k€</td><td>Bibliothèque sonore validée + prototype</td></tr>
+            <tr><td><strong>Phase 2 - Pilote</strong></td><td>Équipement 20 PUSH, formation, expérimentation 4 mois, mesure impact</td><td>61 k€</td><td>Retour d'expérience + ROI mesuré</td></tr>
+            <tr><td><strong>Phase 3 - Déploiement CDG</strong></td><td>Commande groupée 1 500 kits, déploiement PUSH/LOADER/BUS/DÉGIVREUSE</td><td>425 k€</td><td>100% engins critiques équipés</td></tr>
+            <tr><td><strong>TOTAL</strong></td><td></td><td><strong>554 k€</strong></td><td></td></tr>
+        </tbody>
+    </table>
+    
+    <p><strong>Coût par engin (série) :</strong> 450 € (kit complet)</p>
+    
+    <!-- ======================================================================== -->
+    <!-- 7. BÉNÉFICES ATTENDUS -->
+    <!-- ======================================================================== -->
+    <h1>7. BÉNÉFICES ATTENDUS</h1>
+    
+    <h2>7.1 Bénéfices sécurité</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Indicateur</th>
+                <th>Baseline</th>
+                <th>Cible M18</th>
+                <th>Cible M36</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Collisions par recul</td><td>8/an</td><td>-30%</td><td>-50%</td></tr>
+            <tr><td>Collisions angles morts</td><td>12/an</td><td>-25%</td><td>-45%</td></tr>
+            <tr><td>Accidents vitesse excessive</td><td>15/an</td><td>-20%</td><td>-35%</td></tr>
+            <tr><td>Temps de réaction aux alarmes</td><td>2,1s</td><td>1,2s</td><td>0,9s</td></tr>
+            <tr><td>Alarmes ignorées</td><td>72%</td><td>30%</td><td>15%</td></tr>
+        </tbody>
+    </table>
+    
+    <h2>7.2 Bénéfices humains</h2>
+    
+    <ul>
+        <li><strong>Fatigue auditive</strong> : -60% (exposition à <75dB)</li>
+        <li><strong>Stress</strong> : Réduction mesurée (échelle)</li>
+        <li><strong>Confort</strong> : 85% de satisfaction attendue</li>
+        <li><strong>Communication radio</strong> : Améliorée (moins de bruit parasite)</li>
+        <li><strong>Acceptation</strong> : L'alarme devient une aide, pas une nuisance</li>
+    </ul>
+    
+    <!-- ======================================================================== -->
+    <!-- 8. RETOURS D'EXPÉRIENCE -->
+    <!-- ======================================================================== -->
+    <h1>8. RETOURS D'EXPÉRIENCE</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Secteur</th>
+                <th>Réalisations</th>
+                <th>Leçon</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>Industrie automobile</strong></td><td>Voitures électriques (AVAS) - son synthétique obligatoire, signatures sonores variées</td><td>Un son bien conçu est identifiable et agréable</td></tr>
+            <tr><td><strong>Transport ferroviaire (SNCF)</strong></td><td>Hiérarchisation des alertes, messages vocaux contextualisés</td><td>-35% incidents liés à la vigilance, la voix humaine plus efficace qu'un bip</td></tr>
+            <tr><td><strong>Aéroport de Munich - "Quiet GSE"</strong></td><td>Réduction 15 dB des alarmes de recul, son directionnel</td><td>92% conducteurs satisfaits, 0 incident - moins fort ne signifie pas moins efficace</td></tr>
+        </tbody>
+    </table>
+    
+    <!-- ======================================================================== -->
+    <!-- 9. RISQUES ET MESURES DE MITIGATION -->
+    <!-- ======================================================================== -->
+    <h1>9. RISQUES ET MESURES DE MITIGATION</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Risque</th>
+                <th>Probabilité</th>
+                <th>Gravité</th>
+                <th>Plan d'action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Non-reconnaissance des nouveaux sons</td><td>Élevée</td><td>Modérée</td><td>Campagne communication, période transition, formation 15 min</td></tr>
+            <tr><td>Rejet des conducteurs ("gadget")</td><td>Moyenne</td><td>Élevée</td><td>Co-conception phase 1, tests utilisateurs, témoignages pairs</td></tr>
+            <tr><td>Coût de déploiement</td><td>Élevée</td><td>Élevée</td><td>Mutualisation CSCA, phasage progressif, intégration au rétrofit (P7)</td></tr>
+            <tr><td>Compatibilité parcs hétérogènes</td><td>Élevée</td><td>Modérée</td><td>Kit universel, installation standardisée</td></tr>
+            <tr><td>Maintenance des équipements</td><td>Faible</td><td>Faible</td><td>Garantie 3 ans, contrat maintenance</td></tr>
+        </tbody>
+    </table>
+    
+    <!-- ======================================================================== -->
+    <!-- 10. INDICATEURS DE SUIVI -->
+    <!-- ======================================================================== -->
+    <h1>10. INDICATEURS DE SUIVI</h1>
+    
+    <h2>10.1 Indicateurs techniques</h2>
+    
+    <div class="indicator-box">
+        <div class="indicator-item">
+            <strong>Engins équipés</strong>
+            <span>Cible M12: 20 (pilote) | Cible M24: 1 500</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Taux de pannes équipements</strong>
+            <span>Cible M12: <2% | Cible M24: <1%</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Temps d'installation</strong>
+            <span>Cible M12: 2h | Cible M24: 1h30</span>
+        </div>
+    </div>
+    
+    <h2>10.2 Indicateurs d'usage</h2>
+    
+    <div class="indicator-box">
+        <div class="indicator-item">
+            <strong>Satisfaction conducteurs</strong>
+            <span>Cible M12: 80% | Cible M24: 90%</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Alarmes ignorées</strong>
+            <span>Cible M12: 40% | Cible M24: 20%</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Temps de réaction</strong>
+            <span>Cible M12: 1,5s | Cible M24: 1,0s</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Recommandation (NPS)</strong>
+            <span>Cible M12: +40 | Cible M24: +60</span>
+        </div>
+    </div>
+    
+    <h2>10.3 Indicateurs d'impact</h2>
+    
+    <div class="indicator-box">
+        <div class="indicator-item">
+            <strong>Collisions recul</strong>
+            <span>Baseline: 8/an | Cible M24: -40% | M36: -60%</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Collisions angles morts</strong>
+            <span>Baseline: 12/an | Cible M24: -35% | M36: -50%</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Accidents nuit (son réduit)</strong>
+            <span>Cible M24: -20% | Cible M36: -30%</span>
+        </div>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 11. EN RÉSUMÉ -->
+    <!-- ======================================================================== -->
+    <h1>11. EN RÉSUMÉ</h1>
+    
+    <div class="encadre">
+        <p style="font-size: 12pt; font-style: italic;">
+            Nous demandons aux conducteurs d'être attentifs, mais nous les soumettons à une agression sonore permanente. 
+            Le bip de recul strident, identique depuis 30 ans, est devenu un bruit de fond que personne n'écoute plus. 
+            Pire, il fatigue, stresse, isole. L'alerte sonore intelligente, ce n'est pas un gadget. C'est la reconnaissance 
+            que le son est une information, pas une punition. C'est faire entrer nos engins dans le XXIe siècle.
+        </p>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 12. CE QUE NOUS PROPOSONS CONCRÈTEMENT -->
+    <!-- ======================================================================== -->
+    <h1>12. CE QUE NOUS PROPOSONS CONCRÈTEMENT</h1>
+    
+    <ol style="font-weight: bold; font-size: 12pt;">
+        <li>Développer une bibliothèque de 15 sons distincts par type de danger</li>
+        <li>Intégrer des messages vocaux contextualisés</li>
+        <li>Adapter le volume à l'environnement (jour/nuit/bruit ambiant)</li>
+        <li>Tester sur 20 PUSH en conditions réelles</li>
+    </ol>
+    
+    <!-- Pied de page -->
+    <div class="footer">
+        <p>PISTE 12 - Alerte Sonore Intelligente | Version 1.0 | Mars 2026 | CDG - CSCA</p>
+    </div>
+</body>
+</html>

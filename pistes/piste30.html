@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PISTE 30 - La "Valise pédagogique itinérante"</title>
+    <style>
+        /* Styles généraux pour l'impression */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            line-height: 1.5;
+            color: #333;
+            background-color: white;
+            font-size: 10.5pt;
+            margin: 0;
+            padding: 15px;
+        }
+        
+        /* Styles pour l'impression PDF */
+        @media print {
+            body {
+                padding: 0.5cm;
+            }
+            .page-break {
+                page-break-before: always;
+            }
+            .no-break {
+                page-break-inside: avoid;
+            }
+            h1, h2, h3, h4 {
+                page-break-after: avoid;
+            }
+            table {
+                page-break-inside: avoid;
+            }
+        }
+        
+        /* En-tête du document */
+        .document-header {
+            border-bottom: 3px solid #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+        
+        .document-title {
+            font-size: 24pt;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .document-subtitle {
+            font-size: 14pt;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+        
+        .document-meta {
+            text-align: right;
+            color: #7f8c8d;
+            font-size: 10pt;
+        }
+        
+        .tagline {
+            background-color: #ecf0f1;
+            padding: 8px 15px;
+            border-left: 5px solid #e67e22;
+            margin-bottom: 20px;
+            font-weight: bold;
+            font-size: 12pt;
+        }
+        
+        /* Typographie */
+        h1 {
+            font-size: 18pt;
+            color: #2c3e50;
+            margin: 25px 0 10px 0;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #bdc3c7;
+        }
+        
+        h2 {
+            font-size: 14pt;
+            color: #34495e;
+            margin: 20px 0 10px 0;
+            padding-left: 5px;
+            border-left: 4px solid #e67e22;
+        }
+        
+        h3 {
+            font-size: 12pt;
+            color: #555;
+            margin: 15px 0 8px 0;
+            font-weight: bold;
+        }
+        
+        h4 {
+            font-size: 11pt;
+            color: #666;
+            margin: 12px 0 5px 0;
+            font-weight: bold;
+        }
+        
+        p {
+            margin-bottom: 8px;
+            text-align: justify;
+        }
+        
+        ul, ol {
+            margin: 8px 0 12px 25px;
+        }
+        
+        li {
+            margin-bottom: 3px;
+        }
+        
+        /* Boîtes d'information */
+        .encadre {
+            border: 1px solid #bdc3c7;
+            padding: 12px;
+            background-color: #f9f9f9;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        
+        .important {
+            background-color: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 8px 12px;
+            margin: 12px 0;
+        }
+        
+        .hypothese {
+            background-color: #d4edda;
+            border-left: 5px solid #28a745;
+            padding: 8px 12px;
+            margin: 12px 0;
+            font-style: italic;
+        }
+        
+        /* Tableaux */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0 18px 0;
+            font-size: 9.5pt;
+        }
+        
+        th {
+            background-color: #2c3e50;
+            color: white;
+            font-weight: bold;
+            padding: 6px 4px;
+            text-align: left;
+            border: 1px solid #34495e;
+        }
+        
+        td {
+            padding: 5px 4px;
+            border: 1px solid #ddd;
+            vertical-align: top;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        /* Tableau de cartographie des risques avec couleurs */
+        .risk-table td:nth-child(7) {
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-orange {
+            background-color: #FFA500 !important;
+            color: black;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-red {
+            background-color: #FF0000 !important;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-yellow {
+            background-color: #FFFF00 !important;
+            color: black;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-green {
+            background-color: #008000 !important;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-purple {
+            background-color: #800080 !important;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        /* Grille de cotation */
+        .cotation-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 12px 0;
+        }
+        
+        .cotation-box {
+            border: 1px solid #ddd;
+            padding: 8px;
+            background-color: #f9f9f9;
+        }
+        
+        .cotation-box h4 {
+            background-color: #2c3e50;
+            color: white;
+            padding: 4px 8px;
+            margin: -8px -8px 8px -8px;
+            font-size: 11pt;
+        }
+        
+        /* Pied de page */
+        .footer {
+            margin-top: 25px;
+            padding-top: 8px;
+            border-top: 1px solid #bdc3c7;
+            font-size: 9pt;
+            color: #7f8c8d;
+            text-align: center;
+        }
+        
+        .page-break {
+            page-break-before: always;
+        }
+        
+        /* Indicateurs */
+        .indicator-box {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 12px 0;
+        }
+        
+        .indicator-item {
+            flex: 1 1 200px;
+            background-color: #ecf0f1;
+            padding: 8px;
+            border-radius: 5px;
+            border-left: 4px solid #e67e22;
+        }
+        
+        .indicator-item strong {
+            display: block;
+            font-size: 10.5pt;
+            color: #2c3e50;
+        }
+        
+        .indicator-item span {
+            font-size: 9pt;
+            color: #555;
+        }
+        
+        /* Légende des couleurs */
+        .color-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 12px 0;
+            padding: 8px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .color-box {
+            width: 20px;
+            height: 20px;
+            border: 1px solid #333;
+        }
+        
+        /* Texte centré */
+        .text-center {
+            text-align: center;
+        }
+        
+        /* Badge */
+        .badge {
+            background-color: #e67e22;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 9pt;
+            font-weight: bold;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <!-- En-tête du document -->
+    <div class="document-header">
+        <div>
+            <div class="document-title">PISTE 30</div>
+            <div class="document-subtitle">La "Valise pédagogique itinérante"</div>
+        </div>
+        <div class="document-meta">
+            <div>Version 1.0</div>
+            <div>Mars 2026</div>
+            <div>CDG - CSCA</div>
+        </div>
+    </div>
+    
+    <!-- Tagline -->
+    <div class="tagline">
+        LA FORMATION QUI VA VERS LE TERRAIN
+    </div>
+
+    <!-- ======================================================================== -->
+    <!-- DESCRIPTION INTRODUCTIVE -->
+    <!-- ======================================================================== -->
+    <p style="font-size: 11pt; font-weight: bold; text-align: center; margin: 20px 0;">
+        Kit de formation mobile qui va sur le terrain, vers les équipes de nuit.
+    </p>
+    <p>
+        Aujourd'hui, la formation à la sécurité est centralisée et programmée. Le conducteur doit venir à la formation, souvent déconnecté de son activité. Les équipes de nuit, les intérimaires, les plus exposés, sont aussi les moins formés. La trentième piste propose d'inverser le paradigme : ce n'est plus au conducteur de venir à la formation, c'est à la formation d'aller vers le conducteur. La valise pédagogique itinérante est un kit complet et autonome, mobile, qui permet d'animer des séquences courtes (15-30 min) directement sur le lieu de travail, avec des maquettes, des simulateurs et des outils numériques.
+    </p>
+    
+    <!-- ======================================================================== -->
+    <!-- 1. PROBLÉMATIQUE ADRESSÉE -->
+    <!-- ======================================================================== -->
+    <h1>1. PROBLÉMATIQUE ADRESSÉE</h1>
+    
+    <p><strong>Constat fondamental :</strong> La formation est centralisée et programmée. Le conducteur doit venir à la formation.</p>
+    
+    <table>
+        <thead><tr><th>Obstacle</th><th>Conséquence</th></tr></thead>
+        <tbody>
+            <tr><td>Éloignement géographique</td><td>Équipes de nuit, éparpillées, pas accès</td></tr>
+            <tr><td>Disponibilité</td><td>Conducteurs en production ne peuvent se libérer</td></tr>
+            <tr><td>Déconnexion</td><td>Formation en salle déconnectée du terrain</td></tr>
+            <tr><td>Délai</td><td>Des semaines entre besoin et formation</td></tr>
+            <tr><td>Hétérogénéité</td><td>Nuit, intérimaires, CDD moins formés</td></tr>
+            <tr><td>Coût</td><td>1 journée formation = 1 journée non productive</td></tr>
+        </tbody>
+    </table>
+    <p><strong>Paradoxe :</strong> Les plus exposés (nuit, intérim) sont les moins formés. La formation a lieu quand le formateur est disponible, pas quand le conducteur est prêt. Les messages sont délivrés en salle, pas sur le lieu du risque.</p>
+    
+    <div class="hypothese">
+        <strong>Notre hypothèse :</strong> Si la formation ne peut pas venir au conducteur, alors le conducteur ne sera pas formé. Il faut inverser le paradigme : la formation doit aller vers le terrain. La valise itinérante est un kit complet, autonome, qui se déplace sur les lieux de travail pour des séquences courtes, concrètes, contextualisées.
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 2. CARTOGRAPHIE DES RISQUES (MISE À JOUR POUR PISTE 30) -->
+    <!-- ======================================================================== -->
+    <h1>2. CARTOGRAPHIE DES RISQUES</h1>
+    
+    <!-- Légende des couleurs -->
+    <div class="color-legend">
+        <div class="legend-item"><div class="color-box" style="background-color: #FF0000;"></div> <strong>Rouge</strong> - Risque très élevé (intolérable)</div>
+        <div class="legend-item"><div class="color-box" style="background-color: #FFA500;"></div> <strong>Orange</strong> - Risque élevé (actions nécessaires)</div>
+        <div class="legend-item"><div class="color-box" style="background-color: #FFFF00;"></div> <strong>Jaune</strong> - Risque moyen (tolérable)</div>
+        <div class="legend-item"><div class="color-box" style="background-color: #008000;"></div> <strong>Vert</strong> - Risque faible (acceptable)</div>
+        <div class="legend-item"><div class="color-box" style="background-color: #800080;"></div> <strong>Violet</strong> - Risque d'accès à la formation</div>
+    </div>
+    
+    <table class="risk-table">
+        <thead>
+            <tr>
+                <th>Réf.</th>
+                <th>Danger</th>
+                <th>Causes</th>
+                <th>Conséquences</th>
+                <th>Gravité</th>
+                <th>Probabilité</th>
+                <th>Criticité</th>
+                <th>Barrières Piste 30</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>FOR 05.1</strong></td>
+                <td>Non-formation des équipes de nuit</td>
+                <td>Formations programmées en journée, absence de sessions nocturnes</td>
+                <td>Conducteurs de nuit moins compétents, risques accrus, accidents</td>
+                <td>3 (Majeure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Valise itinérante disponible 24/7, sessions programmables de nuit</td>
+            </tr>
+            <tr>
+                <td><strong>FOR 05.2</strong></td>
+                <td>Exclusion des intérimaires et CDD des formations</td>
+                <td>Formations réservées aux CDI, planning incompatible avec contrats courts</td>
+                <td>Personnel temporaire non formé, risques majeurs en situation d'urgence</td>
+                <td>3 (Majeure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-red">ROUGE</td>
+                <td>Sessions courtes et flexibles, accessibles à tous les statuts</td>
+            </tr>
+            <tr>
+                <td><strong>FOR 05.3</strong></td>
+                <td>Déconnexion formation / réalité terrain</td>
+                <td>Cours en salle théoriques, absence de mise en situation concrète</td>
+                <td>Apprentissage inefficace, non-application des règles en situation réelle</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Formation sur le lieu de travail, maquettes, tapis de sol, simulation</td>
+            </tr>
+            <tr>
+                <td><strong>FOR 05.4</strong></td>
+                <td>Délais trop longs entre besoin et formation</td>
+                <td>Planification rigide, absence de réactivité</td>
+                <td>Conducteurs non formés au moment critique, risques persistants</td>
+                <td>2 (Mineure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-green">VERT</td>
+                <td>Déploiement rapide de nouveaux modules (48h), valise prête à l'emploi</td>
+            </tr>
+            <tr>
+                <td><strong>FOR 05.5</strong></td>
+                <td>Coût d'opportunité de la formation (perte de production)</td>
+                <td>1 journée de formation = 1 journée non productive, réticence des managers</td>
+                <td>Sous-formation, risques non maîtrisés</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Sessions courtes (15-30 min) intégrées à la vacation, perte minimale</td>
+            </tr>
+            <tr>
+                <td><strong>FOR 05.6</strong></td>
+                <td>Absence de formation aux situations rares ou complexes</td>
+                <td>Scénarios non couverts par la formation standard (dégivrage, panne)</td>
+                <td>Mauvaise réaction en situation d'urgence, accidents</td>
+                <td>3 (Majeure)</td>
+                <td>D (Très rare)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Modules spécifiques (urgence, co-activité) dans la valise, mise en situation</td>
+            </tr>
+            <tr>
+                <td><strong>FOR 05.7</strong></td>
+                <td>Manque de formation pratique sur les angles morts</td>
+                <td>Explications théoriques, absence de visualisation concrète</td>
+                <td>Non-vérification systématique, collisions</td>
+                <td>3 (Majeure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-red">ROUGE</td>
+                <td>Maquette d'angles morts avec figurines, choc visuel, participation active</td>
+            </tr>
+            <tr>
+                <td><strong>FOR 05.8</strong></td>
+                <td>Méconnaissance des effets de la fatigue sur la conduite</td>
+                <td>Formation théorique, absence d'expérimentation</td>
+                <td>Sous-estimation du risque, endormissement au volant</td>
+                <td>3 (Majeure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Lunettes de simulation de fatigue, parcours comparatif, prise de conscience</td>
+            </tr>
+            <tr>
+                <td><strong>FOR 05.9</strong></td>
+                <td>Absence de rappel pratique des règles de co-activité</td>
+                <td>Formation initiale non réactualisée, pas de mise en situation collective</td>
+                <td>Conflits piéton/engin, accidents</td>
+                <td>3 (Majeure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Tapis de sol avec marquages, simulation de co-activité, visualisation distances</td>
+            </tr>
+            <tr>
+                <td><strong>COM 05.2</strong></td>
+                <td>Fracture dans l'accès à la formation (statut/horaire)</td>
+                <td>Inégalité de traitement entre conducteurs de jour et de nuit, CDI et précaires</td>
+                <td>Sentiment d'injustice, démobilisation, risques non maîtrisés</td>
+                <td>2 (Mineure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-green">VERT</td>
+                <td>Formation équitable pour tous, quel que soit le statut ou l'horaire</td>
+            </tr>
+            <tr>
+                <td><strong>ACC 02.1</strong></td>
+                <td>Accident lié à la méconnaissance d'une procédure d'urgence</td>
+                <td>Procédure jamais pratiquée, formation trop théorique</td>
+                <td>Blessures, dommages graves</td>
+                <td>4 (Catastrophique)</td>
+                <td>D (Très rare)</td>
+                <td class="risk-red">ROUGE</td>
+                <td>Module dédié avec fiches et scénarios, mise en situation sur tapis</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <!-- Échelle de cotation -->
+    <h3>Échelle de cotation utilisée</h3>
+    <div class="cotation-grid">
+        <div class="cotation-box"><h4>Gravité</h4><ul><li>1 - Négligeable</li><li>2 - Mineure</li><li>3 - Majeure</li><li>4 - Catastrophique</li></ul></div>
+        <div class="cotation-box"><h4>Probabilité</h4><ul><li>A - Fréquent (quotidien)</li><li>B - Occasionnel (hebdo/mensuel)</li><li>C - Rare (annuel)</li><li>D - Très rare (>1 an)</li><li>E - Extrêmement rare</li></ul></div>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 3. CONCEPT D'ENSEMBLE -->
+    <!-- ======================================================================== -->
+    <h1>3. CONCEPT D'ENSEMBLE</h1>
+    <h2>3.1 Principe général</h2>
+    <p>Créer une <strong>valise pédagogique</strong> contenant tous les outils pour animer une séquence de 15-30 min <strong>directement sur la zone de travail</strong>.</p>
+    <p><strong>Caractéristiques :</strong> Mobile, autonome (batterie, éclairage), modulaire, interactive, contextualisée, courte.</p>
+    
+    <h2>3.2 Architecture du dispositif</h2>
+    <div style="background-color: #f0f0f0; border:1px solid #ccc; padding:10px;">
+        <p><strong>🧳 CONTENU DE LA VALISE :</strong> Modules pédagogiques (10 thèmes) + Maquette angles morts + Lunettes fatigue + Tapis de sol + Tablette pré-chargée (vidéos, quiz, fiches) + Kit animation (tableau, affiches, post-it).</p>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 4. LE CONTENU DE LA VALISE -->
+    <!-- ======================================================================== -->
+    <h1>4. LE CONTENU DE LA VALISE - DÉTAIL</h1>
+    <ul>
+        <li><strong>10 modules pédagogiques :</strong> Angles morts (20 min), Vitesse (15), Vérification pré-op (20), Co-activité (15), Fatigue (20), Recul (15), Éco-conduite (15), Urgences (20), Signalétique (15), Joker sécurité (10).</li>
+        <li><strong>Maquette angles morts (400€) :</strong> Engin 1/20e, figurines, révélation des angles morts.</li>
+        <li><strong>Lunettes simulation fatigue (250€/lot de 4) :</strong> Simule vision floue, champ réduit, latence.</li>
+        <li><strong>Tapis de sol pédagogique (300€) :</strong> 3x2 m, zone parking, visualisation distances.</li>
+        <li><strong>Tablette pré-chargée (400€) :</strong> 15 vidéos, 10 quiz, 20 fiches, QR codes.</li>
+        <li><strong>Kit animation (610€) :</strong> Valise renforcée, tableau magnétique, affiches, feutres, batterie.</li>
+        <li><strong>TOTAL PAR VALISE : 3 460 €</strong></li>
+    </ul>
+    
+    <!-- ======================================================================== -->
+    <!-- 5. DÉPLOIEMENT PAR PHASES -->
+    <!-- ======================================================================== -->
+    <h1>5. DÉPLOIEMENT PAR PHASES</h1>
+    <p><strong>PHASE 1 - Conception & prototypage (4 mois) :</strong> Conception 10 modules, fabrication maquette, achat équipements, développement contenus, assemblage prototype, tests terrain. <strong>Budget 13 060 €.</strong></p>
+    <p><strong>PHASE 2 - Déploiement CDG (6 mois) :</strong> 4 valises supplémentaires, formation 10 animateurs (buddies), déploiement 5 zones (Fret, T2E, Catering, Maintenance, Nuit). <strong>Budget 19 000 €.</strong></p>
+    <p><strong>PHASE 3 - Généralisation (24-36 mois) :</strong> Déploiement Orly (3 valises), province (5 aéroports), nouveaux modules. <strong>Budget 35 000 € + 2 k€/an.</strong></p>
+    <p><strong>BUDGET TOTAL 3 ANS : 67 060 €.</strong></p>
+    
+    <!-- ======================================================================== -->
+    <!-- 6. BÉNÉFICES ATTENDUS -->
+    <!-- ======================================================================== -->
+    <h1>6. BÉNÉFICES ATTENDUS</h1>
+    <h2>6.1 Bénéfices mesurables</h2>
+    <div class="indicator-box">
+        <div class="indicator-item"><strong>Valises déployées</strong><span>Cible M36: 13</span></div>
+        <div class="indicator-item"><strong>Sessions réalisées / an</strong><span>Cible M36: 300</span></div>
+        <div class="indicator-item"><strong>Conducteurs touchés / an</strong><span>Cible M36: 3 000</span></div>
+        <div class="indicator-item"><strong>Dont conducteurs de nuit</strong><span>Cible M36: 900</span></div>
+        <div class="indicator-item"><strong>Dont intérimaires / CDD</strong><span>Cible M36: 600</span></div>
+        <div class="indicator-item"><strong>Satisfaction participants</strong><span>Cible M36: 92%</span></div>
+    </div>
+    <h2>6.2 Bénéfices qualitatifs</h2>
+    <ul><li>Équité d'accès, contextualisation, brièveté, concret (maquettes, simulateurs), décloisonnement, agilité.</li></ul>
+    
+    <!-- ======================================================================== -->
+    <!-- 7. RETOURS D'EXPÉRIENCE / 8. RISQUES / 9. CONDITIONS -->
+    <!-- ======================================================================== -->
+    <h1>7. RETOURS D'EXPÉRIENCE</h1>
+    <ul>
+        <li><strong>BTP - Camion-école :</strong> +300% conducteurs formés, -40% accidents sur chantiers visités. Leçon : la formation vient au travailleur.</li>
+        <li><strong>Grande distribution - Formation en magasin :</strong> Taux formation intérimaires 95%, accidentologie -35%. Leçon : la brièveté est un facteur de succès.</li>
+        <li><strong>Armée française - Kit déployable :</strong> Kits légers (20 kg) en OPEX. Leçon : la mobilité est une exigence.</li>
+    </ul>
+    
+    <h1>8. RISQUES ET MESURES DE MITIGATION</h1>
+    <table><thead><tr><th>Risque</th><th>Prob.</th><th>Grav.</th><th>Plan d'action</th></tr></thead>
+        <tr><td>Utilisation insuffisante (valise dort)</td><td>Élevée</td><td>Critique</td><td>Animateur par zone, objectif hebdo de sessions, reporting</td></tr>
+        <tr><td>Usure / détérioration</td><td>Élevée</td><td>Modérée</td><td>Valise renforcée, maintenance trimestrielle, budget renouvellement</td></tr>
+        <tr><td>Obsolescence des contenus</td><td>Moyenne</td><td>Modérée</td><td>Mise à jour annuelle, modules évolutifs</td></tr>
+        <tr><td>Rejet des conducteurs ("encore une formation")</td><td>Moyenne</td><td>Élevée</td><td>Sessions courtes, pédagogie active, pas de diapositives</td></tr>
+        <tr><td>Coût de déploiement</td><td>Faible</td><td>Faible</td><td>Mutualisation CSCA, 3 460 € par valise</td></tr>
+    </table>
+    
+    <h1>9. CONDITIONS DE RÉUSSITE</h1>
+    <h3>Facteurs clés</h3>
+    <ol><li>Mobilité (poids <15 kg, roulettes)</li><li>Brièveté (15-30 min max)</li><li>Concret (maquettes, simulateurs)</li><li>Contextualisation (sur le lieu du risque)</li><li>Animateur formé par zone</li><li>Actualisation des modules</li></ol>
+    <h3>Pièges à éviter</h3>
+    <ul><li>Valise trop lourde</li><li>Modules trop longs</li><li>Déconnexion du terrain (co-conception)</li><li>Dépendance technologique (mode hors ligne)</li><li>Oubli de la nuit (éclairage)</li></ul>
+    
+    <!-- ======================================================================== -->
+    <!-- 10. POSITIONNEMENT STRATÉGIQUE -->
+    <!-- ======================================================================== -->
+    <h1>10. POSITIONNEMENT STRATÉGIQUE</h1>
+    <h2>10.1 Complémentarité avec la formation classique</h2>
+    <table>
+        <tr><th>Critère</th><th>Formation classique</th><th>Valise itinérante</th></tr>
+        <tr><td>Durée</td><td>1-5 jours</td><td>15-30 minutes</td></tr>
+        <tr><td>Lieu</td><td>Salle de formation</td><td>Zone de travail</td></tr>
+        <tr><td>Public</td><td>Planifié</td><td>Tous (nuit, intérim)</td></tr>
+        <tr><td>Pédagogie</td><td>Théorique</td><td>Concrète, maquettes</td></tr>
+        <tr><td>Fréquence</td><td>Ponctuelle</td><td>Quotidienne possible</td></tr>
+        <tr><td>Coût marginal</td><td>Élevé</td><td>Très faible</td></tr>
+    </table>
+    <p><strong>Complémentarité :</strong> Formation longue = certification. Valise = rappel, mise à jour, contextualisation.</p>
+    
+    <!-- ======================================================================== -->
+    <!-- 11. EN RÉSUMÉ -->
+    <!-- ======================================================================== -->
+    <h1>11. EN RÉSUMÉ</h1>
+    <div class="encadre">
+        <p style="font-size: 12pt; font-style: italic;">
+            La valise pédagogique itinérante est la piste de l'équité et de la proximité. Ce n'est pas un outil technologique révolutionnaire. C'est une idée simple : la formation doit aller vers ceux qui en ont besoin. Pas l'inverse. Ce que nous proposons, c'est d'arrêter de former uniquement ceux qui ont le temps, la disponibilité, la proximité. C'est d'aller chercher ceux qui travaillent de nuit, ceux qui sont en bout de piste, ceux qui sont intérimaires.
+        </p>
+        <p><strong>Le coût ?</strong> 3 460 € par valise. <strong>Le bénéfice ?</strong> Un conducteur de nuit qui comprend pourquoi on lui demande de vérifier son angle mort. À 3h du matin. Sur sa zone. Avec ses collègues. Et qui ne l'oubliera jamais.</p>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 12. CE QUE NOUS PROPOSONS CONCRÈTEMENT -->
+    <!-- ======================================================================== -->
+    <h1>12. CE QUE NOUS PROPOSONS CONCRÈTEMENT</h1>
+    <ol style="font-weight: bold; font-size: 12pt;">
+        <li>Concevoir une première valise prototype avec 10 modules.</li>
+        <li>Tester sur 3 sessions terrain avec conducteurs volontaires.</li>
+        <li>Déployer 4 valises supplémentaires sur les zones CDG.</li>
+        <li>Former 10 animateurs (buddies) à l'utilisation.</li>
+    </ol>
+    
+    <!-- Pied de page -->
+    <div class="footer">
+        <p>PISTE 30 - La "Valise pédagogique itinérante" | Version 1.0 | Mars 2026 | CDG - CSCA</p>
+    </div>
+</body>
+</html>

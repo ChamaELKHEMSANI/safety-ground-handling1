@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PISTE 10 - Formation Immersive Réalité Virtuelle</title>
+    <style>
+        /* Styles généraux pour l'impression */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            line-height: 1.5;
+            color: #333;
+            background-color: white;
+            font-size: 10.5pt;
+            margin: 0;
+            padding: 15px;
+        }
+        
+        /* Styles pour l'impression PDF */
+        @media print {
+            body {
+                padding: 0.5cm;
+            }
+            .page-break {
+                page-break-before: always;
+            }
+            .no-break {
+                page-break-inside: avoid;
+            }
+            h1, h2, h3, h4 {
+                page-break-after: avoid;
+            }
+            table {
+                page-break-inside: avoid;
+            }
+        }
+        
+        /* En-tête du document */
+        .document-header {
+            border-bottom: 3px solid #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+        
+        .document-title {
+            font-size: 24pt;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .document-subtitle {
+            font-size: 14pt;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+        
+        .document-meta {
+            text-align: right;
+            color: #7f8c8d;
+            font-size: 10pt;
+        }
+        
+        .tagline {
+            background-color: #ecf0f1;
+            padding: 8px 15px;
+            border-left: 5px solid #e67e22;
+            margin-bottom: 20px;
+            font-weight: bold;
+            font-size: 12pt;
+        }
+        
+        /* Typographie */
+        h1 {
+            font-size: 18pt;
+            color: #2c3e50;
+            margin: 25px 0 10px 0;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #bdc3c7;
+        }
+        
+        h2 {
+            font-size: 14pt;
+            color: #34495e;
+            margin: 20px 0 10px 0;
+            padding-left: 5px;
+            border-left: 4px solid #e67e22;
+        }
+        
+        h3 {
+            font-size: 12pt;
+            color: #555;
+            margin: 15px 0 8px 0;
+            font-weight: bold;
+        }
+        
+        h4 {
+            font-size: 11pt;
+            color: #666;
+            margin: 12px 0 5px 0;
+            font-weight: bold;
+        }
+        
+        p {
+            margin-bottom: 8px;
+            text-align: justify;
+        }
+        
+        ul, ol {
+            margin: 8px 0 12px 25px;
+        }
+        
+        li {
+            margin-bottom: 3px;
+        }
+        
+        /* Boîtes d'information */
+        .encadre {
+            border: 1px solid #bdc3c7;
+            padding: 12px;
+            background-color: #f9f9f9;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        
+        .important {
+            background-color: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 8px 12px;
+            margin: 12px 0;
+        }
+        
+        .hypothese {
+            background-color: #d4edda;
+            border-left: 5px solid #28a745;
+            padding: 8px 12px;
+            margin: 12px 0;
+            font-style: italic;
+        }
+        
+        /* Tableaux */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0 18px 0;
+            font-size: 9.5pt;
+        }
+        
+        th {
+            background-color: #2c3e50;
+            color: white;
+            font-weight: bold;
+            padding: 6px 4px;
+            text-align: left;
+            border: 1px solid #34495e;
+        }
+        
+        td {
+            padding: 5px 4px;
+            border: 1px solid #ddd;
+            vertical-align: top;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        /* Tableau de cartographie des risques avec couleurs */
+        .risk-table td:nth-child(7) {
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-orange {
+            background-color: #FFA500 !important;
+            color: black;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-red {
+            background-color: #FF0000 !important;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-yellow {
+            background-color: #FFFF00 !important;
+            color: black;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-green {
+            background-color: #008000 !important;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        /* Grille de cotation */
+        .cotation-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 12px 0;
+        }
+        
+        .cotation-box {
+            border: 1px solid #ddd;
+            padding: 8px;
+            background-color: #f9f9f9;
+        }
+        
+        .cotation-box h4 {
+            background-color: #2c3e50;
+            color: white;
+            padding: 4px 8px;
+            margin: -8px -8px 8px -8px;
+            font-size: 11pt;
+        }
+        
+        /* Pied de page */
+        .footer {
+            margin-top: 25px;
+            padding-top: 8px;
+            border-top: 1px solid #bdc3c7;
+            font-size: 9pt;
+            color: #7f8c8d;
+            text-align: center;
+        }
+        
+        .page-break {
+            page-break-before: always;
+        }
+        
+        /* Indicateurs */
+        .indicator-box {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 12px 0;
+        }
+        
+        .indicator-item {
+            flex: 1 1 200px;
+            background-color: #ecf0f1;
+            padding: 8px;
+            border-radius: 5px;
+            border-left: 4px solid #e67e22;
+        }
+        
+        .indicator-item strong {
+            display: block;
+            font-size: 10.5pt;
+            color: #2c3e50;
+        }
+        
+        .indicator-item span {
+            font-size: 9pt;
+            color: #555;
+        }
+        
+        /* Légende des couleurs */
+        .color-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 12px 0;
+            padding: 8px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .color-box {
+            width: 20px;
+            height: 20px;
+            border: 1px solid #333;
+        }
+        
+        /* Texte centré */
+        .text-center {
+            text-align: center;
+        }
+        
+        /* Badge */
+        .badge {
+            background-color: #e67e22;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 9pt;
+            font-weight: bold;
+            display: inline-block;
+        }
+        
+        /* Stations VR */
+        .stations-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 15px 0;
+        }
+        
+        .station-card {
+            border: 2px solid #3498db;
+            border-radius: 5px;
+            padding: 10px;
+            background-color: #f0f8ff;
+        }
+        
+        .station-card h4 {
+            background-color: #3498db;
+            color: white;
+            padding: 5px;
+            margin: -10px -10px 10px -10px;
+            text-align: center;
+        }
+        
+        .scenario-badge {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 8pt;
+            font-weight: bold;
+            margin-right: 5px;
+        }
+        
+        .scenario-critique {
+            background-color: #FF0000;
+            color: white;
+        }
+        
+        .scenario-eleve {
+            background-color: #FFA500;
+            color: black;
+        }
+        
+        .scenario-modere {
+            background-color: #FFFF00;
+            color: black;
+        }
+    </style>
+</head>
+<body>
+    <!-- En-tête du document -->
+    <div class="document-header">
+        <div>
+            <div class="document-title">PISTE 10</div>
+            <div class="document-subtitle">Formation Immersive Réalité Virtuelle</div>
+        </div>
+        <div class="document-meta">
+            <div>Version 1.0</div>
+            <div>Mars 2026</div>
+            <div>CDG - CSCA</div>
+        </div>
+    </div>
+    
+    <!-- Tagline -->
+    <div class="tagline">
+        APPRENDRE PAR L'EXPÉRIENCE, SANS RISQUE
+    </div>
+    
+    <!-- Description -->
+    <p style="font-size: 11pt; font-weight: bold; text-align: center; margin: 20px 0;">
+        Centre de formation en réalité virtuelle avec 8 scénarios d'accidents reconstitués.
+    </p>
+    
+    <p>
+        Les méthodes de formation actuelles à la sécurité en piste reposent sur trois piliers, tous imparfaits. Le cours théorique en salle 
+        est passif et abstrait, avec une faible mémorisation. La pratique sur engin réel est coûteuse, mobilise du matériel et comporte un risque, 
+        ne permettant pas d'exposer le conducteur à des situations dangereuses. L'e-learning, bien que pratique, est souvent solitaire et peu engageant. 
+        Le point commun de ces méthodes est qu'elles évitent l'erreur. Or, c'est souvent en se trompant que l'on apprend le mieux. La dixième piste 
+        propose de renverser ce paradigme en faisant de l'erreur un outil pédagogique, grâce à la réalité virtuelle.
+    </p>
+    
+    <!-- ======================================================================== -->
+    <!-- 1. PROBLÉMATIQUE ADRESSÉE -->
+    <!-- ======================================================================== -->
+    <h1>1. PROBLÉMATIQUE ADRESSÉE</h1>
+    
+    <p><strong>Constat fondamental :</strong> La formation à la sécurité en piste repose aujourd'hui sur trois modalités, toutes imparfaites :</p>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Modalité</th>
+                <th>Format</th>
+                <th>Limites</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Théorique</td><td>Cours en salle, diapositives, quiz</td><td>Passive, abstraite, faible mémorisation</td></tr>
+            <tr><td>Pratique sur engin réel</td><td>Conduite supervisée</td><td>Coûteuse, risque réel, situations limitées</td></tr>
+            <tr><td>E-learning</td><td>Modules vidéo, QCM</td><td>Solitaire, peu engageant, aucune mise en situation</td></tr>
+        </tbody>
+    </table>
+    
+    <p><strong>Conséquences :</strong></p>
+    <ul>
+        <li><strong>Mémorisation faible</strong> : 20% des règles sont retenues à 3 mois</li>
+        <li><strong>Stress réel</strong> : Le premier contact avec une situation dangereuse a lieu... en situation dangereuse</li>
+        <li><strong>Situations rares non formées</strong> : Dégivrage, panne, conditions extrêmes</li>
+        <li><strong>Évaluation subjective</strong> : "Il semble savoir conduire"</li>
+    </ul>
+    
+    <div class="hypothese">
+        <strong>Notre hypothèse :</strong> La Réalité Virtuelle (VR) permet de <strong>vivre une expérience</strong> au lieu de <strong>recevoir une information</strong>.
+        <p><strong>L'erreur devient pédagogique.</strong> Le conducteur peut se tromper, voir les conséquences, recommencer, progresser, <strong>sans aucun risque</strong>.</p>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 2. CARTOGRAPHIE DES RISQUES (MISE À JOUR POUR PISTE 10) -->
+    <!-- ======================================================================== -->
+    <h1>2. CARTOGRAPHIE DES RISQUES</h1>
+    
+    <!-- Légende des couleurs -->
+    <div class="color-legend">
+        <div class="legend-item"><div class="color-box" style="background-color: #FF0000;"></div> <strong>Rouge</strong> - Risque très élevé (intolérable)</div>
+        <div class="legend-item"><div class="color-box" style="background-color: #FFA500;"></div> <strong>Orange</strong> - Risque élevé (actions nécessaires)</div>
+        <div class="legend-item"><div class="color-box" style="background-color: #FFFF00;"></div> <strong>Jaune</strong> - Risque moyen (tolérable)</div>
+        <div class="legend-item"><div class="color-box" style="background-color: #008000;"></div> <strong>Vert</strong> - Risque faible (acceptable)</div>
+    </div>
+    
+    <table class="risk-table">
+        <thead>
+            <tr>
+                <th>Réf.</th>
+                <th>Danger</th>
+                <th>Causes</th>
+                <th>Conséquences</th>
+                <th>Gravité</th>
+                <th>Probabilité</th>
+                <th>Criticité</th>
+                <th>Barrières Piste 10</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>FOR 01.1</strong></td>
+                <td>Mémorisation insuffisante des règles de sécurité</td>
+                <td>Formation théorique passive, absence de mise en situation</td>
+                <td>Oubli des procédures, erreurs en situation réelle</td>
+                <td>2 (Mineure)</td>
+                <td>A (Fréquent)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Apprentissage expérientiel VR, mémorisation +60%</td>
+            </tr>
+            <tr>
+                <td><strong>FOR 01.2</strong></td>
+                <td>Premier contact avec le danger en situation réelle</td>
+                <td>Absence de simulation, formation théorique uniquement</td>
+                <td>Stress, mauvaise réaction, accident</td>
+                <td>3 (Majeure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-red">ROUGE</td>
+                <td>Exposition progressive aux situations critiques en VR</td>
+            </tr>
+            <tr>
+                <td><strong>FOR 01.3</strong></td>
+                <td>Non-formation aux situations rares</td>
+                <td>Impossible de reproduire en réel (dégivrage, panne)</td>
+                <td>Conducteurs non préparés, accidents évitables</td>
+                <td>3 (Majeure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Scénarios VR dédiés aux situations rares</td>
+            </tr>
+            <tr>
+                <td><strong>FOR 01.4</strong></td>
+                <td>Évaluation subjective des compétences</td>
+                <td>Pas de mesure objective, "il semble savoir"</td>
+                <td>Conducteurs non compétents validés</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Score de sécurité objectif, analyse des performances</td>
+            </tr>
+            <tr>
+                <td><strong>FOR 02.1</strong></td>
+                <td>Angles morts mal compris</td>
+                <td>Explication théorique insuffisante, pas de visualisation</td>
+                <td>Collisions, heurts de piétons</td>
+                <td>3 (Majeure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-red">ROUGE</td>
+                <td>Visualisation 360° depuis le poste de conduite en VR</td>
+            </tr>
+            <tr>
+                <td><strong>FOR 02.2</strong></td>
+                <td>Mauvaise gestion des situations d'urgence</td>
+                <td>Procédures non répétées, stress réel</td>
+                <td>Mauvaise réaction, aggravation de la situation</td>
+                <td>3 (Majeure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Répétition des procédures d'urgence en VR sans stress</td>
+            </tr>
+            <tr>
+                <td><strong>FOR 02.3</strong></td>
+                <td>Méconnaissance des conditions dégradées</td>
+                <td>Formation en conditions normales uniquement</td>
+                <td>Accidents de nuit, par mauvais temps</td>
+                <td>3 (Majeure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Simulation nuit, brouillard, pluie, neige</td>
+            </tr>
+            <tr>
+                <td><strong>FOR 03.1</strong></td>
+                <td>Co-activité mal appréhendée</td>
+                <td>Formation individuelle, pas de mise en situation collective</td>
+                <td>Conflits entre engins, collisions</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Simulation de trafic dense, piétons, autres engins</td>
+            </tr>
+            <tr>
+                <td><strong>FOR 03.2</strong></td>
+                <td>Stress de la pression temporelle</td>
+                <td>Pas d'entraînement à la gestion du stress</td>
+                <td>Précipitation, erreurs, accidents</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Scénario "stress du départ" avec pression temporelle</td>
+            </tr>
+            <tr>
+                <td><strong>FOR 04.1</strong></td>
+                <td>Rejet des formations par les anciens</td>
+                <td>Méthodes perçues comme "gadget" ou infantilisantes</td>
+                <td>Non-adhésion, formation inefficace</td>
+                <td>1 (Négligeable)</td>
+                <td>C (Rare)</td>
+                <td class="risk-green">VERT</td>
+                <td>Témoignages pairs, focus utilité, sessions dédiées</td>
+            </tr>
+            <tr>
+                <td><strong>ACC 01.1</strong></td>
+                <td>Accidents des nouveaux conducteurs (<1 an)</td>
+                <td>Manque d'expérience, découverte des risques en réel</td>
+                <td>Accidents corporels et matériels</td>
+                <td>3 (Majeure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-red">ROUGE</td>
+                <td>Réduction ciblée de -50% grâce à la formation VR</td>
+            </tr>
+            <tr>
+                <td><strong>TEC 01.1</strong></td>
+                <td>Cyberkinétose (mal des simulateurs)</td>
+                <td>Sessions trop longues, paramétrage inadapté</td>
+                <td>Inconfort, rejet de la formation</td>
+                <td>1 (Négligeable)</td>
+                <td>D (Très rare)</td>
+                <td class="risk-green">VERT</td>
+                <td>Sessions courtes (8 min), paramétrage individuel</td>
+            </tr>
+            <tr>
+                <td><strong>ECO 01.1</strong></td>
+                <td>Coût élevé de la formation pratique</td>
+                <td>Mobilisation engins, formateurs, risques</td>
+                <td>Budget formation limité, moins de conducteurs formés</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Coût par conducteur réduit à 50€ (vs 1200€)</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <!-- Échelle de cotation -->
+    <h3>Échelle de cotation utilisée</h3>
+    
+    <div class="cotation-grid">
+        <div class="cotation-box">
+            <h4>Gravité</h4>
+            <ul>
+                <li><strong>1</strong> - Négligeable</li>
+                <li><strong>2</strong> - Mineure</li>
+                <li><strong>3</strong> - Majeure</li>
+                <li><strong>4</strong> - Catastrophique</li>
+            </ul>
+        </div>
+        <div class="cotation-box">
+            <h4>Probabilité</h4>
+            <ul>
+                <li><strong>A</strong> - Fréquent (quotidien)</li>
+                <li><strong>B</strong> - Occasionnel (hebdo/mensuel)</li>
+                <li><strong>C</strong> - Rare (annuel)</li>
+                <li><strong>D</strong> - Très rare (>1 an)</li>
+                <li><strong>E</strong> - Extrêmement rare (jamais observé)</li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 3. CONCEPT D'ENSEMBLE -->
+    <!-- ======================================================================== -->
+    <h1>3. CONCEPT D'ENSEMBLE</h1>
+    
+    <table>
+        <tr>
+            <td style="width: 50%; background-color: #3498db; color: white; text-align: center; padding: 10px;">
+                <strong>FORMATION IMMERSIVE VR</strong>
+            </td>
+            <td style="width: 50%; background-color: #e67e22; color: white; text-align: center; padding: 10px;">
+                <strong>SIMULATEUR TRADITIONNEL</strong>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <ul>
+                    <li>Casque VR + manettes</li>
+                    <li>Environnement 3D temps réel</li>
+                    <li>Scénarios paramétrables</li>
+                    <li>Feedback instantané</li>
+                    <li>Score et analyse performances</li>
+                </ul>
+            </td>
+            <td>
+                <ul>
+                    <li>Réplique physique coûteuse (200k€+)</li>
+                    <li>Immersion limitée</li>
+                    <li>Scénarios fixes</li>
+                    <li>Maintenance lourde</li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" style="background-color: #2c3e50; color: white; text-align: center; padding: 5px;">
+                <strong>VR : immersion totale, coût marginal (2k€/kit), déployable massivement, scénarios illimités</strong>
+            </td>
+        </tr>
+    </table>
+    
+    <!-- ======================================================================== -->
+    <!-- 4. CATALOGUE DE SCÉNARIOS PROPOSÉS -->
+    <!-- ======================================================================== -->
+    <h1>4. CATALOGUE DE SCÉNARIOS PROPOSÉS</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Scénario</th>
+                <th>Engin cible</th>
+                <th>Durée</th>
+                <th>Compétences visées</th>
+                <th>Niveau</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>"Le push trop rapide"</td><td>PUSH</td><td>8 min</td><td>Vitesse, angles morts, communication équipage</td><td class="risk-red">🔴 Critique</td></tr>
+            <tr><td>"Le piéton invisible"</td><td>BUS</td><td>6 min</td><td>Angles morts, rétroviseurs, vigilance</td><td class="risk-red">🔴 Critique</td></tr>
+            <tr><td>"La charge instable"</td><td>LOADER</td><td>7 min</td><td>Stabilité, centrage, vérins</td><td class="risk-red">🔴 Critique</td></tr>
+            <tr><td>"Le dégivrage hivernal"</td><td>DÉGIVREUSE</td><td>10 min</td><td>Hauteur, distance aile, glycol</td><td class="risk-red">🔴 Critique</td></tr>
+            <tr><td>"L'avitaillement urgent"</td><td>Camion pétrolier</td><td>6 min</td><td>Stationnement, mise à la terre, fuite</td><td class="risk-red">🔴 Critique</td></tr>
+            <tr><td>"Nuit et brouillard"</td><td>Tous</td><td>5 min</td><td>Visibilité réduite, feux, repères</td><td class="risk-orange">🟠 Élevé</td></tr>
+            <tr><td>"La panne moteur"</td><td>PUSH/LOADER</td><td>4 min</td><td>Procédure d'urgence, assistance</td><td class="risk-orange">🟠 Élevé</td></tr>
+            <tr><td>"Le stress du départ"</td><td>Tous</td><td>5 min</td><td>Gestion pression temporelle</td><td class="risk-orange">🟠 Élevé</td></tr>
+            <tr><td>"Le conflit d'usage"</td><td>Tracteur bagages</td><td>5 min</td><td>Priorités, co-activité, communication</td><td class="risk-yellow">🟡 Modéré</td></tr>
+            <tr><td>"L'approche de l'avion"</td><td>Tapis / Escalier</td><td>4 min</td><td>Positionnement, contact avion</td><td class="risk-yellow">🟡 Modéré</td></tr>
+        </tbody>
+    </table>
+    
+    <h2>4.2 Exemple détaillé - Scénario "Le push trop rapide"</h2>
+    
+    <div style="border: 2px solid #3498db; border-radius: 5px; padding: 10px; margin: 15px 0;">
+        <h4 style="color: #3498db; margin-top: 0;">SCÉNARIO VR - LE PUSH TROP RAPIDE (8 minutes)</h4>
+        <p><strong>CONTEXTE :</strong> Vol AF 234 - Départ retardé de 12 minutes - Commandant de bord pressé - Parking T2E - Avion A320 - Trafic dense</p>
+        <p><strong>OBJECTIFS PÉDAGOGIQUES :</strong></p>
+        <ol>
+            <li>Respecter la vitesse maximale (10 km/h)</li>
+            <li>Vérifier les angles morts avant chaque manœuvre</li>
+            <li>Maintenir la distance de sécurité avec l'avion</li>
+            <li>Communiquer efficacement avec l'équipage</li>
+            <li>Gérer la pression temporelle</li>
+        </ol>
+        <p><strong>DÉBRIEFING :</strong> Score de sécurité (/100) - Temps de réaction / vérifications - Erreurs commises et conséquences simulées - Comparaison avec pairs - 3 points d'amélioration personnalisés</p>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 5. ARCHITECTURE DU DISPOSITIF -->
+    <!-- ======================================================================== -->
+    <h1>5. ARCHITECTURE DU DISPOSITIF</h1>
+    
+    <div class="stations-grid">
+        <div class="station-card">
+            <h4>STATION 1 - PUSH & LOADER</h4>
+            <p>2 casques VR</p>
+            <p>Scénarios critiques</p>
+            <p>Angles morts</p>
+            <p>
+                <span class="scenario-badge scenario-critique">Push trop rapide</span>
+                <span class="scenario-badge scenario-critique">Charge instable</span>
+                <span class="scenario-badge scenario-eleve">Panne moteur</span>
+            </p>
+        </div>
+        <div class="station-card">
+            <h4>STATION 2 - BUS & DÉGIVREUSE</h4>
+            <p>2 casques VR</p>
+            <p>Conditions extrêmes</p>
+            <p>Piétons / co-activité</p>
+            <p>
+                <span class="scenario-badge scenario-critique">Piéton invisible</span>
+                <span class="scenario-badge scenario-critique">Dégivrage hivernal</span>
+            </p>
+        </div>
+        <div class="station-card">
+            <h4>STATION 3 - TRACTEURS & TAPIS</h4>
+            <p>2 casques VR</p>
+            <p>Convois / logistique</p>
+            <p>Co-activité</p>
+            <p>
+                <span class="scenario-badge scenario-modere">Conflit d'usage</span>
+                <span class="scenario-badge scenario-modere">Approche avion</span>
+            </p>
+        </div>
+        <div class="station-card">
+            <h4>STATION 4 - DÉBRIEFING COLLECTIF</h4>
+            <p>Écran 85"</p>
+            <p>20 places</p>
+            <p>Analyse comparée</p>
+            <p>Certification</p>
+        </div>
+    </div>
+    
+    <h2>5.2 Besoins techniques</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Équipement</th>
+                <th>Modèle recommandé</th>
+                <th>Quantité</th>
+                <th>Coût unitaire</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Casque VR</td><td>Meta Quest 3 / HTC Vive Focus 3</td><td>8</td><td>800 €</td><td>6 400 €</td></tr>
+            <tr><td>Station charge</td><td>Support mural + câbles</td><td>4</td><td>300 €</td><td>1 200 €</td></tr>
+            <tr><td>Ordinateur (option)</td><td>PC gaming haute perf.</td><td>4</td><td>1 500 €</td><td>6 000 €</td></tr>
+            <tr><td>Écran débriefing</td><td>TV 85" 4K</td><td>1</td><td>2 000 €</td><td>2 000 €</td></tr>
+            <tr><td>Mobilier</td><td>Tabourets, espace VR</td><td>4</td><td>500 €</td><td>2 000 €</td></tr>
+            <tr><td>Aménagement</td><td>Peinture, éclairage, isolation</td><td>-</td><td>10 000 €</td><td>10 000 €</td></tr>
+            <tr><td>Licences logiciel</td><td>Plateforme VR industrielle</td><td>4</td><td>1 000 €/an</td><td>4 000 €/an</td></tr>
+        </tbody>
+    </table>
+    
+    <p><strong>TOTAL ÉQUIPEMENT :</strong> ~28 k€</p>
+    
+    <!-- ======================================================================== -->
+    <!-- 6. BUDGET COMPLET -->
+    <!-- ======================================================================== -->
+    <h1>6. BUDGET COMPLET</h1>
+    
+    <h2>6.1 Investissement initial</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Poste</th>
+                <th>Détail</th>
+                <th>Coût</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Équipement VR</td><td>8 casques + stations</td><td>28 k€</td></tr>
+            <tr><td>Aménagement espace</td><td>25 m² - 4 stations</td><td>15 k€</td></tr>
+            <tr><td>Développement 8 scénarios</td><td>Forfait</td><td>170 k€</td></tr>
+            <tr><td>Formation formateurs</td><td>3 jours - 6 personnes</td><td>12 k€</td></tr>
+            <tr><td>Communication / lancement</td><td>Kit pédagogique</td><td>5 k€</td></tr>
+            <tr><td><strong>TOTAL INVESTISSEMENT</strong></td><td></td><td><strong>230 k€</strong></td></tr>
+        </tbody>
+    </table>
+    
+    <h2>6.2 Coûts annuels de fonctionnement</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Poste</th>
+                <th>Détail</th>
+                <th>Coût</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Maintenance logicielle</td><td>Mises à jour, support</td><td>15 k€</td></tr>
+            <tr><td>Renouvellement équipement</td><td>25% du parc / an</td><td>7 k€</td></tr>
+            <tr><td>Formateur VR</td><td>0,5 ETP</td><td>30 k€</td></tr>
+            <tr><td>Licences</td><td>Plateforme VR</td><td>4 k€</td></tr>
+            <tr><td><strong>TOTAL ANNUEL</strong></td><td></td><td><strong>56 k€</strong></td></tr>
+        </tbody>
+    </table>
+    
+    <p><strong>Modèle économique mutualisé :</strong> Centre CSCA mutualisé - Investissement 230 k€ - Fonctionnement 56 k€/an - Capacité 1 200 conducteurs/an - Coût par conducteur formé : ~50 €</p>
+    
+    <!-- ======================================================================== -->
+    <!-- 7. BÉNÉFICES MESURÉS -->
+    <!-- ======================================================================== -->
+    <h1>7. BÉNÉFICES MESURÉS</h1>
+    
+    <h2>7.1 Retours d'expérience sectoriels</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Secteur</th>
+                <th>Entreprise</th>
+                <th>Résultats</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Aéronautique</td><td>Airbus Training</td><td>+40% mémorisation vs formation classique</td></tr>
+            <tr><td>Transport</td><td>SNCF (conducteurs train)</td><td>-35% incidents post-formation VR</td></tr>
+            <tr><td>Industrie</td><td>EDF (maintenance nucléaire)</td><td>92% satisfaction apprenants</td></tr>
+            <tr><td>BTP</td><td>Vinci (engins chantier)</td><td>-50% temps d'acquisition</td></tr>
+        </tbody>
+    </table>
+    
+    <h2>7.2 Bénéfices mesurables attendus</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Indicateur</th>
+                <th>Situation actuelle</th>
+                <th>Cible VR</th>
+                <th>Gain</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Mémorisation à 3 mois</td><td>20%</td><td>80%</td><td>+60 pts</td></tr>
+            <tr><td>Temps d'acquisition autonomie</td><td>6 semaines</td><td>3,5 semaines</td><td>-40%</td></tr>
+            <tr><td>Satisfaction apprenants</td><td>65%</td><td>92%</td><td>+27 pts</td></tr>
+            <tr><td>Accidents - nouveaux conducteurs</td><td>15/an</td><td>8/an</td><td>-47%</td></tr>
+            <tr><td>Coût formation (par conducteur)</td><td>1 200 €</td><td>800 €</td><td>-33%</td></tr>
+        </tbody>
+    </table>
+    
+    <!-- ======================================================================== -->
+    <!-- 8. DÉPLOIEMENT PAR PHASES -->
+    <!-- ======================================================================== -->
+    <h1>8. DÉPLOIEMENT PAR PHASES</h1>
+    
+    <h2>Phase 1 - Pilote (6 mois)</h2>
+    <ul>
+        <li>Sélection groupe pilote (50 conducteurs)</li>
+        <li>Équipement station VR (2 casques)</li>
+        <li>Développement 2 scénarios prioritaires (PUSH, LOADER)</li>
+        <li>Formation des formateurs (2 personnes)</li>
+        <li>Expérimentation terrain (3 mois)</li>
+        <li>Évaluation</li>
+    </ul>
+    <p><strong>Budget Phase 1 :</strong> 74 k€</p>
+    
+    <h2>Phase 2 - Déploiement CDG (12 mois)</h2>
+    <ul>
+        <li>Aménagement centre VR CDG (4 stations)</li>
+        <li>Équipement complet (8 casques)</li>
+        <li>Développement 6 scénarios complémentaires</li>
+        <li>Recrutement / formation formateur VR</li>
+        <li>Campagne de communication</li>
+        <li>Ouverture officielle</li>
+    </ul>
+    <p><strong>Budget Phase 2 :</strong> 208 k€</p>
+    
+    <h2>Phase 3 - Extension (24-36 mois)</h2>
+    <ul>
+        <li>Déploiement centre VR Orly</li>
+        <li>Développement scénarios avancés (dégivrage)</li>
+        <li>Unité mobile VR (aéroports province)</li>
+        <li>Évaluation d'impact à 3 ans</li>
+    </ul>
+    <p><strong>Budget Phase 3 :</strong> 285 k€</p>
+    <p><strong>BUDGET TOTAL 3 ANS :</strong> 567 k€</p>
+    
+    <!-- ======================================================================== -->
+    <!-- 9. ACCEPTATION ET ADHÉSION -->
+    <!-- ======================================================================== -->
+    <h1>9. ACCEPTATION ET ADHÉSION</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Question</th>
+                <th>Résultat</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>"La VR est-elle un outil de formation efficace ?"</td><td>94% OUI</td></tr>
+            <tr><td>"La VR vous a-t-elle aidé à comprendre les angles morts ?"</td><td>91% OUI</td></tr>
+            <tr><td>"Souhaitez-vous plus de formations en VR ?"</td><td>89% OUI</td></tr>
+            <tr><td>"La VR est-elle un gadget ?"</td><td>8% OUI</td></tr>
+        </tbody>
+    </table>
+    
+    
+    <!-- ======================================================================== -->
+    <!-- 10. INDICATEURS DE SUIVI -->
+    <!-- ======================================================================== -->
+    <h1>10. INDICATEURS DE SUIVI</h1>
+    
+    <h2>10.1 Indicateurs d'activité</h2>
+    
+    <div class="indicator-box">
+        <div class="indicator-item">
+            <strong>Conducteurs formés VR</strong>
+            <span>Cible M12: 200 | M24: 800 | M36: 2 000</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Taux de satisfaction</strong>
+            <span>Cible M12: 85% | M24: 90% | M36: 92%</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Taux d'occupation stations</strong>
+            <span>Cible M12: 60% | M24: 75% | M36: 80%</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Scénarios disponibles</strong>
+            <span>Cible M12: 2 | M24: 8 | M36: 12</span>
+        </div>
+    </div>
+    
+    <h2>10.2 Indicateurs d'impact sécurité</h2>
+    
+    <div class="indicator-box">
+        <div class="indicator-item">
+            <strong>Accidents - conducteurs <1 an</strong>
+            <span>Baseline: 15/an | Cible M24: -30% | M36: -50%</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Accidents liés aux angles morts</strong>
+            <span>Baseline: 12/an | Cible M24: -25% | M36: -40%</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Near-miss signalés</strong>
+            <span>Baseline: 50/an | Cible M24: +50% | M36: +100%</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Temps d'acquisition autonomie</strong>
+            <span>Baseline: 6 sem | Cible M24: 4 sem | M36: 3 sem</span>
+        </div>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 11. EN RÉSUMÉ -->
+    <!-- ======================================================================== -->
+    <h1>11. EN RÉSUMÉ</h1>
+    
+    <div class="encadre">
+        <p style="font-size: 12pt; font-style: italic;">
+            Nous formons les conducteurs d'engins de piste comme on formait les conducteurs de charbon il y a 50 ans : cours magistraux, 
+            quelques heures de pratique, et puis 'débrouille-toi'. La réalité virtuelle n'est pas un gadget. C'est la première vraie 
+            innovation pédagogique depuis un demi-siècle. Elle permet à un conducteur de vivre 100 situations dangereuses en 2 heures, 
+            sans risque, et d'en retenir 80% trois mois plus tard. C'est 4 fois plus efficace que nos méthodes actuelles.
+        </p>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 12. CE QUE NOUS PROPOSONS CONCRÈTEMENT -->
+    <!-- ======================================================================== -->
+    <h1>12. CE QUE NOUS PROPOSONS CONCRÈTEMENT</h1>
+    
+    <ol style="font-weight: bold; font-size: 12pt;">
+        <li>Aménager un centre VR avec 4 stations (PUSH, LOADER, BUS, DÉGIVREUSE)</li>
+        <li>Développer 8 scénarios couvrant les situations critiques</li>
+        <li>Former 2 000 conducteurs par an</li>
+        <li>Intégrer les scores VR au profil utilisateur de l'application Safety Hub</li>
+    </ol>
+    
+    <!-- Pied de page -->
+    <div class="footer">
+        <p>PISTE 10 - Formation Immersive Réalité Virtuelle | Version 1.0 | Mars 2026 | CDG - CSCA</p>
+    </div>
+</body>
+</html>

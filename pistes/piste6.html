@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PISTE 6 - Jumeau numérique et optimisation des flux</title>
+    <style>
+        /* Styles généraux pour l'impression */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            line-height: 1.5;
+            color: #333;
+            background-color: white;
+            font-size: 10.5pt;
+            margin: 0;
+            padding: 15px;
+        }
+        
+        /* Styles pour l'impression PDF */
+        @media print {
+            body {
+                padding: 0.5cm;
+            }
+            .page-break {
+                page-break-before: always;
+            }
+            .no-break {
+                page-break-inside: avoid;
+            }
+            h1, h2, h3, h4 {
+                page-break-after: avoid;
+            }
+            table {
+                page-break-inside: avoid;
+            }
+        }
+        
+        /* En-tête du document */
+        .document-header {
+            border-bottom: 3px solid #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+        
+        .document-title {
+            font-size: 24pt;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .document-subtitle {
+            font-size: 14pt;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+        
+        .document-meta {
+            text-align: right;
+            color: #7f8c8d;
+            font-size: 10pt;
+        }
+        
+        .tagline {
+            background-color: #ecf0f1;
+            padding: 8px 15px;
+            border-left: 5px solid #e67e22;
+            margin-bottom: 20px;
+            font-weight: bold;
+            font-size: 12pt;
+        }
+        
+        /* Typographie */
+        h1 {
+            font-size: 18pt;
+            color: #2c3e50;
+            margin: 25px 0 10px 0;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #bdc3c7;
+        }
+        
+        h2 {
+            font-size: 14pt;
+            color: #34495e;
+            margin: 20px 0 10px 0;
+            padding-left: 5px;
+            border-left: 4px solid #e67e22;
+        }
+        
+        h3 {
+            font-size: 12pt;
+            color: #555;
+            margin: 15px 0 8px 0;
+            font-weight: bold;
+        }
+        
+        h4 {
+            font-size: 11pt;
+            color: #666;
+            margin: 12px 0 5px 0;
+            font-weight: bold;
+        }
+        
+        p {
+            margin-bottom: 8px;
+            text-align: justify;
+        }
+        
+        ul, ol {
+            margin: 8px 0 12px 25px;
+        }
+        
+        li {
+            margin-bottom: 3px;
+        }
+        
+        /* Boîtes d'information */
+        .encadre {
+            border: 1px solid #bdc3c7;
+            padding: 12px;
+            background-color: #f9f9f9;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        
+        .important {
+            background-color: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 8px 12px;
+            margin: 12px 0;
+        }
+        
+        .hypothese {
+            background-color: #d4edda;
+            border-left: 5px solid #28a745;
+            padding: 8px 12px;
+            margin: 12px 0;
+            font-style: italic;
+        }
+        
+        /* Tableaux */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0 18px 0;
+            font-size: 9.5pt;
+        }
+        
+        th {
+            background-color: #2c3e50;
+            color: white;
+            font-weight: bold;
+            padding: 6px 4px;
+            text-align: left;
+            border: 1px solid #34495e;
+        }
+        
+        td {
+            padding: 5px 4px;
+            border: 1px solid #ddd;
+            vertical-align: top;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        /* Tableau de cartographie des risques avec couleurs */
+        .risk-table td:nth-child(7) {
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-orange {
+            background-color: #FFA500 !important;
+            color: black;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-red {
+            background-color: #FF0000 !important;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-yellow {
+            background-color: #FFFF00 !important;
+            color: black;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-green {
+            background-color: #008000 !important;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        /* Grille de cotation */
+        .cotation-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 12px 0;
+        }
+        
+        .cotation-box {
+            border: 1px solid #ddd;
+            padding: 8px;
+            background-color: #f9f9f9;
+        }
+        
+        .cotation-box h4 {
+            background-color: #2c3e50;
+            color: white;
+            padding: 4px 8px;
+            margin: -8px -8px 8px -8px;
+            font-size: 11pt;
+        }
+        
+        /* Pied de page */
+        .footer {
+            margin-top: 25px;
+            padding-top: 8px;
+            border-top: 1px solid #bdc3c7;
+            font-size: 9pt;
+            color: #7f8c8d;
+            text-align: center;
+        }
+        
+        .page-break {
+            page-break-before: always;
+        }
+        
+        /* Indicateurs */
+        .indicator-box {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 12px 0;
+        }
+        
+        .indicator-item {
+            flex: 1 1 200px;
+            background-color: #ecf0f1;
+            padding: 8px;
+            border-radius: 5px;
+            border-left: 4px solid #e67e22;
+        }
+        
+        .indicator-item strong {
+            display: block;
+            font-size: 10.5pt;
+            color: #2c3e50;
+        }
+        
+        .indicator-item span {
+            font-size: 9pt;
+            color: #555;
+        }
+        
+        /* Légende des couleurs */
+        .color-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 12px 0;
+            padding: 8px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .color-box {
+            width: 20px;
+            height: 20px;
+            border: 1px solid #333;
+        }
+        
+        /* Texte centré */
+        .text-center {
+            text-align: center;
+        }
+        
+        /* Badge */
+        .badge {
+            background-color: #e67e22;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 9pt;
+            font-weight: bold;
+            display: inline-block;
+        }
+        
+        /* Simulation de carte de chaleur */
+        .heatmap-simulation {
+            background-color: #f0f0f0;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .heatmap-header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 8px;
+            border-radius: 5px 5px 0 0;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .heatmap-content {
+            background-color: white;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 0 0 5px 5px;
+        }
+        
+        .heatmap-bar {
+            display: flex;
+            align-items: center;
+            margin: 5px 0;
+        }
+        
+        .heatmap-label {
+            width: 180px;
+            font-weight: bold;
+        }
+        
+        .heatmap-bar-color {
+            height: 25px;
+            margin-left: 10px;
+            border-radius: 3px;
+        }
+        
+        /* Grille pour les niveaux de maturité */
+        .maturity-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .maturity-card {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 8px;
+            background-color: #f9f9f9;
+            text-align: center;
+        }
+        
+        .maturity-card h4 {
+            margin: 0 0 5px 0;
+            color: #e67e22;
+            font-size: 12pt;
+        }
+        
+        .maturity-card p {
+            font-size: 9pt;
+            margin: 5px 0;
+        }
+        
+        .maturity-level {
+            font-size: 18pt;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+    </style>
+</head>
+<body>
+    <!-- En-tête du document -->
+    <div class="document-header">
+        <div>
+            <div class="document-title">PISTE 6</div>
+            <div class="document-subtitle">Jumeau numérique et optimisation des flux</div>
+        </div>
+        <div class="document-meta">
+            <div>Version 1.0</div>
+            <div>Mars 2026</div>
+            <div>CDG - CSCA</div>
+        </div>
+    </div>
+    
+    <!-- Tagline -->
+    <div class="tagline">
+        OPTIMISER LES FLUX POUR RÉDUIRE LES RISQUES
+    </div>
+    
+    <!-- Description -->
+    <p style="font-size: 11pt; font-weight: bold; text-align: center; margin: 20px 0;">
+        Réplique virtuelle dynamique de la plateforme pour simuler, prédire et optimiser les flux.
+    </p>
+    
+    <p>
+        L'analyse des accidents en piste ne saurait se limiter aux seuls comportements individuels. Une part significative des incidents 
+        trouve sa source dans des problèmes structurels : densité de trafic, chevauchement des flux d'engins d'entreprises différentes, 
+        visibilité réduite liée à la configuration des infrastructures, ou encore stress temporel généré par des cheminements sous-optimaux. 
+        Aujourd'hui, personne n'a de vision globale des mouvements sur la plateforme, et les décisions d'aménagement sont souvent prises 
+        sans pouvoir simuler leurs impacts en amont. La sixième piste propose de combler cette lacune grâce à un outil de modélisation puissant : 
+        le jumeau numérique.
+    </p>
+    
+    <!-- ======================================================================== -->
+    <!-- 1. PROBLÉMATIQUE ADRESSÉE -->
+    <!-- ======================================================================== -->
+    <h1>1. PROBLÉMATIQUE ADRESSÉE</h1>
+    
+    <p><strong>Constat opérationnel :</strong></p>
+    <p>Les accidents en piste ne sont pas seulement des problèmes de <strong>comportement individuel</strong>. Ils sont aussi la conséquence de <strong>problèmes structurels</strong> :</p>
+    
+    <ul>
+        <li><strong>Densité de trafic</strong> aux heures de pointe (vagues AF)</li>
+        <li><strong>Chevauchement des flux</strong> entre engins de différentes entreprises</li>
+        <li><strong>Conflits d'usage</strong> sur les mêmes zones (parkings, taxiways, zones de fret)</li>
+        <li><strong>Visibilité réduite</strong> liée à la configuration des infrastructures</li>
+        <li><strong>Stress temporel</strong> généré par des cheminements sous-optimaux</li>
+    </ul>
+    
+    <div class="hypothese">
+        <strong>Notre hypothèse :</strong> Une partie des accidents pourrait être évitée <strong>sans changer le comportement des conducteurs</strong>, simplement en <strong>optimisant les flux et l'infrastructure</strong>.
+    </div>
+    
+    <div class="important">
+        <strong>Mais aujourd'hui :</strong>
+        <ul>
+            <li>Personne n'a de <strong>vision globale</strong> des mouvements d'engins sur la plateforme</li>
+            <li>Les décisions d'aménagement sont prises <strong>sans modélisation préalable</strong></li>
+            <li>On ne peut pas tester virtuellement une modification avant de la réaliser</li>
+        </ul>
+        <p style="margin-top: 8px;"><strong>Le jumeau numérique change la donne.</strong></p>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 2. CARTOGRAPHIE DES RISQUES (MISE À JOUR POUR PISTE 6) -->
+    <!-- ======================================================================== -->
+    <h1>2. CARTOGRAPHIE DES RISQUES</h1>
+    
+    <!-- Légende des couleurs -->
+    <div class="color-legend">
+        <div class="legend-item"><div class="color-box" style="background-color: #FF0000;"></div> <strong>Rouge</strong> - Risque très élevé (intolérable)</div>
+        <div class="legend-item"><div class="color-box" style="background-color: #FFA500;"></div> <strong>Orange</strong> - Risque élevé (actions nécessaires)</div>
+        <div class="legend-item"><div class="color-box" style="background-color: #FFFF00;"></div> <strong>Jaune</strong> - Risque moyen (tolérable)</div>
+        <div class="legend-item"><div class="color-box" style="background-color: #008000;"></div> <strong>Vert</strong> - Risque faible (acceptable)</div>
+    </div>
+    
+    <table class="risk-table">
+        <thead>
+            <tr>
+                <th>Réf.</th>
+                <th>Danger</th>
+                <th>Causes</th>
+                <th>Conséquences</th>
+                <th>Gravité</th>
+                <th>Probabilité</th>
+                <th>Criticité</th>
+                <th>Barrières Piste 6</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>INF 01.1</strong></td>
+                <td>Densité de trafic critique aux heures de pointe</td>
+                <td>Vagues AF, coordination insuffisante entre entreprises</td>
+                <td>Saturation des zones, collisions, stress des conducteurs</td>
+                <td>3 (Majeure)</td>
+                <td>A (Fréquent)</td>
+                <td class="risk-red">ROUGE</td>
+                <td>Simulation des pics, recommandations d'atténuation en temps réel</td>
+            </tr>
+            <tr>
+                <td><strong>INF 01.2</strong></td>
+                <td>Chevauchement des flux d'engins</td>
+                <td>Absence de coordination inter-entreprises, itinéraires conflictuels</td>
+                <td>Conflits de circulation, collisions, ralentissements</td>
+                <td>3 (Majeure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Optimisation des cheminements, séparation des flux</td>
+            </tr>
+            <tr>
+                <td><strong>INF 02.1</strong></td>
+                <td>Conflits d'usage sur les parkings et zones de fret</td>
+                <td>Zones partagées entre plusieurs types d'engins, manque de délimitation</td>
+                <td>Collisions, dommages matériels, blessures</td>
+                <td>3 (Majeure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Cartographie des hotspots, priorisation des aménagements</td>
+            </tr>
+            <tr>
+                <td><strong>INF 02.2</strong></td>
+                <td>Visibilité réduite liée à l'infrastructure</td>
+                <td>Configuration des lieux, obstacles visuels, angles morts structurels</td>
+                <td>Non-détection de danger, collisions</td>
+                <td>3 (Majeure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Modélisation 3D, identification des zones à risque visuel</td>
+            </tr>
+            <tr>
+                <td><strong>INF 03.1</strong></td>
+                <td>Cheminements sous-optimaux des engins</td>
+                <td>Circuits trop longs, mal fléchés, non adaptés au trafic réel</td>
+                <td>Exposition prolongée au risque, stress, retards</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Simulation et optimisation des itinéraires, tests virtuels</td>
+            </tr>
+            <tr>
+                <td><strong>ANA 01.1</strong></td>
+                <td>Absence de vision globale des mouvements</td>
+                <td>Données non partagées, silos entre entreprises</td>
+                <td>Décisions non éclairées, risques non anticipés</td>
+                <td>2 (Mineure)</td>
+                <td>A (Fréquent)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Plateforme de données mutualisées, vision consolidée</td>
+            </tr>
+            <tr>
+                <td><strong>ANA 01.2</strong></td>
+                <td>Identification tardive des hotspots</td>
+                <td>Méthodes déclaratives, absence de données objectives</td>
+                <td>Actions correctives trop tardives, accidents récurrents</td>
+                <td>3 (Majeure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Cartes de chaleur dynamiques, analyse prédictive</td>
+            </tr>
+            <tr>
+                <td><strong>ANA 02.1</strong></td>
+                <td>Impossibilité de tester les modifications avant déploiement</td>
+                <td>Absence d'outil de simulation, approche essai-erreur</td>
+                <td>Aménagements inefficaces, parfois dangereux</td>
+                <td>2 (Mineure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-green">VERT</td>
+                <td>Simulation virtuelle des modifications d'infrastructure</td>
+            </tr>
+            <tr>
+                <td><strong>ACC 01.1</strong></td>
+                <td>Reconstitution imprécise des accidents</td>
+                <td>Témoignages subjectifs, vidéos partielles</td>
+                <td>Compréhension incomplète des causes, récidive</td>
+                <td>2 (Mineure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-green">VERT</td>
+                <td>Reconstitution 3D précise des scénarios d'accident</td>
+            </tr>
+            <tr>
+                <td><strong>FOR 01.1</strong></td>
+                <td>Formation insuffisante aux situations complexes</td>
+                <td>Scénarios réels trop risqués pour la formation</td>
+                <td>Mauvaise réaction en situation réelle</td>
+                <td>2 (Mineure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-green">VERT</td>
+                <td>Formation immersive sur simulateur connecté au jumeau</td>
+            </tr>
+            <tr>
+                <td><strong>ORG 01.1</strong></td>
+                <td>Absence de coordination inter-entreprises sur les flux</td>
+                <td>Données non partagées, pas de vision commune</td>
+                <td>Optimisation locale, sous-optimisation globale</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Gouvernance partagée des données, vision consolidée</td>
+            </tr>
+            <tr>
+                <td><strong>DON 01.1</strong></td>
+                <td>Non-partage des données de géolocalisation</td>
+                <td>Concurrence, absence de confiance, pas de cadre juridique</td>
+                <td>Impossibilité de créer le jumeau numérique</td>
+                <td>2 (Mineure)</td>
+                <td>A (Fréquent)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Convention de partage, anonymisation, démonstration de la valeur</td>
+            </tr>
+            <tr>
+                <td><strong>DON 01.2</strong></td>
+                <td>Hétérogénéité des données entre entreprises</td>
+                <td>Formats différents, qualité variable</td>
+                <td>Difficulté d'intégration, analyses biaisées</td>
+                <td>2 (Mineure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-green">VERT</td>
+                <td>Standardisation des formats, API communes</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <!-- Échelle de cotation -->
+    <h3>Échelle de cotation utilisée</h3>
+    
+    <div class="cotation-grid">
+        <div class="cotation-box">
+            <h4>Gravité</h4>
+            <ul>
+                <li><strong>1</strong> - Négligeable</li>
+                <li><strong>2</strong> - Mineure</li>
+                <li><strong>3</strong> - Majeure</li>
+                <li><strong>4</strong> - Catastrophique</li>
+            </ul>
+        </div>
+        <div class="cotation-box">
+            <h4>Probabilité</h4>
+            <ul>
+                <li><strong>A</strong> - Fréquent (quotidien)</li>
+                <li><strong>B</strong> - Occasionnel (hebdo/mensuel)</li>
+                <li><strong>C</strong> - Rare (annuel)</li>
+                <li><strong>D</strong> - Très rare (>1 an)</li>
+                <li><strong>E</strong> - Extrêmement rare (jamais observé)</li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 3. CONCEPT D'ENSEMBLE -->
+    <!-- ======================================================================== -->
+    <h1>3. CONCEPT D'ENSEMBLE</h1>
+    
+    <h2>3.1 Qu'est-ce qu'un jumeau numérique ?</h2>
+    
+    <table>
+        <tr>
+            <td style="width: 50%; background-color: #3498db; color: white; font-weight: bold; text-align: center; padding: 10px;">
+                RÉALITÉ PHYSIQUE
+            </td>
+            <td style="width: 50%; background-color: #e67e22; color: white; font-weight: bold; text-align: center; padding: 10px;">
+                RÉALITÉ NUMÉRIQUE
+            </td>
+        </tr>
+        <tr>
+            <td style="vertical-align: top;">
+                <ul>
+                    <li>Plateforme CDG</li>
+                    <li>Engins</li>
+                    <li>Conducteurs</li>
+                    <li>Infrastructure</li>
+                </ul>
+            </td>
+            <td style="vertical-align: top;">
+                <ul>
+                    <li>Modèle 3D dynamique</li>
+                    <li>Flux temps réel</li>
+                    <li>Simulations</li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" style="text-align: center; background-color: #ecf0f1; padding: 8px;">
+                <strong>⬆️⬇️ Échange de données en temps réel ⬆️⬇️</strong>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" style="background-color: #2c3e50; color: white; text-align: center; padding: 8px;">
+                <strong>DÉCISIONS OPTIMISÉES</strong>
+            </td>
+        </tr>
+    </table>
+    
+    <p><strong>Définition :</strong> Un jumeau numérique est une <strong>réplique virtuelle dynamique</strong> d'un système physique (ici, la plateforme aéroportuaire et ses flux), alimentée en <strong>temps réel</strong> par des données terrain, permettant de <strong>simuler, prédire et optimiser</strong> les opérations.</p>
+    
+    <h2>3.2 Objectifs pour la sécurité</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Objectif</th>
+                <th>Bénéfice sécurité</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Visualiser les flux en temps réel</td><td>Identifier les zones de saturation avant l'accident</td></tr>
+            <tr><td>Simuler des modifications d'infrastructure</td><td>Tester virtuellement l'impact sur la sécurité</td></tr>
+            <tr><td>Optimiser les cheminements</td><td>Réduire les distances parcourues et les conflits</td></tr>
+            <tr><td>Prédire les hotspots</td><td>Anticiper les zones à risque selon le trafic</td></tr>
+            <tr><td>Former les conducteurs</td><td>Immersion virtuelle sans risque</td></tr>
+            <tr><td>Analyser les accidents</td><td>Reconstituer les scénarios pour comprendre les causes</td></tr>
+        </tbody>
+    </table>
+    
+    <!-- ======================================================================== -->
+    <!-- 4. NIVEAUX DE MATURITÉ -->
+    <!-- ======================================================================== -->
+    <h1>4. NIVEAUX DE MATURITÉ DU JUMEAU NUMÉRIQUE</h1>
+    
+    <div class="maturity-grid">
+        <div class="maturity-card">
+            <div class="maturity-level">N1</div>
+            <h4>STATIQUE</h4>
+            <p>Modélisation 3D de l'infrastructure</p>
+            <p>Plans interactifs, zonage, hotspots</p>
+            <p><strong>Usage :</strong> formation, documentation</p>
+        </div>
+        <div class="maturity-card">
+            <div class="maturity-level">N2</div>
+            <h4>DYNAMIQUE</h4>
+            <p>Flux historiques (données géoloc agrégées)</p>
+            <p>Identification des points de congestion</p>
+            <p><strong>Usage :</strong> analyse a posteriori, planification</p>
+        </div>
+        <div class="maturity-card">
+            <div class="maturity-level">N3</div>
+            <h4>TEMPS RÉEL</h4>
+            <p>Visualisation des mouvements en direct</p>
+            <p>Alertes sur anomalies (congestion, vitesse)</p>
+            <p><strong>Usage :</strong> supervision, gestion opérationnelle</p>
+        </div>
+        <div class="maturity-card">
+            <div class="maturity-level">N4</div>
+            <h4>PRÉDICTIF</h4>
+            <p>Simulation de scénarios futurs</p>
+            <p>Recommandations d'optimisation automatiques</p>
+            <p><strong>Usage :</strong> aide à la décision stratégique</p>
+        </div>
+    </div>
+    
+    <p><strong>Notre proposition :</strong> Atteindre le <strong>Niveau 2</strong> à 24 mois, préparer le <strong>Niveau 3</strong> à 36 mois.</p>
+    
+    <!-- ======================================================================== -->
+    <!-- 5. CAS D'USAGE CONCRETS -->
+    <!-- ======================================================================== -->
+    <h1>5. CAS D'USAGE CONCRETS POUR LA SÉCURITÉ</h1>
+    
+    <h2>5.1 Identification des hotspots</h2>
+    
+    <div class="heatmap-simulation">
+        <div class="heatmap-header">CARTE DE CHALEUR DES ACCIDENTS - CDG 2025</div>
+        <div class="heatmap-content">
+            <div class="heatmap-bar">
+                <span class="heatmap-label">Zone A : Parking T2E (15 accidents)</span>
+                <div class="heatmap-bar-color" style="width: 100%; background-color: #FF0000;"></div>
+            </div>
+            <div class="heatmap-bar">
+                <span class="heatmap-label">Zone B : Zone Fret Nord (12 accidents)</span>
+                <div class="heatmap-bar-color" style="width: 80%; background-color: #FF4500;"></div>
+            </div>
+            <div class="heatmap-bar">
+                <span class="heatmap-label">Zone C : Taxiway B (8 accidents)</span>
+                <div class="heatmap-bar-color" style="width: 53%; background-color: #FFA500;"></div>
+            </div>
+            <div class="heatmap-bar">
+                <span class="heatmap-label">Zone D : Parking T3 (6 accidents)</span>
+                <div class="heatmap-bar-color" style="width: 40%; background-color: #FFD700;"></div>
+            </div>
+            <div class="heatmap-bar">
+                <span class="heatmap-label">Zone E : Zone Catering (4 accidents)</span>
+                <div class="heatmap-bar-color" style="width: 27%; background-color: #FFFF00;"></div>
+            </div>
+            <p style="margin-top: 10px;"><strong>Données croisées :</strong> Flux horaires (géolocalisation), type d'engins impliqués, conditions météo, heure de la journée</p>
+        </div>
+    </div>
+    
+    <h2>5.2 Optimisation des cheminements</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Indicateur</th>
+                <th>Situation actuelle</th>
+                <th>Simulation proposée</th>
+                <th>Gain</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Distance parcourue moyenne</td><td>450 m</td><td>380 m</td><td>-15%</td></tr>
+            <tr><td>Temps de parcours moyen</td><td>3 min 45 s</td><td>2 min 55 s</td><td>-22%</td></tr>
+            <tr><td>Points de conflit identifiés</td><td>4</td><td>1</td><td>-75%</td></tr>
+            <tr><td>Accidents estimés</td><td>3 sur 12 mois</td><td>-60%</td><td>-60%</td></tr>
+        </tbody>
+    </table>
+    
+    <h2>5.3 Gestion des pics de trafic</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Scénario</th>
+                <th>Réduction densité</th>
+                <th>Impact production</th>
+                <th>Faisabilité</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Décalage 5 min des convois bagages</td><td>-18%</td><td>Négligeable</td><td>Immédiate</td></tr>
+            <tr><td>Reroutage des engins de fret vers parking sud</td><td>-25%</td><td>+2 min</td><td>Communication radio</td></tr>
+            <tr><td>Activation zone de stockage tampon</td><td>-35%</td><td>-</td><td>Nécessite validation ADP</td></tr>
+        </tbody>
+    </table>
+    
+    <!-- ======================================================================== -->
+    <!-- 6. DONNÉES NÉCESSAIRES -->
+    <!-- ======================================================================== -->
+    <h1>6. DONNÉES NÉCESSAIRES</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Type de données</th>
+                <th>Source</th>
+                <th>Disponibilité</th>
+                <th>Niveau requis</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Infrastructure</td><td>Plans ADP, SIG</td><td> Disponible</td><td>N1</td></tr>
+            <tr><td>Zonage</td><td>ADP, DSAC</td><td> Disponible</td><td>N1</td></tr>
+            <tr><td>Trafic avions</td><td>ADP, DSAC</td><td> Disponible</td><td>N2</td></tr>
+            <tr><td>Flux GSE</td><td>Géolocalisation (handlers)</td><td> Partielle</td><td>N2-N3</td></tr>
+            <tr><td>Accidents</td><td>Gendarmerie, CSCA</td><td> Disponible</td><td>N2</td></tr>
+            <tr><td>Données temps réel</td><td>Géolocalisation</td><td> Non centralisée</td><td>N3-N4</td></tr>
+            <tr><td>Météo</td><td>Météo France, ADP</td><td> Disponible</td><td>N2-N3</td></tr>
+        </tbody>
+    </table>
+    
+    <div class="important">
+        <p><strong>Défaut critique identifié :</strong> Nous n'avons pas aujourd'hui de vision consolidée des flux d'engins sur la plateforme.</p>
+        <p>Les données de géolocalisation :</p>
+        <ul>
+            <li>Existent chez certains handlers "évolués"</li>
+            <li>Mais ne sont <strong>pas partagées</strong></li>
+            <li>Pas de <strong>format commun</strong></li>
+            <li>Pas de <strong>centralisation</strong></li>
+        </ul>
+        <p><strong>Condition de réussite du jumeau numérique :</strong> Mutualiser les données de géolocalisation entre les acteurs de la plateforme, de manière anonymisée et sécurisée.</p>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 7. BUDGET ESTIMÉ -->
+    <!-- ======================================================================== -->
+    <h1>7. BUDGET ESTIMÉ</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Phase</th>
+                <th>Délai</th>
+                <th>Coût</th>
+                <th>Financement proposé</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>Niveau 1 - Statique</strong></td><td>6-12 mois</td><td>320 000€</td><td>ADP (infrastructure)</td></tr>
+            <tr><td><strong>Niveau 2 - Dynamique</strong></td><td>12-24 mois</td><td>850 000€</td><td>ADP + CSCA (mutualisation)</td></tr>
+            <tr><td><strong>Niveau 3 - Temps réel</strong></td><td>24-36 mois</td><td>750 000€</td><td>ADP + Handlers</td></tr>
+            <tr><td><strong>Niveau 4 - Prédictif</strong></td><td>36-48 mois</td><td>750 000€</td><td>Partenariat R&D</td></tr>
+            <tr><td><strong>TOTAL</strong></td><td>4 ans</td><td><strong>2,67 M€</strong></td><td></td></tr>
+        </tbody>
+    </table>
+    
+    <p><strong>Coût annualis é :</strong> ~670 000€/an</p>
+    
+    <!-- ======================================================================== -->
+    <!-- 8. COMPARAISON INTERNATIONALE -->
+    <!-- ======================================================================== -->
+    <h1>8. COMPARAISON INTERNATIONALE</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Aéroport</th>
+                <th>Réalisations</th>
+                <th>Résultats</th>
+                <th>Investissement</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>Singapour (Changi)</strong></td><td>Jumeau numérique complet depuis 2021, intégration flux passagers, bagages, avions, GSE</td><td>-23% conflits GSE/avions, -15% temps de roulage, ROI 36 mois</td><td>8 M$ (3 ans)</td></tr>
+            <tr><td><strong>Munich</strong></td><td>Jumeau numérique ciblé sur opérations GSE (PUSH et LOADER), niveau 2 partiel</td><td>-18% incidents en zone parking</td><td>1,2 M€</td></tr>
+            <tr><td><strong>Heathrow</strong></td><td>Programme "Digital Twin" depuis 2022, phase 1 modélisation infrastructure, phase 2 intégration données trafic</td><td>En cours (niveau 2 partiel)</td><td>5 M£</td></tr>
+        </tbody>
+    </table>
+    
+    <!-- ======================================================================== -->
+    <!-- 9. RETOURS D'EXPÉRIENCE HORS AÉRONAUTIQUE -->
+    <!-- ======================================================================== -->
+    <h1>9. RETOURS D'EXPÉRIENCE HORS AÉRONAUTIQUE</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Secteur</th>
+                <th>Réalisations</th>
+                <th>Résultats sécurité</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>Port de Rotterdam</strong></td><td>Modélisation complète des flux maritimes et terrestres, simulation congestion, optimisation affectations</td><td>-35% accidents engins portuaires, -20% temps d'attente</td></tr>
+            <tr><td><strong>SNCF Réseau</strong></td><td>Modélisation 30 000 km de voies, simulation flux trains, maintenance prédictive</td><td>-28% incidents liés aux chantiers</td></tr>
+        </tbody>
+    </table>
+    
+    <!-- ======================================================================== -->
+    <!-- 10. RISQUES ET MESURES DE MITIGATION -->
+    <!-- ======================================================================== -->
+    <h1>10. RISQUES ET MESURES DE MITIGATION</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Risque</th>
+                <th>Probabilité</th>
+                <th>Gravité</th>
+                <th>Plan d'action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Refus de partage des données (handlers)</td><td>Élevée</td><td>Critique</td><td>Démontrer la valeur ajoutée ; Anonymisation stricte ; Obligation contractuelle ADP</td></tr>
+            <tr><td>Coût d'investissement</td><td>Élevée</td><td>Élevée</td><td>Phasage progressif ; Financements européens ; ROI démontré cas par cas</td></tr>
+            <tr><td>Complexité technique</td><td>Élevée</td><td>Modérée</td><td>Partenariat avec labo R&D (ENAC, ONERA) ; Recrutement compétences spécifiques</td></tr>
+            <tr><td>Délais de déploiement</td><td>Élevée</td><td>Modérée</td><td>Approche agile, MVP rapide ; Ne pas viser la perfection dès le début</td></tr>
+            <tr><td>Obsolescence technologique</td><td>Moyenne</td><td>Faible</td><td>Architecture ouverte, standards ; Évolution incrémentale</td></tr>
+            <tr><td>Acceptation par les opérationnels</td><td>Moyenne</td><td>Modérée</td><td>Co-conception avec utilisateurs ; Démonstrateurs concrets</td></tr>
+        </tbody>
+    </table>
+    
+    <!-- ======================================================================== -->
+    <!-- 11. FEUILLE DE ROUTE PROPOSÉE -->
+    <!-- ======================================================================== -->
+    <h1>11. FEUILLE DE ROUTE PROPOSÉE</h1>
+    
+    <h2>Phase 1 - Fondations (0-12 mois)</h2>
+    <ul>
+        <li>Modélisation 3D CDG (zones critiques)</li>
+        <li>Convention de partage de données (ADP + CSCA + Handlers)</li>
+        <li>Pilote données géoloc (2 handlers)</li>
+        <li>Démonstrateur hotspots</li>
+        <li>Évaluation et décision Phase 2</li>
+    </ul>
+    
+    <h2>Phase 2 - Industrialisation (12-24 mois)</h2>
+    <ul>
+        <li>Généralisation collecte données</li>
+        <li>Développement plateforme</li>
+        <li>Module simulation flux</li>
+        <li>Déploiement utilisateurs (ADP, handlers)</li>
+        <li>Formation équipes</li>
+    </ul>
+    
+    <h2>Phase 3 - Extension (24-36 mois)</h2>
+    <ul>
+        <li>Extension Orly</li>
+        <li>Module temps réel</li>
+        <li>Système d'alertes automatiques</li>
+        <li>Extension aéroports province</li>
+    </ul>
+    
+    <h2>Phase 4 - Innovation (36-48 mois)</h2>
+    <ul>
+        <li>IA prédictive (hotspots)</li>
+        <li>Optimisation automatique</li>
+        <li>Jumeau temps réel complet</li>
+    </ul>
+    
+    <!-- ======================================================================== -->
+    <!-- 12. INDICATEURS DE SUIVI -->
+    <!-- ======================================================================== -->
+    <h1>12. INDICATEURS DE SUIVI</h1>
+    
+    <h2>12.1 Indicateurs de déploiement</h2>
+    
+    <div class="indicator-box">
+        <div class="indicator-item">
+            <strong>% zones CDG modélisées</strong>
+            <span>Cible M12: 50% | M24: 90% | M36: 100%</span>
+        </div>
+        <div class="indicator-item">
+            <strong>% handlers connectés</strong>
+            <span>Cible M12: 20% | M24: 70% | M36: 100%</span>
+        </div>
+        <div class="indicator-item">
+            <strong>% engins tracés</strong>
+            <span>Cible M12: 10% | M24: 50% | M36: 80%</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Utilisateurs actifs</strong>
+            <span>Cible M12: 20 | M24: 100 | M36: 300</span>
+        </div>
+    </div>
+    
+    <h2>12.2 Indicateurs d'impact</h2>
+    
+    <div class="indicator-box">
+        <div class="indicator-item">
+            <strong>Accidents en zones critiques</strong>
+            <span>Baseline 2025: 25/an | Cible M24: -20% | Cible M36: -35%</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Temps de parcours GSE (moyen)</strong>
+            <span>Baseline: 8,2 min | Cible M24: -10% | Cible M36: -15%</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Hotspots actifs</strong>
+            <span>Baseline: 12 | Cible M24: 8 | Cible M36: 5</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Satisfaction conducteurs (cheminements)</strong>
+            <span>Cible M24: 3,5/5 | Cible M36: 4,0/5</span>
+        </div>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 13. SYNTHÈSE - AVANTAGES COMPARATIFS -->
+    <!-- ======================================================================== -->
+    <h1>13. SYNTHÈSE - AVANTAGES COMPARATIFS</h1>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 15px 0;">
+        <div style="border: 1px solid #ddd; padding: 10px; background-color: #f9f9f9;">
+            <h4 style="color: #e67e22;">Pour ADP</h4>
+            <ul>
+                <li>Optimisation de l'infrastructure</li>
+                <li>Décisions basées sur données objectives</li>
+                <li>Image d'innovation</li>
+            </ul>
+        </div>
+        <div style="border: 1px solid #ddd; padding: 10px; background-color: #f9f9f9;">
+            <h4 style="color: #e67e22;">Pour les handlers</h4>
+            <ul>
+                <li>Réduction des temps de parcours</li>
+                <li>Moins d'accidents (coûts, immobilisation)</li>
+                <li>Planification optimisée</li>
+            </ul>
+        </div>
+        <div style="border: 1px solid #ddd; padding: 10px; background-color: #f9f9f9;">
+            <h4 style="color: #e67e22;">Pour les conducteurs</h4>
+            <ul>
+                <li>Cheminements plus sûrs</li>
+                <li>Moins de stress</li>
+                <li>Formation immersive</li>
+            </ul>
+        </div>
+        <div style="border: 1px solid #ddd; padding: 10px; background-color: #f9f9f9;">
+            <h4 style="color: #e67e22;">Pour la plateforme</h4>
+            <ul>
+                <li>Vision consolidée des flux</li>
+                <li>Anticipation des risques</li>
+                <li>Culture de la donnée partagée</li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 14. CONDITIONS DE RÉUSSITE -->
+    <!-- ======================================================================== -->
+    <h1>14. CONDITIONS DE RÉUSSITE</h1>
+    
+    <h2>Facteurs clés</h2>
+    <ol>
+        <li><strong>GOUVERNANCE DES DONNÉES</strong> : Le partage des données de géolocalisation est le prérequis absolu.</li>
+        <li><strong>PHASAGE PROGRESSIF</strong> : Commencer petit, prouver la valeur, puis étendre.</li>
+        <li><strong>CO-CONCEPTION</strong> : Impliquer les opérationnels dès la conception.</li>
+        <li><strong>ANONYMISATION</strong> : Garantir que les données individuelles ne sont pas utilisées pour le contrôle.</li>
+        <li><strong>FINANCEMENT MUTUALISÉ</strong> : Le coût est trop élevé pour un seul acteur.</li>
+    </ol>
+    
+    <h2>Pièges à éviter</h2>
+    <ol>
+        <li><strong>ATTENDRE LA PERFECTION</strong> : Un jumeau imparfait qui existe vaut mieux qu'un jumeau parfait qui n'arrive jamais.</li>
+        <li><strong>SOUS-ESTIMER LA COMPLEXITÉ JURIDIQUE</strong> : Le partage de données entre concurrents est sensible.</li>
+        <li><strong>OUBLIER LA FORMATION</strong> : Un outil puissant sans utilisateurs formés ne sert à rien.</li>
+        <li><strong>NÉGLIGER LE ROI</strong> : Chaque fonctionnalité doit avoir un bénéfice démontrable.</li>
+    </ol>
+    
+    <!-- ======================================================================== -->
+    <!-- 15. EN RÉSUMÉ -->
+    <!-- ======================================================================== -->
+    <h1>15. EN RÉSUMÉ</h1>
+    
+    <div class="encadre">
+        <p style="font-size: 12pt; font-style: italic;">
+            Personne n'a aujourd'hui de vision globale des mouvements d'engins sur la plateforme. Les décisions d'aménagement sont prises 
+            sans modélisation préalable. Le jumeau numérique change la donne en permettant de tester virtuellement avant de réaliser.
+        </p>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 16. CE QUE NOUS PROPOSONS CONCRÈTEMENT -->
+    <!-- ======================================================================== -->
+    <h1>16. CE QUE NOUS PROPOSONS CONCRÈTEMENT</h1>
+    
+    <ol style="font-weight: bold; font-size: 12pt;">
+        <li>Réaliser une modélisation 3D complète des zones critiques de CDG</li>
+        <li>Mutualiser les données de géolocalisation entre les acteurs de la plateforme</li>
+        <li>Développer un démonstrateur sur une zone pilote (Parking T2E)</li>
+        <li>Simuler l'impact de modifications d'infrastructure avant déploiement</li>
+    </ol>
+    
+    <!-- Pied de page -->
+    <div class="footer">
+        <p>PISTE 6 - Jumeau numérique et optimisation des flux | Version 1.0 | Mars 2026 | CDG - CSCA</p>
+
+    </div>
+</body>
+</html>

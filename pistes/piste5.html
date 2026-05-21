@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PISTE 5 - Gamification de la sécurité</title>
+    <style>
+        /* Styles généraux pour l'impression */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            line-height: 1.5;
+            color: #333;
+            background-color: white;
+            font-size: 10.5pt;
+            margin: 0;
+            padding: 15px;
+        }
+        
+        /* Styles pour l'impression PDF */
+        @media print {
+            body {
+                padding: 0.5cm;
+            }
+            .page-break {
+                page-break-before: always;
+            }
+            .no-break {
+                page-break-inside: avoid;
+            }
+            h1, h2, h3, h4 {
+                page-break-after: avoid;
+            }
+            table {
+                page-break-inside: avoid;
+            }
+        }
+        
+        /* En-tête du document */
+        .document-header {
+            border-bottom: 3px solid #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+        
+        .document-title {
+            font-size: 24pt;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .document-subtitle {
+            font-size: 14pt;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+        
+        .document-meta {
+            text-align: right;
+            color: #7f8c8d;
+            font-size: 10pt;
+        }
+        
+        .tagline {
+            background-color: #ecf0f1;
+            padding: 8px 15px;
+            border-left: 5px solid #e67e22;
+            margin-bottom: 20px;
+            font-weight: bold;
+            font-size: 12pt;
+        }
+        
+        /* Typographie */
+        h1 {
+            font-size: 18pt;
+            color: #2c3e50;
+            margin: 25px 0 10px 0;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #bdc3c7;
+        }
+        
+        h2 {
+            font-size: 14pt;
+            color: #34495e;
+            margin: 20px 0 10px 0;
+            padding-left: 5px;
+            border-left: 4px solid #e67e22;
+        }
+        
+        h3 {
+            font-size: 12pt;
+            color: #555;
+            margin: 15px 0 8px 0;
+            font-weight: bold;
+        }
+        
+        h4 {
+            font-size: 11pt;
+            color: #666;
+            margin: 12px 0 5px 0;
+            font-weight: bold;
+        }
+        
+        p {
+            margin-bottom: 8px;
+            text-align: justify;
+        }
+        
+        ul, ol {
+            margin: 8px 0 12px 25px;
+        }
+        
+        li {
+            margin-bottom: 3px;
+        }
+        
+        /* Boîtes d'information */
+        .encadre {
+            border: 1px solid #bdc3c7;
+            padding: 12px;
+            background-color: #f9f9f9;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        
+        .important {
+            background-color: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 8px 12px;
+            margin: 12px 0;
+        }
+        
+        .hypothese {
+            background-color: #d4edda;
+            border-left: 5px solid #28a745;
+            padding: 8px 12px;
+            margin: 12px 0;
+            font-style: italic;
+        }
+        
+        /* Tableaux */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0 18px 0;
+            font-size: 9.5pt;
+        }
+        
+        th {
+            background-color: #2c3e50;
+            color: white;
+            font-weight: bold;
+            padding: 6px 4px;
+            text-align: left;
+            border: 1px solid #34495e;
+        }
+        
+        td {
+            padding: 5px 4px;
+            border: 1px solid #ddd;
+            vertical-align: top;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        /* Tableau de cartographie des risques avec couleurs */
+        .risk-table td:nth-child(7) {
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-orange {
+            background-color: #FFA500 !important;
+            color: black;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-red {
+            background-color: #FF0000 !important;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-yellow {
+            background-color: #FFFF00 !important;
+            color: black;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-green {
+            background-color: #008000 !important;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        /* Grille de cotation */
+        .cotation-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 12px 0;
+        }
+        
+        .cotation-box {
+            border: 1px solid #ddd;
+            padding: 8px;
+            background-color: #f9f9f9;
+        }
+        
+        .cotation-box h4 {
+            background-color: #2c3e50;
+            color: white;
+            padding: 4px 8px;
+            margin: -8px -8px 8px -8px;
+            font-size: 11pt;
+        }
+        
+        /* Pied de page */
+        .footer {
+            margin-top: 25px;
+            padding-top: 8px;
+            border-top: 1px solid #bdc3c7;
+            font-size: 9pt;
+            color: #7f8c8d;
+            text-align: center;
+        }
+        
+        .page-break {
+            page-break-before: always;
+        }
+        
+        /* Indicateurs */
+        .indicator-box {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 12px 0;
+        }
+        
+        .indicator-item {
+            flex: 1 1 200px;
+            background-color: #ecf0f1;
+            padding: 8px;
+            border-radius: 5px;
+            border-left: 4px solid #e67e22;
+        }
+        
+        .indicator-item strong {
+            display: block;
+            font-size: 10.5pt;
+            color: #2c3e50;
+        }
+        
+        .indicator-item span {
+            font-size: 9pt;
+            color: #555;
+        }
+        
+        /* Légende des couleurs */
+        .color-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 12px 0;
+            padding: 8px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .color-box {
+            width: 20px;
+            height: 20px;
+            border: 1px solid #333;
+        }
+        
+        /* Texte centré */
+        .text-center {
+            text-align: center;
+        }
+        
+        /* Badge */
+        .badge {
+            background-color: #e67e22;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 9pt;
+            font-weight: bold;
+            display: inline-block;
+        }
+        
+        /* Simulation d'interface d'application */
+        .app-interface {
+            background-color: #f0f0f0;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            padding: 15px;
+            font-family: monospace;
+            margin: 15px 0;
+        }
+        
+        .app-header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 8px;
+            border-radius: 5px 5px 0 0;
+            font-weight: bold;
+        }
+        
+        .app-content {
+            background-color: white;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 0 0 5px 5px;
+        }
+        
+        /* Grille pour les badges */
+        .badges-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .badge-card {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 8px;
+            background-color: #f9f9f9;
+            text-align: center;
+        }
+        
+        .badge-card h4 {
+            margin: 5px 0 0 0;
+            color: #e67e22;
+            font-size: 10pt;
+        }
+        
+        .badge-card p {
+            font-size: 9pt;
+            margin: 5px 0 0 0;
+        }
+        
+        .badge-emoji {
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body>
+    <!-- En-tête du document -->
+    <div class="document-header">
+        <div>
+            <div class="document-title">PISTE 5</div>
+            <div class="document-subtitle">Gamification de la sécurité</div>
+        </div>
+        <div class="document-meta">
+            <div>Version 1.0</div>
+            <div>Mars 2026</div>
+            <div>CDG - CSCA</div>
+        </div>
+    </div>
+    
+    <!-- Tagline -->
+    <div class="tagline">
+        RENDRE LA SÉCURITÉ VISIBLE, MESURABLE ET VALORISANTE
+    </div>
+    
+    <!-- Description -->
+    <p style="font-size: 11pt; font-weight: bold; text-align: center; margin: 20px 0;">
+        Points, badges, niveaux, classements pour rendre visible et valoriser les comportements vertueux.
+    </p>
+    
+    <p>
+        La sécurité est aujourd'hui trop souvent perçue comme une contrainte, une série d'interdictions et d'obligations. 
+        Cette perception négative engendre un désengagement, où le respect des règles est vécu comme une fatalité plutôt 
+        qu'une fierté. Parallèlement, les mêmes conducteurs qui subissent cette sécurité au travail s'engagent volontairement 
+        dans des jeux sur leur smartphone, collectionnant badges, comparant leurs scores et relevant des défis avec leurs amis. 
+        La cinquième piste propose d'exploiter ce paradoxe en transposant les mécaniques du jeu au service de la prévention.
+    </p>
+    
+    <!-- ======================================================================== -->
+    <!-- 1. PROBLÉMATIQUE ADRESSÉE -->
+    <!-- ======================================================================== -->
+    <h1>1. PROBLÉMATIQUE ADRESSÉE</h1>
+    
+    <p><strong>Constat fondamental :</strong></p>
+    <p>La sécurité est aujourd'hui perçue comme :</p>
+    <ul>
+        <li><strong>Une contrainte</strong> ("je dois respecter des règles")</li>
+        <li><strong>Une obligation</strong> ("on me contrôle")</li>
+        <li><strong>Un coût</strong> ("ça ralentit la production")</li>
+        <li><strong>Invisible</strong> ("quand ça va bien, personne ne le voit")</li>
+    </ul>
+    
+    <div class="important">
+        <strong>Paradoxe :</strong> Les conducteurs jouent à des jeux sur leur smartphone, collectionnent des badges sur Strava, 
+        comparent leurs scores avec leurs amis... mais la sécurité reste <strong>en dehors de cette dynamique</strong>.
+    </div>
+    
+    <div class="hypothese">
+        <strong>Notre hypothèse :</strong> Si nous rendons la sécurité <strong>visible, mesurable, comparable et valorisante</strong>, 
+        nous créons un <strong>engagement volontaire</strong> et une <strong>fierté d'appartenance</strong> bien plus puissants que la peur de la sanction.
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 2. CARTOGRAPHIE DES RISQUES (MISE À JOUR POUR PISTE 5) -->
+    <!-- ======================================================================== -->
+    <h1>2. CARTOGRAPHIE DES RISQUES</h1>
+    
+    <!-- Légende des couleurs -->
+    <div class="color-legend">
+        <div class="legend-item"><div class="color-box" style="background-color: #FF0000;"></div> <strong>Rouge</strong> - Risque très élevé (intolérable)</div>
+        <div class="legend-item"><div class="color-box" style="background-color: #FFA500;"></div> <strong>Orange</strong> - Risque élevé (actions nécessaires)</div>
+        <div class="legend-item"><div class="color-box" style="background-color: #FFFF00;"></div> <strong>Jaune</strong> - Risque moyen (tolérable)</div>
+        <div class="legend-item"><div class="color-box" style="background-color: #008000;"></div> <strong>Vert</strong> - Risque faible (acceptable)</div>
+    </div>
+    
+    <table class="risk-table">
+        <thead>
+            <tr>
+                <th>Réf.</th>
+                <th>Danger</th>
+                <th>Causes</th>
+                <th>Conséquences</th>
+                <th>Gravité</th>
+                <th>Probabilité</th>
+                <th>Criticité</th>
+                <th>Barrières Piste 5</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>CUL 01.1</strong></td>
+                <td>Perception négative de la sécurité</td>
+                <td>Sécurité vue comme contrainte, absence de valorisation des bons comportements</td>
+                <td>Désengagement, respect passif des règles, recherche de contournement</td>
+                <td>2 (Mineure)</td>
+                <td>A (Fréquent)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Valorisation par points, badges, reconnaissance positive</td>
+            </tr>
+            <tr>
+                <td><strong>CUL 01.2</strong></td>
+                <td>Invisibilité des comportements vertueux</td>
+                <td>Seuls les incidents sont comptabilisés et communiqués</td>
+                <td>Démotivation des conducteurs exemplaires, sentiment d'injustice</td>
+                <td>2 (Mineure)</td>
+                <td>A (Fréquent)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Affichage des scores, badges, classements, "héros du mois"</td>
+            </tr>
+            <tr>
+                <td><strong>CUL 01.3</strong></td>
+                <td>Absence de fierté liée à la sécurité</td>
+                <td>Pas de reconnaissance, pas de distinction des conducteurs exemplaires</td>
+                <td>La sécurité n'est pas une source de motivation intrinsèque</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-green">VERT</td>
+                <td>Niveaux (stagiaire → légende), privilèges, reconnaissance publique</td>
+            </tr>
+            <tr>
+                <td><strong>COM 02.1</strong></td>
+                <td>Sous-déclaration des near-miss</td>
+                <td>Manque de temps, absence de feedback, non-valorisation</td>
+                <td>Perte d'information sur les presque-accidents, prévention inefficace</td>
+                <td>3 (Majeure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Gain de points XP par signalement (+25), badge "Œil de lynx"</td>
+            </tr>
+            <tr>
+                <td><strong>COM 02.2</strong></td>
+                <td>Non-remontée des bonnes pratiques</td>
+                <td>Absence de canal de partage, pas de valorisation</td>
+                <td>Innovations terrain non capitalisées</td>
+                <td>2 (Mineure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-green">VERT</td>
+                <td>Badge "Innovateur", points pour propositions retenues (+300)</td>
+            </tr>
+            <tr>
+                <td><strong>FOR 01.1</strong></td>
+                <td>Faible engagement dans les formations volontaires</td>
+                <td>Formation perçue comme contrainte, pas d'incitation</td>
+                <td>Compétences non actualisées, risques liés à la méconnaissance</td>
+                <td>2 (Mineure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-green">VERT</td>
+                <td>Points XP pour formations suivies (+100), progression accélérée</td>
+            </tr>
+            <tr>
+                <td><strong>HUM 03.1</strong></td>
+                <td>Manque de reconnaissance des conducteurs exemplaires</td>
+                <td>Pas de distinction, pas de retour positif sur le travail bien fait</td>
+                <td>Démotivation, baisse de vigilance, recherche de reconnaissance ailleurs</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Badges, niveaux, classements, récompenses symboliques et concrètes</td>
+            </tr>
+            <tr>
+                <td><strong>HUM 03.2</strong></td>
+                <td>Absence d'émulation positive entre pairs</td>
+                <td>Culture individuelle, pas de partage des objectifs sécurité</td>
+                <td>Chacun travaille dans son coin, pas de dynamique collective</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Classements équipes, challenges mensuels, compétitions inter-entreprises</td>
+            </tr>
+            <tr>
+                <td><strong>HUM 03.3</strong></td>
+                <td>Fracture générationnelle dans l'appropriation de la sécurité</td>
+                <td>Jeunes désengagés par l'absence de digital, anciens non valorisés</td>
+                <td>Incompréhension, rejet des dispositifs</td>
+                <td>2 (Mineure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-green">VERT</td>
+                <td>Système ludique attrayant pour les jeunes, reconnaissance des anciens par niveaux</td>
+            </tr>
+            <tr>
+                <td><strong>PER 01.1</strong></td>
+                <td>Baisse de la vigilance liée à la routine</td>
+                <td>Répétitivité des tâches, absence de stimulation</td>
+                <td>Erreurs d'inattention, accidents évitables</td>
+                <td>3 (Majeure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Défis quotidiens, objectifs variés, maintien de l'engagement</td>
+            </tr>
+            <tr>
+                <td><strong>RH 01.1</strong></td>
+                <td>Turnover élevé des jeunes conducteurs</td>
+                <td>Manque de reconnaissance, absence de perspective valorisante</td>
+                <td>Perte de compétences, coûts de recrutement</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Parcours de progression visible (niveaux), badges, reconnaissance</td>
+            </tr>
+            <tr>
+                <td><strong>RH 01.2</strong></td>
+                <td>Difficulté à attirer les jeunes talents</td>
+                <td>Image du métier peu valorisante, absence de dimension ludique</td>
+                <td>Pénurie de candidats, vieillissement des effectifs</td>
+                <td>2 (Mineure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-green">VERT</td>
+                <td>Image moderne et innovante, attractivité par la gamification</td>
+            </tr>
+            <tr>
+                <td><strong>ACC 01.1</strong></td>
+                <td>Accidents liés à la démotivation</td>
+                <td>Désengagement, perte de sens, baisse de vigilance</td>
+                <td>Accidents corporels et matériels</td>
+                <td>3 (Majeure)</td>
+                <td>D (Très rare)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Maintien de l'engagement par la reconnaissance continue</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <!-- Échelle de cotation -->
+    <h3>Échelle de cotation utilisée</h3>
+    
+    <div class="cotation-grid">
+        <div class="cotation-box">
+            <h4>Gravité</h4>
+            <ul>
+                <li><strong>1</strong> - Négligeable</li>
+                <li><strong>2</strong> - Mineure</li>
+                <li><strong>3</strong> - Majeure</li>
+                <li><strong>4</strong> - Catastrophique</li>
+            </ul>
+        </div>
+        <div class="cotation-box">
+            <h4>Probabilité</h4>
+            <ul>
+                <li><strong>A</strong> - Fréquent (quotidien)</li>
+                <li><strong>B</strong> - Occasionnel (hebdo/mensuel)</li>
+                <li><strong>C</strong> - Rare (annuel)</li>
+                <li><strong>D</strong> - Très rare (>1 an)</li>
+                <li><strong>E</strong> - Extrêmement rare (jamais observé)</li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 3. SYSTÈME DE POINTS ET NIVEAUX -->
+    <!-- ======================================================================== -->
+    <h1>3. SYSTÈME DE POINTS ET NIVEAUX</h1>
+    
+    <h2>3.1 Points d'expérience (XP)</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>Points XP</th>
+                <th>Fréquence max</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Journée sans incident</td><td>+10 XP</td><td>Quotidienne</td></tr>
+            <tr><td>Semaine sans infraction</td><td>+50 XP</td><td>Hebdomadaire</td></tr>
+            <tr><td>Signalement near-miss</td><td>+25 XP</td><td>Par signalement (plafond 100/mois)</td></tr>
+            <tr><td>Quiz sécurité complété</td><td>+15 XP</td><td>Hebdomadaire</td></tr>
+            <tr><td>Formation volontaire suivie</td><td>+100 XP</td><td>Mensuelle</td></tr>
+            <tr><td>Mentorat d'un nouveau (buddy)</td><td>+200 XP</td><td>Par binôme</td></tr>
+            <tr><td>Proposition d'amélioration retenue</td><td>+300 XP</td><td>Annuelle</td></tr>
+            <tr><td>10 ans sans accident</td><td>+500 XP</td><td>Unique</td></tr>
+        </tbody>
+    </table>
+    
+    <h2>3.2 Niveaux et progression</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Niveau</th>
+                <th>Titre</th>
+                <th>Points XP requis</th>
+                <th>Privilèges</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>1</td><td>Conducteur stagiaire</td><td>0</td><td>Parcours d'intégration</td></tr>
+            <tr><td>2</td><td>Conducteur confirmé</td><td>500</td><td>Badge nominatif</td></tr>
+            <tr><td>3</td><td>Conducteur expert</td><td>1 500</td><td>Casquette siglée</td></tr>
+            <tr><td>4</td><td>Conducteur d'élite</td><td>3 000</td><td>Étoile sur le casque</td></tr>
+            <tr><td>5</td><td>Légende sécurité</td><td>5 000</td><td>Plaque nominative vestiaire</td></tr>
+            <tr><td>6</td><td>Ambassadeur</td><td>8 000</td><td>Mentorat, conseil sécurité</td></tr>
+        </tbody>
+    </table>
+    
+    <p><strong>Temps estimé pour atteindre niveau 5 :</strong> ~18 mois (avec engagement régulier)</p>
+    
+    <!-- ======================================================================== -->
+    <!-- 4. BADGES DE COMPÉTENCES -->
+    <!-- ======================================================================== -->
+    <h1>4. BADGES DE COMPÉTENCES ET RECONNAISSANCE</h1>
+    
+    <div class="badges-grid">
+        <div class="badge-card">
+            <div class="badge-emoji">🦅</div>
+            <h4>Œil de lynx</h4>
+            <p>10 signalements near-miss validés</p>
+        </div>
+        <div class="badge-card">
+            <div class="badge-emoji">🌿</div>
+            <h4>Main verte</h4>
+            <p>6 mois sans aucun incident</p>
+        </div>
+        <div class="badge-card">
+            <div class="badge-emoji">🛑</div>
+            <h4>Silence d'or</h4>
+            <p>Zéro infraction vitesse sur l'année</p>
+        </div>
+        <div class="badge-card">
+            <div class="badge-emoji">🤝</div>
+            <h4>Compagnon</h4>
+            <p>3 nouveaux conducteurs parrainés</p>
+        </div>
+        <div class="badge-card">
+            <div class="badge-emoji">🌙</div>
+            <h4>Pilote de nuit</h4>
+            <p>100 heures de conduite de nuit sans incident</p>
+        </div>
+        <div class="badge-card">
+            <div class="badge-emoji">🚛</div>
+            <h4>Toutes zones</h4>
+            <p>Conduite validée sur 5 types d'engins</p>
+        </div>
+        <div class="badge-card">
+            <div class="badge-emoji">🚑</div>
+            <h4>Sauveteur</h4>
+            <p>Intervention lors d'un incident (1er secours)</p>
+        </div>
+        <div class="badge-card">
+            <div class="badge-emoji">💡</div>
+            <h4>Innovateur</h4>
+            <p>Proposition d'amélioration retenue</p>
+        </div>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 5. CLASSEMENTS ET COMPÉTITIONS -->
+    <!-- ======================================================================== -->
+    <h1>5. CLASSEMENTS ET COMPÉTITIONS</h1>
+    
+    <h2>5.1 Classements individuels</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Classement</th>
+                <th>Périmètre</th>
+                <th>Fréquence mise à jour</th>
+                <th>Récompense</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Top 10 journée</td><td>Équipe</td><td>Temps réel</td><td>Félicitations manager</td></tr>
+            <tr><td>Top 10 semaine</td><td>Entreprise</td><td>Hebdomadaire</td><td>Prime de 50€</td></tr>
+            <tr><td>Top 10 mois</td><td>CDG</td><td>Mensuelle</td><td>Prime de 150€ + place parking</td></tr>
+            <tr><td>Top 10 année</td><td>Tous aéroports</td><td>Annuelle</td><td>Trophée + voyage d'étude</td></tr>
+        </tbody>
+    </table>
+    
+    <h2>5.2 Classements collectifs</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Compétition</th>
+                <th>Participants</th>
+                <th>Durée</th>
+                <th>Récompense</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Challenge équipes</td><td>Équipes d'une même entreprise</td><td>Mensuel</td><td>Journée team building</td></tr>
+            <tr><td>Trophée des handlers</td><td>Entreprises concurrentes</td><td>Trimestriel</td><td>Trophée tournant + communication</td></tr>
+            <tr><td>Coupe des plateformes</td><td>CDG vs Orly vs Province</td><td>Annuelle</td><td>Reconnaissance DSAC/FNAM</td></tr>
+        </tbody>
+    </table>
+    
+    <h2>5.3 Exemple de challenge mensuel</h2>
+    
+    <div class="app-interface">
+        <div class="app-header">CHALLENGE DU MOIS - MARS 2026</div>
+        <div class="app-content">
+            <p><strong>"OPÉRATION ANGLE MORT"</strong></p>
+            <p><strong>OBJECTIF :</strong> Réaliser 50 vérifications d'angles morts avant manœuvre et les signaler dans l'application.</p>
+            <p><strong>RÉCOMPENSES :</strong></p>
+            <ul>
+                <li>Individuel : Top 10 → Casque "Sécurité d'élite" + 100€</li>
+                <li>Collectif : Équipe gagnante → Petit-déjeuner offert 1 mois</li>
+            </ul>
+            <p><strong>PROGRESSION :</strong> [████████░░░░░░░░] 48% - Objectif atteint par 43 conducteurs</p>
+            <p><strong>VOTRE ÉQUIPE :</strong> 4e/12 - 15 points à rattraper sur le leader</p>
+        </div>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 6. RÉCOMPENSES ET INCITATIONS -->
+    <!-- ======================================================================== -->
+    <h1>6. RÉCOMPENSES ET INCITATIONS</h1>
+    
+    <h2>6.1 Typologie des récompenses</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Type</th>
+                <th>Exemples</th>
+                <th>Coût estimé</th>
+                <th>Impact perçu</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Symbolique</td><td>Badge, pin's, casquette, étoile</td><td>5-20€</td><td>Très fort</td></tr>
+            <tr><td>Fonctionnelle</td><td>Place de parking prioritaire, horaires flexibles</td><td>0€</td><td>Fort</td></tr>
+            <tr><td>Financière</td><td>Prime (50-500€), chèque cadeau</td><td>Variable</td><td>Fort</td></tr>
+            <tr><td>Expérientielle</td><td>Visite tour de contrôle, vol découverte</td><td>150-300€</td><td>Très fort</td></tr>
+            <tr><td>Reconnaissance</td><td>Photo dans hall, article intranet</td><td>0€</td><td>Très fort</td></tr>
+        </tbody>
+    </table>
+    
+    <h2>6.2 Proposition de barème de récompenses</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Niveau atteint</th>
+                <th>Récompense</th>
+                <th>Coût</th>
+                <th>Fréquence</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Top 10 semaine</td><td>Chèque cadeau 50€</td><td>50€</td><td>Hebdomadaire</td></tr>
+            <tr><td>Badge "Élite"</td><td>Casquette personnalisée</td><td>15€</td><td>Unique</td></tr>
+            <tr><td>Top 10 mois</td><td>Prime 150€ + place parking</td><td>150€</td><td>Mensuelle</td></tr>
+            <tr><td>Niveau 5 (Légende)</td><td>Plaque vestiaire nominative</td><td>30€</td><td>Unique</td></tr>
+            <tr><td>Champion annuel</td><td>Trophée + 1 000€ + voyage</td><td>2 000€</td><td>Annuelle</td></tr>
+            <tr><td>Équipe du mois</td><td>Petit-déjeuner/repas offert</td><td>200€</td><td>Mensuelle</td></tr>
+        </tbody>
+    </table>
+    
+    <p><strong>Budget annuel estimé (entreprise 500 conducteurs) :</strong> ~14 000€/an (28€ par conducteur)</p>
+    
+    <!-- ======================================================================== -->
+    <!-- 7. APPLICATION MOBILE - TABLEAU DE BORD GAMIFIÉ -->
+    <!-- ======================================================================== -->
+    <h1>7. APPLICATION MOBILE - TABLEAU DE BORD GAMIFIÉ</h1>
+    
+    <div class="app-interface">
+        <div class="app-header">🔒 BUDDY 📊 Thomas, 45 ans ⚡ 2340</div>
+        <div class="app-content">
+            <p><strong>🎯 TON NIVEAU : CONDUCTEUR EXPERT</strong></p>
+            <p>[████████████████░░░░] 1520/3000 XP</p>
+            <p><strong>🏅 TES BADGES (8/12)</strong></p>
+            <p>[🦅] [🌿] [🛑] [🤝] [🌙] [🚛] [💡] [+]</p>
+            <p><strong>📊 CLASSEMENTS</strong></p>
+            <ul>
+                <li>Équipe : 3e/45 ▲ +2 places</li>
+                <li>Entreprise : 12e/320 ▲ +5</li>
+                <li>CDG : 47e/1250 ▲ +18</li>
+            </ul>
+            <p><strong>🚀 DÉFI DU JOUR</strong><br>"Signaler un angle mort" - +25 XP bonus<br>[✔️ RELEVER LE DÉFI]</p>
+            <p><strong>📢 NOUVEAUTÉ</strong><br>Félicitations à l'équipe de Sarah qui remporte le challenge mensuel !</p>
+        </div>
+    </div>
+    
+    <h2>7.2 Fonctionnalités clés</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Module</th>
+                <th>Fonction</th>
+                <th>Bénéfice</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Profil</td><td>Progression, badges, statistiques</td><td>Fierté individuelle</td></tr>
+            <tr><td>Classements</td><td>Comparaison pairs</td><td>Émulation</td></tr>
+            <tr><td>Défis</td><td>Missions quotidiennes/hebdomadaires</td><td>Engagement continu</td></tr>
+            <tr><td>Notifications</td><td>Félicitations, records battus</td><td>Reconnaissance instantanée</td></tr>
+            <tr><td>Social</td><td>Réactions, encouragements entre pairs</td><td>Cohésion d'équipe</td></tr>
+        </tbody>
+    </table>
+    
+    <!-- ======================================================================== -->
+    <!-- 8. BUDGET ESTIMÉ -->
+    <!-- ======================================================================== -->
+    <h1>8. BUDGET ESTIMÉ</h1>
+    
+    <h2>8.1 Investissement initial (mutualisable CSCA)</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Poste</th>
+                <th>Coût</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Conception système gamification (AMO)</td><td>20 000€</td></tr>
+            <tr><td>Développement module application</td><td>40 000€</td></tr>
+            <tr><td>Création identité visuelle (badges, trophées)</td><td>10 000€</td></tr>
+            <tr><td>Campagne de lancement</td><td>15 000€</td></tr>
+            <tr><td><strong>Total</strong></td><td><strong>85 000€</strong></td></tr>
+        </tbody>
+    </table>
+    
+    <h2>8.2 Coûts annuels récurrents</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Poste</th>
+                <th>Coût</th>
+                <th>Mutualisation</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Maintenance application</td><td>15 000€/an</td><td>CSCA</td></tr>
+            <tr><td>Récompenses (primes, cadeaux)</td><td>14 000€/entreprise</td><td>Entreprise</td></tr>
+            <tr><td>Événement annuel</td><td>25 000€</td><td>CSCA</td></tr>
+            <tr><td>Communication continue</td><td>8 000€</td><td>CSCA</td></tr>
+            <tr><td><strong>Total CSCA</strong></td><td><strong>48 000€/an</strong></td><td>~5 000€/entreprise</td></tr>
+            <tr><td><strong>Total entreprise (500 cond.)</strong></td><td><strong>14 000€/an</strong></td><td>28€/conducteur</td></tr>
+        </tbody>
+    </table>
+    
+    <!-- ======================================================================== -->
+    <!-- 9. RISQUES ET MESURES DE MITIGATION -->
+    <!-- ======================================================================== -->
+    <h1>9. RISQUES ET MESURES DE MITIGATION</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Risque</th>
+                <th>Probabilité</th>
+                <th>Gravité</th>
+                <th>Plan d'action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Effet "boy scout" (perçu comme infantilisant)</td><td>Élevée</td><td>Élevée</td><td>Co-conception avec conducteurs ; Ton sobre et professionnel ; Pas d'emoji excessifs</td></tr>
+            <tr><td>Compétition malsaine (non-signalement pour préserver score)</td><td>Moyenne</td><td>Critique</td><td>Pondération ; Bonus pour signalement ; Sanction du camouflage</td></tr>
+            <tr><td>Lassitude (effet "novice" s'essouffle)</td><td>Élevée</td><td>Élevée</td><td>Renouvellement défis ; Événements spéciaux ; Récompenses évolutives</td></tr>
+            <tr><td>Iniquité (postes de jour favorisés)</td><td>Moyenne</td><td>Modérée</td><td>Catégories distinctes ; Bonus nuit/weekend</td></tr>
+            <tr><td>Surinvestissement (conduite risquée pour gagner)</td><td>Faible</td><td>Critique</td><td>Plafonds journaliers ; Contrôle cohérence données</td></tr>
+            <tr><td>Coût des récompenses</td><td>Moyenne</td><td>Modérée</td><td>Mutualisation ; Récompenses non-financières prioritaires</td></tr>
+        </tbody>
+    </table>
+    
+    <!-- ======================================================================== -->
+    <!-- 10. PROPOSITION DE DÉPLOIEMENT PAR PHASES -->
+    <!-- ======================================================================== -->
+    <h1>10. PROPOSITION DE DÉPLOIEMENT PAR PHASES</h1>
+    
+    <h2>Phase 1 - Conception & Pilote (3 mois)</h2>
+    <ul>
+        <li>Ateliers de co-conception (3 ateliers de 8 conducteurs)</li>
+        <li>Définition du système de points et badges</li>
+        <li>Développement module gamification (MVP)</li>
+        <li>Test pilote - 50 conducteurs volontaires</li>
+        <li>Ajustements UX/UI</li>
+    </ul>
+    
+    <h2>Phase 2 - Expérimentation (6 mois)</h2>
+    <ul>
+        <li>Déploiement sur 300 conducteurs (2-3 entreprises)</li>
+        <li>Lancement des challenges mensuels</li>
+        <li>Première remise de récompenses</li>
+        <li>Enquête satisfaction utilisateurs</li>
+        <li>Évaluation intermédiaire</li>
+    </ul>
+    
+    <h2>Phase 3 - Généralisation (12 mois)</h2>
+    <ul>
+        <li>Déploiement CDG</li>
+        <li>Extension Orly</li>
+        <li>Trophée annuel CSCA</li>
+        <li>Extension province</li>
+        <li>Évaluation d'impact à 1 an</li>
+    </ul>
+    
+    <!-- ======================================================================== -->
+    <!-- 11. INDICATEURS DE SUIVI -->
+    <!-- ======================================================================== -->
+    <h1>11. INDICATEURS DE SUIVI</h1>
+    
+    <h2>11.1 Indicateurs d'adoption</h2>
+    
+    <div class="indicator-box">
+        <div class="indicator-item">
+            <strong>% conducteurs ayant activé leur compte</strong>
+            <span>Cible M6: 60% | M12: 80% | M24: 95%</span>
+        </div>
+        <div class="indicator-item">
+            <strong>% utilisation hebdomadaire</strong>
+            <span>Cible M6: 40% | M12: 60% | M24: 70%</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Taux de complétion des défis</strong>
+            <span>Cible M6: 30% | M12: 50% | M24: 60%</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Signalements near-miss/mois</strong>
+            <span>Cible M6: +50% | M12: +100% | M24: +200%</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Satisfaction utilisateurs</strong>
+            <span>Cible M6: 3,8/5 | M12: 4,2/5 | M24: 4,5/5</span>
+        </div>
+    </div>
+    
+    <h2>11.2 Indicateurs d'impact</h2>
+    
+    <div class="indicator-box">
+        <div class="indicator-item">
+            <strong>Accidents corporels</strong>
+            <span>Baseline 2025: 20/an | Cible M24: -20% | Cible M36: -35%</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Infractions vitesse</strong>
+            <span>Cible M24: -25% | Cible M36: -40%</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Turnover volontaire</strong>
+            <span>Baseline 2025: 15% | Cible M24: 12% | Cible M36: 10%</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Participation formations volontaires</strong>
+            <span>Cible M24: +50% | Cible M36: +100%</span>
+        </div>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 12. SYNTHÈSE - AVANTAGES COMPARATIFS -->
+    <!-- ======================================================================== -->
+    <h1>12. SYNTHÈSE - AVANTAGES COMPARATIFS</h1>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 15px 0;">
+        <div style="border: 1px solid #ddd; padding: 10px; background-color: #f9f9f9;">
+            <h4 style="color: #e67e22;">Pour le conducteur</h4>
+            <ul>
+                <li><strong>Visibilité</strong> de sa progression</li>
+                <li><strong>Fierté</strong> des accomplissements</li>
+                <li><strong>Reconnaissance</strong> par les pairs</li>
+                <li><strong>Plaisir</strong> dans la sécurité</li>
+            </ul>
+        </div>
+        <div style="border: 1px solid #ddd; padding: 10px; background-color: #f9f9f9;">
+            <h4 style="color: #e67e22;">Pour l'entreprise</h4>
+            <ul>
+                <li><strong>Engagement</strong> volontaire des équipes</li>
+                <li><strong>Signalements</strong> en forte hausse</li>
+                <li><strong>Ambiance</strong> positive autour sécurité</li>
+                <li><strong>Image</strong> innovante</li>
+            </ul>
+        </div>
+        <div style="border: 1px solid #ddd; padding: 10px; background-color: #f9f9f9;">
+            <h4 style="color: #e67e22;">Pour la plateforme</h4>
+            <ul>
+                <li><strong>Culture commune</strong> entre entreprises</li>
+                <li><strong>Émulation</strong> positive</li>
+                <li><strong>Visibilité</strong> des bonnes pratiques</li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 13. CONDITIONS DE RÉUSSITE -->
+    <!-- ======================================================================== -->
+    <h1>13. CONDITIONS DE RÉUSSITE</h1>
+    
+    <h2>Facteurs clés</h2>
+    <ol>
+        <li><strong>CO-CONCEPTION</strong> : Ne pas imposer un système déconnecté du terrain</li>
+        <li><strong>SIMPLICITÉ</strong> : Règles claires, compréhensibles en 2 minutes</li>
+        <li><strong>ÉQUITÉ</strong> : Mêmes chances pour tous (postes, horaires, ancienneté)</li>
+        <li><strong>AUTHENTICITÉ</strong> : Récompenses sincères, pas de gadgets inutiles</li>
+        <li><strong>CONSTANCE</strong> : Ne pas abandonner après l'effet de nouveauté</li>
+        <li><strong>ÉVOLUTION</strong> : Le système doit vivre avec les retours</li>
+    </ol>
+    
+    <h2>Pièges à éviter</h2>
+    <ol>
+        <li><strong>INFANTILISATION</strong> : "On traite les conducteurs comme des enfants"</li>
+        <li><strong>ÉLITISME</strong> : Toujours les mêmes en haut du classement</li>
+        <li><strong>COMPÉTITION NÉGATIVE</strong> : Rivalités malsaines entre équipes</li>
+        <li><strong>COMPLEXITÉ</strong> : Trop de règles, personne ne comprend</li>
+        <li><strong>INJUSTICE</strong> : Postes de jour avantagés</li>
+        <li><strong>EFFET D'AUBE</strong> : On joue le jeu uniquement pour les cadeaux</li>
+    </ol>
+    
+    <!-- ======================================================================== -->
+    <!-- 14. EN RÉSUMÉ -->
+    <!-- ======================================================================== -->
+    <h1>14. EN RÉSUMÉ</h1>
+    
+    <div class="encadre">
+        <p style="font-size: 12pt; font-style: italic;">
+            Les conducteurs jouent à des jeux sur leur smartphone, collectionnent des badges, comparent leurs scores. 
+            La sécurité reste en dehors de cette dynamique. Si nous la rendons visible, mesurable et valorisante, 
+            nous créons un engagement volontaire bien plus puissant que la peur de la sanction.
+        </p>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 15. CE QUE NOUS PROPOSONS CONCRÈTEMENT -->
+    <!-- ======================================================================== -->
+    <h1>15. CE QUE NOUS PROPOSONS CONCRÈTEMENT</h1>
+    
+    <ol style="font-weight: bold; font-size: 12pt;">
+        <li>Développer un système de points d'expérience pour les comportements vertueux</li>
+        <li>Créer 10 badges thématiques (Œil de lynx, Main verte, Silence d'or, etc.)</li>
+        <li>Mettre en place des classements individuels et collectifs</li>
+        <li>Organiser des défis mensuels avec des récompenses symboliques et concrètes</li>
+    </ol>
+    
+    <!-- Pied de page -->
+    <div class="footer">
+        <p>PISTE 5 - Gamification de la sécurité | Version 1.0 | Mars 2026 | CDG - CSCA</p>
+    </div>
+</body>
+</html>

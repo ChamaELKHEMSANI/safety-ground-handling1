@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PISTE 15 - Design Émotionnel des Engins</title>
+    <style>
+        /* Styles généraux pour l'impression */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            line-height: 1.5;
+            color: #333;
+            background-color: white;
+            font-size: 10.5pt;
+            margin: 0;
+            padding: 15px;
+        }
+        
+        /* Styles pour l'impression PDF */
+        @media print {
+            body {
+                padding: 0.5cm;
+            }
+            .page-break {
+                page-break-before: always;
+            }
+            .no-break {
+                page-break-inside: avoid;
+            }
+            h1, h2, h3, h4 {
+                page-break-after: avoid;
+            }
+            table {
+                page-break-inside: avoid;
+            }
+        }
+        
+        /* En-tête du document */
+        .document-header {
+            border-bottom: 3px solid #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+        
+        .document-title {
+            font-size: 24pt;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .document-subtitle {
+            font-size: 14pt;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+        
+        .document-meta {
+            text-align: right;
+            color: #7f8c8d;
+            font-size: 10pt;
+        }
+        
+        .tagline {
+            background-color: #ecf0f1;
+            padding: 8px 15px;
+            border-left: 5px solid #e67e22;
+            margin-bottom: 20px;
+            font-weight: bold;
+            font-size: 12pt;
+        }
+        
+        /* Typographie */
+        h1 {
+            font-size: 18pt;
+            color: #2c3e50;
+            margin: 25px 0 10px 0;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #bdc3c7;
+        }
+        
+        h2 {
+            font-size: 14pt;
+            color: #34495e;
+            margin: 20px 0 10px 0;
+            padding-left: 5px;
+            border-left: 4px solid #e67e22;
+        }
+        
+        h3 {
+            font-size: 12pt;
+            color: #555;
+            margin: 15px 0 8px 0;
+            font-weight: bold;
+        }
+        
+        h4 {
+            font-size: 11pt;
+            color: #666;
+            margin: 12px 0 5px 0;
+            font-weight: bold;
+        }
+        
+        p {
+            margin-bottom: 8px;
+            text-align: justify;
+        }
+        
+        ul, ol {
+            margin: 8px 0 12px 25px;
+        }
+        
+        li {
+            margin-bottom: 3px;
+        }
+        
+        /* Boîtes d'information */
+        .encadre {
+            border: 1px solid #bdc3c7;
+            padding: 12px;
+            background-color: #f9f9f9;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        
+        .important {
+            background-color: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 8px 12px;
+            margin: 12px 0;
+        }
+        
+        .hypothese {
+            background-color: #d4edda;
+            border-left: 5px solid #28a745;
+            padding: 8px 12px;
+            margin: 12px 0;
+            font-style: italic;
+        }
+        
+        /* Tableaux */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0 18px 0;
+            font-size: 9.5pt;
+        }
+        
+        th {
+            background-color: #2c3e50;
+            color: white;
+            font-weight: bold;
+            padding: 6px 4px;
+            text-align: left;
+            border: 1px solid #34495e;
+        }
+        
+        td {
+            padding: 5px 4px;
+            border: 1px solid #ddd;
+            vertical-align: top;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        /* Tableau de cartographie des risques avec couleurs */
+        .risk-table td:nth-child(7) {
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-orange {
+            background-color: #FFA500 !important;
+            color: black;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-red {
+            background-color: #FF0000 !important;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-yellow {
+            background-color: #FFFF00 !important;
+            color: black;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-green {
+            background-color: #008000 !important;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        /* Grille de cotation */
+        .cotation-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 12px 0;
+        }
+        
+        .cotation-box {
+            border: 1px solid #ddd;
+            padding: 8px;
+            background-color: #f9f9f9;
+        }
+        
+        .cotation-box h4 {
+            background-color: #2c3e50;
+            color: white;
+            padding: 4px 8px;
+            margin: -8px -8px 8px -8px;
+            font-size: 11pt;
+        }
+        
+        /* Pied de page */
+        .footer {
+            margin-top: 25px;
+            padding-top: 8px;
+            border-top: 1px solid #bdc3c7;
+            font-size: 9pt;
+            color: #7f8c8d;
+            text-align: center;
+        }
+        
+        .page-break {
+            page-break-before: always;
+        }
+        
+        /* Indicateurs */
+        .indicator-box {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 12px 0;
+        }
+        
+        .indicator-item {
+            flex: 1 1 200px;
+            background-color: #ecf0f1;
+            padding: 8px;
+            border-radius: 5px;
+            border-left: 4px solid #e67e22;
+        }
+        
+        .indicator-item strong {
+            display: block;
+            font-size: 10.5pt;
+            color: #2c3e50;
+        }
+        
+        .indicator-item span {
+            font-size: 9pt;
+            color: #555;
+        }
+        
+        /* Légende des couleurs */
+        .color-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 12px 0;
+            padding: 8px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .color-box {
+            width: 20px;
+            height: 20px;
+            border: 1px solid #333;
+        }
+        
+        /* Texte centré */
+        .text-center {
+            text-align: center;
+        }
+        
+        /* Badge */
+        .badge {
+            background-color: #e67e22;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 9pt;
+            font-weight: bold;
+            display: inline-block;
+        }
+        
+        /* Simulation de cockpit */
+        .cockpit-msg {
+            border: 2px solid #3498db;
+            border-radius: 5px;
+            padding: 10px;
+            background-color: #f0f8ff;
+            margin: 15px 0;
+            font-family: monospace;
+        }
+        
+        .cockpit-header {
+            background-color: #3498db;
+            color: white;
+            padding: 5px;
+            margin: -10px -10px 10px -10px;
+            border-radius: 5px 5px 0 0;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .progress-bar {
+            height: 20px;
+            background-color: #2ecc71;
+            color: white;
+            text-align: center;
+            line-height: 20px;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+        
+        /* Grille des axes */
+        .axes-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .axe-card {
+            border: 1px solid #2c3e50;
+            border-radius: 5px;
+            padding: 10px;
+            background-color: #ecf0f1;
+        }
+        
+        .axe-card h4 {
+            background-color: #2c3e50;
+            color: white;
+            padding: 5px;
+            margin: -10px -10px 10px -10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- En-tête du document -->
+    <div class="document-header">
+        <div>
+            <div class="document-title">PISTE 15</div>
+            <div class="document-subtitle">Design Émotionnel des Engins</div>
+        </div>
+        <div class="document-meta">
+            <div>Version 1.0</div>
+            <div>Mars 2026</div>
+            <div>CDG - CSCA</div>
+        </div>
+    </div>
+    
+    <!-- Tagline -->
+    <div class="tagline">
+        DONNER ENVIE D'ÊTRE SÉCURITAIRE
+    </div>
+    
+    <!-- Description -->
+    <p style="font-size: 11pt; font-weight: bold; text-align: center; margin: 20px 0;">
+        Cockpit bien-être, feedback positif, personnalisation, identité visuelle.
+    </p>
+    
+    <p>
+        Les engins de piste sont aujourd'hui purement fonctionnels. Leur couleur jaune ou grise standard, leurs formes anguleuses, 
+        leurs tableaux de bord techniques et leurs alarmes stridentes envoient un message implicite : "Je suis un outil, je suis une machine, 
+        je suis hostile". Cette absence totale de considération pour l'expérience du conducteur a des conséquences bien réelles : aucun 
+        attachement à l'engin, stress à bord, image négative du métier, difficulté de recrutement et absence de fierté. La quinzième piste 
+        propose d'appliquer les principes du design émotionnel pour transformer ces machines en objets valorisés et protecteurs.
+    </p>
+    
+    <!-- ======================================================================== -->
+    <!-- 1. PROBLÉMATIQUE ADRESSÉE -->
+    <!-- ======================================================================== -->
+    <h1>1. PROBLÉMATIQUE ADRESSÉE</h1>
+    
+    <p><strong>Constat fondamental :</strong> Les engins de piste sont aujourd'hui <strong>purement fonctionnels</strong>.</p>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Critère</th>
+                <th>Situation actuelle</th>
+                <th>Message perçu</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Couleur</td><td>Jaune/gris standard</td><td>"Je suis un outil"</td></tr>
+            <tr><td>Forme</td><td>Anguleuse, utilitaire</td><td>"Je suis une machine"</td></tr>
+            <tr><td>Interface</td><td>Tableau de bord technique</td><td>"Je suis complexe"</td></tr>
+            <tr><td>Son</td><td>Bip strident</td><td>"Je suis une nuisance"</td></tr>
+            <tr><td>Ambiance</td><td>Froide, bruyante, vibrante</td><td>"Je suis hostile"</td></tr>
+        </tbody>
+    </table>
+    
+    <p><strong>Conséquences :</strong></p>
+    <ul>
+        <li><strong>Aucun attachement à l'engin</strong> → "C'est juste un outil, je n'en prends pas soin"</li>
+        <li><strong>Stress à bord</strong> → Fatigue, irritabilité, vigilance réduite</li>
+        <li><strong>Image négative</strong> → "Conduire un engin, c'est un métier pénible"</li>
+        <li><strong>Difficulté de recrutement</strong> → Les jeunes préfèrent d'autres secteurs</li>
+        <li><strong>Absence de fierté</strong> → On n'est pas fier de conduire "ça"</li>
+    </ul>
+    
+    <div class="hypothese">
+        <strong>Notre hypothèse :</strong> Le design n'est pas un <strong>gadget</strong>. C'est un <strong>outil de transformation culturelle</strong>.
+        <p>Un engin bien conçu, agréable à conduire, dont on est fier, sera <strong>mieux traité, mieux respecté, mieux conduit</strong>.</p>
+        <p><strong>L'émotion au service de la sécurité.</strong></p>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 2. CARTOGRAPHIE DES RISQUES (MISE À JOUR POUR PISTE 15) -->
+    <!-- ======================================================================== -->
+    <h1>2. CARTOGRAPHIE DES RISQUES</h1>
+    
+    <!-- Légende des couleurs -->
+    <div class="color-legend">
+        <div class="legend-item"><div class="color-box" style="background-color: #FF0000;"></div> <strong>Rouge</strong> - Risque très élevé (intolérable)</div>
+        <div class="legend-item"><div class="color-box" style="background-color: #FFA500;"></div> <strong>Orange</strong> - Risque élevé (actions nécessaires)</div>
+        <div class="legend-item"><div class="color-box" style="background-color: #FFFF00;"></div> <strong>Jaune</strong> - Risque moyen (tolérable)</div>
+        <div class="legend-item"><div class="color-box" style="background-color: #008000;"></div> <strong>Vert</strong> - Risque faible (acceptable)</div>
+    </div>
+    
+    <table class="risk-table">
+        <thead>
+            <tr>
+                <th>Réf.</th>
+                <th>Danger</th>
+                <th>Causes</th>
+                <th>Conséquences</th>
+                <th>Gravité</th>
+                <th>Probabilité</th>
+                <th>Criticité</th>
+                <th>Barrières Piste 15</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>DES 01.1</strong></td>
+                <td>Absence d'attachement à l'engin</td>
+                <td>Design purement fonctionnel, pas de personnalisation</td>
+                <td>Négligence, défauts d'entretien, dégradations</td>
+                <td>2 (Mineure)</td>
+                <td>A (Fréquent)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Personnalisation (nom, couleurs), housse siège, pin's</td>
+            </tr>
+            <tr>
+                <td><strong>DES 01.2</strong></td>
+                <td>Stress lié à l'environnement de travail</td>
+                <td>Ambiance froide, vibrations, bruit, inconfort</td>
+                <td>Fatigue, irritabilité, baisse de vigilance</td>
+                <td>2 (Mineure)</td>
+                <td>A (Fréquent)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Cockpit bien-être : éclairage adaptatif, isolation, siège ergo</td>
+            </tr>
+            <tr>
+                <td><strong>DES 01.3</strong></td>
+                <td>Fatigue visuelle</td>
+                <td>Éclairage fixe et inadapté, reflets</td>
+                <td>Baisse de vigilance, erreurs</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Éclairage adaptatif LED (5000K jour, 3000K fin, ambre nuit)</td>
+            </tr>
+            <tr>
+                <td><strong>DES 02.1</strong></td>
+                <td>TMS (troubles musculo-squelettiques)</td>
+                <td>Sièges non ergonomiques, vibrations, posture</td>
+                <td>Lombalgies, absentéisme, turnover</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Siège ergonomique suspendu, réglages multiples, chauffant/ventilant</td>
+            </tr>
+            <tr>
+                <td><strong>DES 02.2</strong></td>
+                <td>Fatigue physique générale</td>
+                <td>Vibrations continues, bruit</td>
+                <td>Épuisement en fin de poste, accidents</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Réduction vibrations (-40%), isolation phonique (-15dB)</td>
+            </tr>
+            <tr>
+                <td><strong>DES 03.1</strong></td>
+                <td>Absence de reconnaissance des efforts</td>
+                <td>Pas de feedback positif, seulement des alertes</td>
+                <td>Démotivation, désengagement</td>
+                <td>2 (Mineure)</td>
+                <td>A (Fréquent)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Sons de félicitation, messages gratitude, indicateurs progrès</td>
+            </tr>
+            <tr>
+                <td><strong>DES 03.2</strong></td>
+                <td>Absence de fierté professionnelle</td>
+                <td>Image négative du métier, outils peu valorisants</td>
+                <td>Difficulté de recrutement, turnover</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Identité visuelle, livrée entreprise, design valorisant</td>
+            </tr>
+            <tr>
+                <td><strong>DES 04.1</strong></td>
+                <td>Méconnaissance des profils experts</td>
+                <td>Pas de signe distinctif pour les conducteurs expérimentés</td>
+                <td>Sous-utilisation des compétences</td>
+                <td>1 (Négligeable)</td>
+                <td>C (Rare)</td>
+                <td class="risk-green">VERT</td>
+                <td>Couleur rétroviseur par statut (bleu expert, orange formateur)</td>
+            </tr>
+            <tr>
+                <td><strong>DES 04.2</strong></td>
+                <td>Absence de transmission des accomplissements</td>
+                <td>Pas de marqueur visible des succès sécurité</td>
+                <td>Manque d'émulation, faible transmission</td>
+                <td>1 (Négligeable)</td>
+                <td>C (Rare)</td>
+                <td class="risk-green">VERT</td>
+                <td>Pin's et stickers de fierté (étoiles, couronnes, œil de lynx)</td>
+            </tr>
+            <tr>
+                <td><strong>DES 05.1</strong></td>
+                <td>Image négative du métier auprès des jeunes</td>
+                <td>Engins perçus comme vieux, inconfortables, peu attractifs</td>
+                <td>Crise de recrutement, pénurie de conducteurs</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Design moderne, cockpit high-tech, image valorisante</td>
+            </tr>
+            <tr>
+                <td><strong>ACC 01.1</strong></td>
+                <td>Accidents liés à la fatigue et au stress</td>
+                <td>Inconfort, stress, fatigue accumulée</td>
+                <td>Erreurs, collisions</td>
+                <td>3 (Majeure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-red">ROUGE</td>
+                <td>Réduction stress (-25%), fatigue (-30%), vigilance accrue</td>
+            </tr>
+            <tr>
+                <td><strong>RH 01.1</strong></td>
+                <td>Turnover élevé</td>
+                <td>Métier peu valorisé, conditions de travail difficiles</td>
+                <td>Perte de compétences, coûts de recrutement</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Réduction turnover 25% → 18% (fierté, confort, reconnaissance)</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <!-- Échelle de cotation -->
+    <h3>Échelle de cotation utilisée</h3>
+    
+    <div class="cotation-grid">
+        <div class="cotation-box">
+            <h4>Gravité</h4>
+            <ul>
+                <li><strong>1</strong> - Négligeable</li>
+                <li><strong>2</strong> - Mineure</li>
+                <li><strong>3</strong> - Majeure</li>
+                <li><strong>4</strong> - Catastrophique</li>
+            </ul>
+        </div>
+        <div class="cotation-box">
+            <h4>Probabilité</h4>
+            <ul>
+                <li><strong>A</strong> - Fréquent (quotidien)</li>
+                <li><strong>B</strong> - Occasionnel (hebdo/mensuel)</li>
+                <li><strong>C</strong> - Rare (annuel)</li>
+                <li><strong>D</strong> - Très rare (>1 an)</li>
+                <li><strong>E</strong> - Extrêmement rare (jamais observé)</li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 3. CONCEPT D'ENSEMBLE -->
+    <!-- ======================================================================== -->
+    <h1>3. CONCEPT D'ENSEMBLE</h1>
+    
+    <div style="text-align: center; margin: 20px 0;">
+        <div style="display: inline-block; width: 30%; padding: 10px; background-color: #3498db; color: white; margin: 0 5px;">
+            <strong>NIVEAU 1 - VISCÉRAL</strong><br>
+            Ce que l'on voit, touche, entend
+        </div>
+        <div style="display: inline-block; width: 30%; padding: 10px; background-color: #e67e22; color: white; margin: 0 5px;">
+            <strong>NIVEAU 2 - COMPORTEMENTAL</strong><br>
+            Plaisir d'utilisation, ergonomie
+        </div>
+        <div style="display: inline-block; width: 30%; padding: 10px; background-color: #2c3e50; color: white; margin: 0 5px;">
+            <strong>NIVEAU 3 - RÉFLEXIF</strong><br>
+            Image, fierté, appartenance
+        </div>
+    </div>
+    
+    <div class="axes-grid">
+        <div class="axe-card">
+            <h4>AXE 1 - COCKPIT BIEN-ÊTRE</h4>
+            <ul>
+                <li>Ambiance lumineuse adaptative</li>
+                <li>Siège ergonomique haut de gamme</li>
+                <li>Réduction des vibrations</li>
+                <li>Isolation phonique</li>
+            </ul>
+        </div>
+        <div class="axe-card">
+            <h4>AXE 2 - FEEDBACK POSITIF</h4>
+            <ul>
+                <li>Sons de félicitation</li>
+                <li>Messages de gratitude</li>
+                <li>Indicateurs de progrès</li>
+                <li>Rituels de clôture</li>
+            </ul>
+        </div>
+        <div class="axe-card">
+            <h4>AXE 3 - PERSONNALISATION</h4>
+            <ul>
+                <li>Pin's et stickers de fierté</li>
+                <li>Couleur de rétroviseur</li>
+                <li>Housse de siège personnalisée</li>
+                <li>Nom du conducteur</li>
+            </ul>
+        </div>
+        <div class="axe-card">
+            <h4>AXE 4 - IDENTITÉ VISUELLE</h4>
+            <ul>
+                <li>Livrée entreprise repensée</li>
+                <li>Signalétique bienveillante</li>
+                <li>Visage amical (phares)</li>
+                <li>Signature de marque</li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 4. AXE 1 - COCKPIT BIEN-ÊTRE -->
+    <!-- ======================================================================== -->
+    <h1>4. AXE 1 - COCKPIT BIEN-ÊTRE</h1>
+    
+    <h2>4.1 Ambiance lumineuse adaptative</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Moment</th>
+                <th>Température</th>
+                <th>Intensité</th>
+                <th>Effet</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Prise de poste matin</td><td>Blanc froid (5000K)</td><td>80%</td><td>Éveil, dynamisme</td></tr>
+            <tr><td>Conduite jour</td><td>Blanc neutre (4000K)</td><td>60%</td><td>Confort visuel</td></tr>
+            <tr><td>Fin de journée</td><td>Blanc chaud (3000K)</td><td>40%</td><td>Détente</td></tr>
+            <tr><td>Poste nuit</td><td>Rouge/Ambre</td><td>20%</td><td>Préservation vision nocturne</td></tr>
+            <tr><td>Pause</td><td>Couleur variable (bleu/vert)</td><td>30%</td><td>Apaisement</td></tr>
+        </tbody>
+    </table>
+    
+    <p><strong>Bénéfices :</strong> -35% fatigue visuelle, +45% confort, -25% stress - <strong>Coût :</strong> 400 €/engin</p>
+    
+    <h2>4.2 Siège ergonomique haut de gamme</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Fonction</th>
+                <th>Bénéfice</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Suspension pneumatique</td><td>Absorption chocs et vibrations</td></tr>
+            <tr><td>Réglage lombaire 4 voies</td><td>Prévention lombalgies</td></tr>
+            <tr><td>Accoudoirs réglables</td><td>Confort bras, réduction tension épaules</td></tr>
+            <tr><td>Chauffant / ventilant</td><td>Confort thermique été/hiver</td></tr>
+            <tr><td>Tissu respirant</td><td>Réduction transpiration</td></tr>
+        </tbody>
+    </table>
+    
+    <p><strong>Bénéfices :</strong> -40% TMS, +60% satisfaction, -30% fatigue - <strong>Coût :</strong> 1 500 €/engin</p>
+    
+    <h2>4.3 Synthèse AXE 1</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Équipement</th>
+                <th>Coût unitaire</th>
+                <th>Bénéfice</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Éclairage adaptatif LED</td><td>400 €</td><td>-35% fatigue visuelle</td></tr>
+            <tr><td>Siège ergonomique</td><td>1 500 €</td><td>-40% TMS</td></tr>
+            <tr><td>Isolation vibrations/bruit</td><td>1 400 €</td><td>-30% fatigue</td></tr>
+            <tr><td><strong>TOTAL KIT COCKPIT</strong></td><td><strong>3 300 €</strong></td><td><strong>Confort global</strong></td></tr>
+        </tbody>
+    </table>
+    
+    <!-- ======================================================================== -->
+    <!-- 5. AXE 2 - FEEDBACK POSITIF -->
+    <!-- ======================================================================== -->
+    <h1>5. AXE 2 - FEEDBACK POSITIF</h1>
+    
+    <div class="cockpit-msg">
+        <div class="cockpit-header">FIN DE POSTE - 18h47</div>
+        <p><strong>MERCI, THOMAS !</strong></p>
+        <p>✓ 47 vérifications angles morts</p>
+        <p>✓ 0 excès de vitesse</p>
+        <p>✓ 1 near-miss signalé</p>
+        <p>Vous avez contribué à 45 jours sans accident pour votre équipe.</p>
+        <p>[🏆 BADGE "CONDUITE DOUCE" DÉBLOQUÉ]</p>
+        <p><em>Bonne soirée, à demain !</em></p>
+    </div>
+    
+    <div class="cockpit-msg">
+        <div class="cockpit-header">📊 MES STATISTIQUES - SEMAINE 8</div>
+        <p>Angles morts vérifiés : 47 ▲ +12</p>
+        <div class="progress-bar" style="width: 78%;">████████░░ 78%</div>
+        <p>Signalements : 3 ▲ +2</p>
+        <div class="progress-bar" style="width: 75%;">████████░░ 75%</div>
+        <p>Conduite douce : 92%</p>
+        <div class="progress-bar" style="width: 92%;">██████████░░ 92%</div>
+        <p>Objectif semaine : 50 vérifications ▶ Plus que 3 !</p>
+    </div>
+    
+    <p><strong>Coût :</strong> Écran cabine 300 €/engin + développement logiciel mutualisé 50 k€</p>
+    
+    <!-- ======================================================================== -->
+    <!-- 6. AXE 3 - PERSONNALISATION -->
+    <!-- ======================================================================== -->
+    <h1>6. AXE 3 - PERSONNALISATION</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Accomplissement</th>
+                <th>Visuel</th>
+                <th>Emplacement</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>1 an sans accident</td><td>⭐ Étoile argent</td><td>Rétroviseur gauche</td></tr>
+            <tr><td>5 ans sans accident</td><td>⭐⭐ Étoiles or</td><td>Rétroviseur gauche</td></tr>
+            <tr><td>10 ans sans accident</td><td>👑 Couronne</td><td>Calandre</td></tr>
+            <tr><td>100 signalements</td><td>🦅 Œil de lynx</td><td>Aile avant</td></tr>
+            <tr><td>Buddy de l'année</td><td>🤝 Poignée de main</td><td>Portière</td></tr>
+            <tr><td>Record d'équipe</td><td>🏆 Trophée</td><td>Tableau de bord</td></tr>
+        </tbody>
+    </table>
+    
+    <p><strong>Coût :</strong> Pin's 5 € • Coquilles rétroviseur 50 € • Adhésif nom 20 € • Housse siège 80 € → <strong>155 €/conducteur</strong></p>
+    
+    <!-- ======================================================================== -->
+    <!-- 7. BUDGET TOTAL -->
+    <!-- ======================================================================== -->
+    <h1>7. BUDGET TOTAL</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Axe</th>
+                <th>Description</th>
+                <th>Coût unitaire</th>
+                <th>Volume cible</th>
+                <th>Coût total</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>1</td><td>Cockpit bien-être</td><td>3 300 €</td><td>500 engins</td><td>1 650 000 €</td></tr>
+            <tr><td>2</td><td>Feedback positif</td><td>300 € + 50 k€</td><td>500 engins</td><td>200 000 €</td></tr>
+            <tr><td>3</td><td>Personnalisation</td><td>155 €</td><td>1 000 cond.</td><td>155 000 €</td></tr>
+            <tr><td>4</td><td>Identité visuelle</td><td>2 100 €</td><td>500 engins</td><td>1 050 000 €</td></tr>
+            <tr><td><strong>TOTAL</strong></td><td></td><td></td><td></td><td><strong>3 055 000 €</strong></td></tr>
+        </tbody>
+    </table>
+    
+    <h2>7.2 Phasage réaliste</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Phase</th>
+                <th>Délai</th>
+                <th>Périmètre</th>
+                <th>Coût</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>1 - Pilote</td><td>12 mois</td><td>10 engins (tous axes)</td><td>65 k€</td></tr>
+            <tr><td>2 - Déploiement sélectif</td><td>24 mois</td><td>100 engins (axes 1+2)</td><td>400 k€</td></tr>
+            <tr><td>3 - Généralisation</td><td>36-60 mois</td><td>500 engins (axes 1+2+4)</td><td>2 500 k€</td></tr>
+            <tr><td><strong>TOTAL 5 ANS</strong></td><td></td><td></td><td><strong>~3 M€</strong></td></tr>
+        </tbody>
+    </table>
+    
+    <p><strong>Coût par engin (full équipement) :</strong> 5 855 € (soit +15% à +20% du prix d'un engin neuf)</p>
+    
+    <!-- ======================================================================== -->
+    <!-- 8. BÉNÉFICES ATTENDUS -->
+    <!-- ======================================================================== -->
+    <h1>8. BÉNÉFICES ATTENDUS</h1>
+    
+    <h2>8.1 Bénéfices mesurables</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Indicateur</th>
+                <th>Baseline</th>
+                <th>Cible M24</th>
+                <th>Cible M36</th>
+                <th>Cible M60</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Satisfaction conduite</td><td>45%</td><td>70%</td><td>80%</td><td>90%</td></tr>
+            <tr><td>Fierté déclarée</td><td>30%</td><td>60%</td><td>75%</td><td>85%</td></tr>
+            <tr><td>Stress perçu</td><td>65%</td><td>50%</td><td>40%</td><td>30%</td></tr>
+            <tr><td>TMS (lombalgies)</td><td>12/an</td><td>-25%</td><td>-40%</td><td>-50%</td></tr>
+            <tr><td>Turnover</td><td>25%</td><td>22%</td><td>20%</td><td>18%</td></tr>
+        </tbody>
+    </table>
+    
+
+    
+    <!-- ======================================================================== -->
+    <!-- 9. RETOURS D'EXPÉRIENCE -->
+    <!-- ======================================================================== -->
+    <h1>9. RETOURS D'EXPÉRIENCE</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Secteur</th>
+                <th>Réalisations</th>
+                <th>Résultats</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>Mercedes Actros</strong></td><td>Cockpit "Multimedia Cockpit", siège haut de gamme, éclairage LED 64 couleurs</td><td>92% satisfaits, +45% plaisir, -30% turnover</td></tr>
+            <tr><td><strong>Singapour Changi</strong></td><td>Design signature pour tous les GSE, couleur rouge, messages sécurité intégrés</td><td>88% fierté équipes, image positive</td></tr>
+            <tr><td><strong>Chargeurs Still</strong></td><td>Design friendly (phares ronds), interface intuitive, siège premium</td><td>-35% accidents fatigue, +12% productivité</td></tr>
+        </tbody>
+    </table>
+    
+    <!-- ======================================================================== -->
+    <!-- 10. RISQUES ET MESURES DE MITIGATION -->
+    <!-- ======================================================================== -->
+    <h1>10. RISQUES ET MESURES DE MITIGATION</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Risque</th>
+                <th>Probabilité</th>
+                <th>Gravité</th>
+                <th>Plan d'action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Perception "gadget" ("des sièges chauffants, vraiment ?")</td><td>Élevée</td><td>Élevée</td><td>Pilote conducteurs volontaires, mesure d'impact objective, témoignages pairs</td></tr>
+            <tr><td>Coût d'investissement</td><td>Élevée</td><td>Élevée</td><td>Phasage progressif, priorisation cockpit d'abord, mutualisation achats</td></tr>
+            <tr><td>Iniquité (seulement les nouveaux engins)</td><td>Moyenne</td><td>Modérée</td><td>Plan de rétrofit pluriannuel, communication transparente</td></tr>
+            <tr><td>Maintenance équipements</td><td>Moyenne</td><td>Faible</td><td>Garantie constructeur, contrats maintenance</td></tr>
+        </tbody>
+    </table>
+    
+    <!-- ======================================================================== -->
+    <!-- 11. CONDITIONS DE RÉUSSITE -->
+    <!-- ======================================================================== -->
+    <h1>11. CONDITIONS DE RÉUSSITE</h1>
+    
+    <h2>Facteurs clés</h2>
+    <ol>
+        <li><strong>Co-conception :</strong> Les conducteurs doivent être associés au design</li>
+        <li><strong>Pilote visible :</strong> 10 engins "vitrine" pour créer l'envie</li>
+        <li><strong>Mesure d'impact :</strong> Prouver que le bien-être améliore la sécurité</li>
+        <li><strong>Progressivité :</strong> Commencer par le cockpit, puis l'identité</li>
+        <li><strong>Équité :</strong> Un plan pluriannuel pour tout le parc</li>
+    </ol>
+    
+    <h2>Pièges à éviter</h2>
+    <ul>
+        <li>Faire du design sans les conducteurs → ateliers de co-conception</li>
+        <li>Investir sur l'apparence sans le confort → priorité au cockpit</li>
+        <li>Créer des inégalités → plan de déploiement transparent</li>
+        <li>Oublier l'entretien → inclure la maintenance dans le budget</li>
+        <li>Se limiter au neuf → programme de rétrofit ambitieux</li>
+    </ul>
+    
+    <!-- ======================================================================== -->
+    <!-- 12. EN RÉSUMÉ -->
+    <!-- ======================================================================== -->
+    <h1>12. EN RÉSUMÉ</h1>
+    
+    <div class="encadre">
+        <p style="font-size: 12pt; font-style: italic;">
+            Le design émotionnel est la piste la plus "douce" des 15 propositions. Mais c'est aussi celle qui parle le plus directement 
+            aux conducteurs. Elle dit : "vous comptez". Elle dit : "votre confort est important". Elle dit : "nous voulons que vous soyez fiers". 
+            Ce n'est pas un hasard si les entreprises qui investissent dans le bien-être de leurs collaborateurs sont aussi celles qui ont 
+            les meilleurs résultats en sécurité.
+        </p>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 13. CE QUE NOUS PROPOSONS CONCRÈTEMENT -->
+    <!-- ======================================================================== -->
+    <h1>13. CE QUE NOUS PROPOSONS CONCRÈTEMENT</h1>
+    
+    <ol style="font-weight: bold; font-size: 12pt;">
+        <li>Équiper 10 engins pilotes d'un kit cockpit bien-être</li>
+        <li>Concevoir une signature sonore positive pour les actions sécuritaires</li>
+        <li>Permettre la personnalisation (nom du conducteur, couleurs)</li>
+        <li>Organiser un concours de l'engin le plus propre</li>
+    </ol>
+    
+    <!-- Pied de page -->
+    <div class="footer">
+        <p>PISTE 15 - Design Émotionnel des Engins | Version 1.0 | Mars 2026 | CDG - CSCA</p>
+    </div>
+</body>
+</html>

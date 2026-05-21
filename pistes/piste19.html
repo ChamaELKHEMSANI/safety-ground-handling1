@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PISTE 19 - L'Enquêteur Mystère Sécurité</title>
+    <style>
+        /* Styles généraux pour l'impression */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            line-height: 1.5;
+            color: #333;
+            background-color: white;
+            font-size: 10.5pt;
+            margin: 0;
+            padding: 15px;
+        }
+        
+        /* Styles pour l'impression PDF */
+        @media print {
+            body {
+                padding: 0.5cm;
+            }
+            .page-break {
+                page-break-before: always;
+            }
+            .no-break {
+                page-break-inside: avoid;
+            }
+            h1, h2, h3, h4 {
+                page-break-after: avoid;
+            }
+            table {
+                page-break-inside: avoid;
+            }
+        }
+        
+        /* En-tête du document */
+        .document-header {
+            border-bottom: 3px solid #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+        
+        .document-title {
+            font-size: 24pt;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .document-subtitle {
+            font-size: 14pt;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+        
+        .document-meta {
+            text-align: right;
+            color: #7f8c8d;
+            font-size: 10pt;
+        }
+        
+        .tagline {
+            background-color: #ecf0f1;
+            padding: 8px 15px;
+            border-left: 5px solid #e67e22;
+            margin-bottom: 20px;
+            font-weight: bold;
+            font-size: 12pt;
+        }
+        
+        /* Typographie */
+        h1 {
+            font-size: 18pt;
+            color: #2c3e50;
+            margin: 25px 0 10px 0;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #bdc3c7;
+        }
+        
+        h2 {
+            font-size: 14pt;
+            color: #34495e;
+            margin: 20px 0 10px 0;
+            padding-left: 5px;
+            border-left: 4px solid #e67e22;
+        }
+        
+        h3 {
+            font-size: 12pt;
+            color: #555;
+            margin: 15px 0 8px 0;
+            font-weight: bold;
+        }
+        
+        h4 {
+            font-size: 11pt;
+            color: #666;
+            margin: 12px 0 5px 0;
+            font-weight: bold;
+        }
+        
+        p {
+            margin-bottom: 8px;
+            text-align: justify;
+        }
+        
+        ul, ol {
+            margin: 8px 0 12px 25px;
+        }
+        
+        li {
+            margin-bottom: 3px;
+        }
+        
+        /* Boîtes d'information */
+        .encadre {
+            border: 1px solid #bdc3c7;
+            padding: 12px;
+            background-color: #f9f9f9;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        
+        .important {
+            background-color: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 8px 12px;
+            margin: 12px 0;
+        }
+        
+        .hypothese {
+            background-color: #d4edda;
+            border-left: 5px solid #28a745;
+            padding: 8px 12px;
+            margin: 12px 0;
+            font-style: italic;
+        }
+        
+        /* Tableaux */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0 18px 0;
+            font-size: 9.5pt;
+        }
+        
+        th {
+            background-color: #2c3e50;
+            color: white;
+            font-weight: bold;
+            padding: 6px 4px;
+            text-align: left;
+            border: 1px solid #34495e;
+        }
+        
+        td {
+            padding: 5px 4px;
+            border: 1px solid #ddd;
+            vertical-align: top;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        /* Tableau de cartographie des risques avec couleurs */
+        .risk-table td:nth-child(7) {
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-orange {
+            background-color: #FFA500 !important;
+            color: black;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-red {
+            background-color: #FF0000 !important;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-yellow {
+            background-color: #FFFF00 !important;
+            color: black;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-green {
+            background-color: #008000 !important;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        /* Grille de cotation */
+        .cotation-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 12px 0;
+        }
+        
+        .cotation-box {
+            border: 1px solid #ddd;
+            padding: 8px;
+            background-color: #f9f9f9;
+        }
+        
+        .cotation-box h4 {
+            background-color: #2c3e50;
+            color: white;
+            padding: 4px 8px;
+            margin: -8px -8px 8px -8px;
+            font-size: 11pt;
+        }
+        
+        /* Pied de page */
+        .footer {
+            margin-top: 25px;
+            padding-top: 8px;
+            border-top: 1px solid #bdc3c7;
+            font-size: 9pt;
+            color: #7f8c8d;
+            text-align: center;
+        }
+        
+        .page-break {
+            page-break-before: always;
+        }
+        
+        /* Indicateurs */
+        .indicator-box {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 12px 0;
+        }
+        
+        .indicator-item {
+            flex: 1 1 200px;
+            background-color: #ecf0f1;
+            padding: 8px;
+            border-radius: 5px;
+            border-left: 4px solid #e67e22;
+        }
+        
+        .indicator-item strong {
+            display: block;
+            font-size: 10.5pt;
+            color: #2c3e50;
+        }
+        
+        .indicator-item span {
+            font-size: 9pt;
+            color: #555;
+        }
+        
+        /* Légende des couleurs */
+        .color-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 12px 0;
+            padding: 8px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .color-box {
+            width: 20px;
+            height: 20px;
+            border: 1px solid #333;
+        }
+        
+        /* Texte centré */
+        .text-center {
+            text-align: center;
+        }
+        
+        /* Badge */
+        .badge {
+            background-color: #e67e22;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 9pt;
+            font-weight: bold;
+            display: inline-block;
+        }
+        
+        /* Simulation de grille d'observation */
+        .grille-observation {
+            border: 2px solid #3498db;
+            border-radius: 5px;
+            padding: 15px;
+            background-color: #f0f8ff;
+            margin: 15px 0;
+        }
+        
+        .grille-header {
+            background-color: #3498db;
+            color: white;
+            padding: 5px;
+            margin: -15px -15px 15px -15px;
+            border-radius: 5px 5px 0 0;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        /* Processus de recrutement */
+        .process-step {
+            display: flex;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+        }
+        
+        .step-number {
+            width: 50px;
+            background-color: #2c3e50;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 16pt;
+        }
+        
+        .step-desc {
+            flex: 1;
+            padding: 10px;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <!-- En-tête du document -->
+    <div class="document-header">
+        <div>
+            <div class="document-title">PISTE 19</div>
+            <div class="document-subtitle">L'Enquêteur Mystère Sécurité</div>
+        </div>
+        <div class="document-meta">
+            <div>Version 1.0</div>
+            <div>Mars 2026</div>
+            <div>CDG - CSCA</div>
+        </div>
+    </div>
+    
+    <!-- Tagline -->
+    <div class="tagline">
+        LE REGARD BIENVEILLANT DES ANCIENS
+    </div>
+    
+    <!-- Description -->
+    <p style="font-size: 11pt; font-weight: bold; text-align: center; margin: 20px 0;">
+        Anciens conducteurs missionnés pour observer incognito les pratiques terrain.
+    </p>
+    
+    <p>
+        La remontée des comportements terrain est aujourd'hui biaisée. Les conducteurs adaptent leur comportement quand ils savent qu'ils sont observés 
+        par leur manager. Les audits CSCE sont annoncés et programmés. L'auto-déclaration des incidents est massivement sous-utilisée, par peur des 
+        conséquences. Les caméras ont des angles morts et ne permettent pas une analyse comportementale fine. Enfin, personne n'ose "dénoncer" un collègue. 
+        Résultat : les vrais problèmes restent invisibles, et la mémoire accidentologique disparaît avec le départ en retraite des anciens. La dix-neuvième 
+        piste propose de créer un regard extérieur, légitime et bienveillant, pour capter cette parole perdue.
+    </p>
+    
+    <!-- ======================================================================== -->
+    <!-- 1. PROBLÉMATIQUE ADRESSÉE -->
+    <!-- ======================================================================== -->
+    <h1>1. PROBLÉMATIQUE ADRESSÉE</h1>
+    
+    <p><strong>Constat fondamental :</strong> Aujourd'hui, la remontée des comportements terrain est <strong>biaisée</strong>.</p>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Canal de remontée</th>
+                <th>Limite</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Managers</td><td>Les conducteurs adaptent leur comportement quand ils sont observés</td></tr>
+            <tr><td>Auditeurs CSCE</td><td>Présence annoncée, visite programmée</td></tr>
+            <tr><td>Auto-déclaration</td><td>Sous-déclaration massive des incidents et near-miss</td></tr>
+            <tr><td>Caméras</td><td>Angles morts, pas d'analyse comportementale fine</td></tr>
+            <tr><td>Pairs</td><td>Réticence à "dénoncer" un collègue</td></tr>
+        </tbody>
+    </table>
+    
+    <div class="important">
+        <strong>Paradoxe :</strong>
+        <ul>
+            <li>Les conducteurs <strong>savent</strong> ce qui ne va pas</li>
+            <li>Les anciens <strong>savent</strong> comment on faisait avant, ce qui a changé</li>
+            <li>Mais leur parole n'est pas <strong>captée</strong>, pas <strong>organisée</strong>, pas <strong>valorisée</strong></li>
+        </ul>
+    </div>
+    
+    <p><strong>Conséquences :</strong></p>
+    <ul>
+        <li><strong>Les vrais problèmes restent invisibles</strong> → On traite des symptômes, pas des causes</li>
+        <li><strong>La mémoire accidentologique disparaît</strong> → Les départs en retraite emportent 40 ans d'expérience</li>
+        <li><strong>Les mauvaises habitudes s'installent</strong> → "On a toujours fait comme ça"</li>
+        <li><strong>Le décalage perception/réalité</strong> → Les managers pensent que tout va bien, les conducteurs savent que non</li>
+    </ul>
+    
+    <div class="hypothese">
+        <strong>Notre hypothèse :</strong> Créer un <strong>corps d'enquêteurs mystères</strong> composé exclusivement d'<strong>anciens conducteurs expérimentés</strong> (retraités ou en fin de carrière), légitimes, bienveillants, formés, qui observent <strong>incognito</strong> les pratiques terrain et remontent une <strong>parole objective et qualitative</strong>.
+        <p><strong>Le regard de l'ancien n'est pas un regard de contrôle. C'est un regard de transmission.</strong></p>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 2. CARTOGRAPHIE DES RISQUES (MISE À JOUR POUR PISTE 19) -->
+    <!-- ======================================================================== -->
+    <h1>2. CARTOGRAPHIE DES RISQUES</h1>
+    
+    <!-- Légende des couleurs -->
+    <div class="color-legend">
+        <div class="legend-item"><div class="color-box" style="background-color: #FF0000;"></div> <strong>Rouge</strong> - Risque très élevé (intolérable)</div>
+        <div class="legend-item"><div class="color-box" style="background-color: #FFA500;"></div> <strong>Orange</strong> - Risque élevé (actions nécessaires)</div>
+        <div class="legend-item"><div class="color-box" style="background-color: #FFFF00;"></div> <strong>Jaune</strong> - Risque moyen (tolérable)</div>
+        <div class="legend-item"><div class="color-box" style="background-color: #008000;"></div> <strong>Vert</strong> - Risque faible (acceptable)</div>
+    </div>
+    
+    <table class="risk-table">
+        <thead>
+            <tr>
+                <th>Réf.</th>
+                <th>Danger</th>
+                <th>Causes</th>
+                <th>Conséquences</th>
+                <th>Gravité</th>
+                <th>Probabilité</th>
+                <th>Criticité</th>
+                <th>Barrières Piste 19</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>OBS 01.1</strong></td>
+                <td>Comportements modifiés en présence d'observateurs connus</td>
+                <td>Managers identifiés, audits annoncés, effet Hawthorne</td>
+                <td>Perception faussée de la réalité terrain</td>
+                <td>2 (Mineure)</td>
+                <td>A (Fréquent)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Observations incognito par enquêteurs non identifiés</td>
+            </tr>
+            <tr>
+                <td><strong>OBS 01.2</strong></td>
+                <td>Angles morts des dispositifs techniques</td>
+                <td>Caméras fixes, zones non couvertes, pas d'analyse comportementale</td>
+                <td>Non-détection de comportements à risque</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Observations humaines mobiles, regard expert contextualisé</td>
+            </tr>
+            <tr>
+                <td><strong>OBS 01.3</strong></td>
+                <td>Sous-déclaration des incidents par les conducteurs</td>
+                <td>Peur des sanctions, manque de confiance, culture du silence</td>
+                <td>Perte d'information critique, prévention inefficace</td>
+                <td>3 (Majeure)</td>
+                <td>A (Fréquent)</td>
+                <td class="risk-red">ROUGE</td>
+                <td>Remontée par enquêteurs, parole libérée sans risque de sanction</td>
+            </tr>
+            <tr>
+                <td><strong>OBS 02.1</strong></td>
+                <td>Perte de la mémoire accidentologique</td>
+                <td>Départs en retraite des anciens, absence de transmission</td>
+                <td>Répétition des erreurs du passé</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Capitalisation par les anciens enquêteurs, transmission orale</td>
+            </tr>
+            <tr>
+                <td><strong>OBS 02.2</strong></td>
+                <td>Méconnaissance des pratiques réelles</td>
+                <td>Écart entre procédures écrites et pratiques terrain</td>
+                <td>Règles inadaptées, contournées, inefficaces</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Observations des pratiques réelles, identification des écarts</td>
+            </tr>
+            <tr>
+                <td><strong>OBS 02.3</strong></td>
+                <td>Décalage perception/réalité des managers</td>
+                <td>Managers éloignés du terrain, vision idéalisée</td>
+                <td>Décisions inadaptées, problèmes non traités</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Remontée objective des observations terrain</td>
+            </tr>
+            <tr>
+                <td><strong>OBS 03.1</strong></td>
+                <td>Installation de mauvaises habitudes</td>
+                <td>Absence de rappel, routine, absence de regard extérieur</td>
+                <td>Pratiques dangereuses normalisées</td>
+                <td>3 (Majeure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Détection précoce des dérives, alertes ponctuelles</td>
+            </tr>
+            <tr>
+                <td><strong>OBS 04.1</strong></td>
+                <td>Non-valorisation des bonnes pratiques</td>
+                <td>Absence de captage des comportements positifs</td>
+                <td>Démotivation, opportunités d'amélioration perdues</td>
+                <td>1 (Négligeable)</td>
+                <td>C (Rare)</td>
+                <td class="risk-green">VERT</td>
+                <td>Cahier des bonnes pratiques, diffusion des observations positives</td>
+            </tr>
+            <tr>
+                <td><strong>ACC 01.1</strong></td>
+                <td>Accidents liés à des problèmes non détectés</td>
+                <td>Signaux faibles ignorés, absence de détection précoce</td>
+                <td>Blessures, dommages matériels</td>
+                <td>3 (Majeure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-red">ROUGE</td>
+                <td>Détection précoce par observations régulières</td>
+            </tr>
+            <tr>
+                <td><strong>VAL 01.1</strong></td>
+                <td>Non-valorisation des anciens conducteurs</td>
+                <td>Départ en retraite sans reconnaissance, perte de sens</td>
+                <td>Démotivation, perte d'expertise</td>
+                <td>1 (Négligeable)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-green">VERT</td>
+                <td>Mission valorisante après carrière, reconnaissance institutionnelle</td>
+            </tr>
+            <tr>
+                <td><strong>ETH 01.1</strong></td>
+                <td>Dérive vers un rôle de contrôle</td>
+                <td>Mauvaise interprétation de la mission, pression hiérarchique</td>
+                <td>Rejet des conducteurs, climat de défiance</td>
+                <td>2 (Mineure)</td>
+                <td>D (Très rare)</td>
+                <td class="risk-green">VERT</td>
+                <td>Formation éthique, charte, supervision CSCA, anonymat</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <!-- Échelle de cotation -->
+    <h3>Échelle de cotation utilisée</h3>
+    
+    <div class="cotation-grid">
+        <div class="cotation-box">
+            <h4>Gravité</h4>
+            <ul>
+                <li><strong>1</strong> - Négligeable</li>
+                <li><strong>2</strong> - Mineure</li>
+                <li><strong>3</strong> - Majeure</li>
+                <li><strong>4</strong> - Catastrophique</li>
+            </ul>
+        </div>
+        <div class="cotation-box">
+            <h4>Probabilité</h4>
+            <ul>
+                <li><strong>A</strong> - Fréquent (quotidien)</li>
+                <li><strong>B</strong> - Occasionnel (hebdo/mensuel)</li>
+                <li><strong>C</strong> - Rare (annuel)</li>
+                <li><strong>D</strong> - Très rare (>1 an)</li>
+                <li><strong>E</strong> - Extrêmement rare (jamais observé)</li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 3. PROFIL DES ENQUÊTEURS -->
+    <!-- ======================================================================== -->
+    <h1>3. PROFIL DES ENQUÊTEURS</h1>
+    
+    <h2>3.1 Critères de sélection</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Critère</th>
+                <th>Niveau requis</th>
+                <th>Pourquoi ?</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Ancienneté</td><td>>20 ans sur plateforme aéroportuaire</td><td>Légitimité, connaissance des évolutions</td></tr>
+            <tr><td>Expérience conduite</td><td>>15 ans de conduite d'engins de piste</td><td>Crédibilité auprès des pairs</td></tr>
+            <tr><td>Discipline</td><td>0 accident grave responsable sur carrière</td><td>Exemplarité non négociable</td></tr>
+            <tr><td>Compétences relationnelles</td><td>Aisance verbale, écoute, empathie</td><td>Capacité à échanger informellement</td></tr>
+            <tr><td>Disponibilité</td><td>1 à 2 jours par semaine</td><td>Engagement durable</td></tr>
+            <tr><td>Volontariat</td><td>Oui (pas de "désignation")</td><td>Motivation intrinsèque</td></tr>
+        </tbody>
+    </table>
+    
+    <h2>3.2 Processus de recrutement</h2>
+    
+    <div class="process-step">
+        <div class="step-number">1</div>
+        <div class="step-desc"><strong>Appel à candidatures</strong> - Associations retraités, bouche-à-oreille, proposition entreprises</div>
+    </div>
+    <div class="process-step">
+        <div class="step-number">2</div>
+        <div class="step-desc"><strong>Pré-sélection</strong> - Vérification parcours, entretien motivation, références</div>
+    </div>
+    <div class="process-step">
+        <div class="step-number">3</div>
+        <div class="step-desc"><strong>Formation</strong> - Observation/neutralité (2j), Rédaction rapport (1j), Éthique (1j), Stage terrain (2j)</div>
+    </div>
+    <div class="process-step">
+        <div class="step-number">4</div>
+        <div class="step-desc"><strong>Habilitation</strong> - Validation CSCA, carte pro, engagement confidentialité</div>
+    </div>
+    
+    <h2>3.3 Valorisation</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Type de reconnaissance</th>
+                <th>Proposition</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Financière</td><td>Défraiement + indemnité journalière (80 €/jour)</td></tr>
+            <tr><td>Statutaire</td><td>Carte professionnelle "Enquêteur sécurité CSCA"</td></tr>
+            <tr><td>Symbolique</td><td>Pin's spécifique, badge nominatif</td></tr>
+            <tr><td>Sociale</td><td>Maintien du lien avec l'entreprise, la communauté</td></tr>
+            <tr><td>Transmission</td><td>Participation aux formations des nouveaux</td></tr>
+        </tbody>
+    </table>
+    
+    <p><strong>Coût par enquêteur :</strong> 80 €/jour × 80 jours/an = 6 400 €/an</p>
+    
+    <!-- ======================================================================== -->
+    <!-- 4. MÉTHODOLOGIE D'OBSERVATION -->
+    <!-- ======================================================================== -->
+    <h1>4. MÉTHODOLOGIE D'OBSERVATION</h1>
+    
+    <div class="grille-observation">
+        <div class="grille-header">GRILLE D'OBSERVATION - ENQUÊTEUR MYSTÈRE</div>
+        <p><strong>ENQUÊTEUR :</strong> [ANONYME] <strong>DATE :</strong> __/__/____</p>
+        <p><strong>ZONE OBSERVÉE :</strong> ______________ <strong>HORAIRE :</strong> ____ à ____</p>
+        
+        <h4>1. COMPORTEMENTS DE CONDUITE</h4>
+        <p>• Vitesse respectée : ☐ Oui ☐ Non ☐ Partiellement</p>
+        <p>• Distance de sécurité : ☐ Oui ☐ Non ☐ Partiellement</p>
+        <p>• Vérification angles morts : ☐ Oui ☐ Non ☐ Partiellement</p>
+        <p>• Utilisation clignotants : ☐ Oui ☐ Non ☐ Partiellement</p>
+        <p>• Priorités respectées : ☐ Oui ☐ Non ☐ Partiellement</p>
+        
+        <h4>2. ÉQUIPEMENTS ET TENUE</h4>
+        <p>• Port de la ceinture : ☐ Oui ☐ Non</p>
+        <p>• Équipements sécurité : ☐ OK ☐ Défectueux</p>
+        <p>• Visibilité engin (feux) : ☐ OK ☐ Insuffisant</p>
+        
+        <h4>3. CO-ACTIVITÉ</h4>
+        <p>• Communication avec équipage : ☐ Bonne ☐ Insuffisante</p>
+        <p>• Gestion des priorités : ☐ Fluide ☐ Conflits</p>
+        <p>• Comportement piétons : ☐ Sécurisé ☐ Risqué</p>
+    </div>
+    
+    <h2>4.2 Types de missions</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Type d'observation</th>
+                <th>Durée</th>
+                <th>Fréquence</th>
+                <th>Objectif</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Observation fixe</td><td>2h</td><td>Hebdomadaire</td><td>Analyser une zone spécifique (hotspot)</td></tr>
+            <tr><td>Observation mobile</td><td>2h</td><td>Hebdomadaire</td><td>Suivre un conducteur (avec son accord)</td></tr>
+            <tr><td>Observation flash</td><td>30 min</td><td>Quotidienne</td><td>Passage rapide sur plusieurs zones</td></tr>
+            <tr><td>Enquête thématique</td><td>4h</td><td>Mensuelle</td><td>Focus sur un sujet (angles morts, vitesse, nuit)</td></tr>
+        </tbody>
+    </table>
+    
+    <!-- ======================================================================== -->
+    <!-- 5. BUDGET -->
+    <!-- ======================================================================== -->
+    <h1>5. BUDGET</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Phase</th>
+                <th>Actions</th>
+                <th>Coût</th>
+                <th>Livrable</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>Phase 1 - Pilote</strong></td><td>Recrutement 3 enquêteurs, formation 4 jours, expérimentation 4 mois</td><td>23 k€</td><td>Retour d'expérience + ajustements</td></tr>
+            <tr><td><strong>Phase 2 - Déploiement CDG</strong></td><td>+10 enquêteurs, formation, déploiement 5 entreprises, coordination</td><td>62 k€</td><td>13 enquêteurs actifs, couverture 50% CDG</td></tr>
+            <tr><td><strong>Phase 3 - Généralisation</strong></td><td>Extension à 20 enquêteurs, Orly, province</td><td>60 k€</td><td>Dispositif pérenne, couverture nationale</td></tr>
+            <tr><td><strong>TOTAL 3 ANS</strong></td><td></td><td><strong>145 k€</strong></td><td></td></tr>
+        </tbody>
+    </table>
+    
+    <p><strong>Coût annuel de fonctionnement (régime permanent) :</strong> 168 000 € (20 enquêteurs × 80 jours × 80€ + coordination + formation)</p>
+    
+    <!-- ======================================================================== -->
+    <!-- 6. BÉNÉFICES ATTENDUS -->
+    <!-- ======================================================================== -->
+    <h1>6. BÉNÉFICES ATTENDUS</h1>
+    
+    <h2>6.1 Bénéfices mesurables</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Indicateur</th>
+                <th>Baseline</th>
+                <th>Cible M12</th>
+                <th>Cible M24</th>
+                <th>Cible M36</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Enquêteurs actifs</td><td>0</td><td>3</td><td>13</td><td>20</td></tr>
+            <tr><td>Observations réalisées</td><td>0</td><td>80</td><td>500</td><td>1 200</td></tr>
+            <tr><td>Écarts de conduite identifiés</td><td>-</td><td>50</td><td>300</td><td>700</td></tr>
+            <tr><td>Bonnes pratiques recensées</td><td>-</td><td>20</td><td>100</td><td>250</td></tr>
+            <tr><td>Alertes sécurité émises</td><td>-</td><td>5</td><td>15</td><td>30</td></tr>
+        </tbody>
+    </table>
+    
+    <!-- ======================================================================== -->
+    <!-- 7. RETOURS D'EXPÉRIENCE -->
+    <!-- ======================================================================== -->
+    <h1>7. RETOURS D'EXPÉRIENCE</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Secteur</th>
+                <th>Réalisations</th>
+                <th>Résultats</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>SNCF</strong></td><td>"Correspondants sûreté" - anciens agents observateurs terrain</td><td>+40% remontées incidents, 85% recommandations mises en œuvre</td></tr>
+            <tr><td><strong>RATP</strong></td><td>"Patrouilleurs de ligne" - agents expérimentés en observation</td><td>25 situations critiques détectées, réduction agressions</td></tr>
+            <tr><td><strong>Heathrow</strong></td><td>"Safety observers" - pilote 5 anciens conducteurs, 3 mois</td><td>73 observations, 12 recommandations majeures</td></tr>
+        </tbody>
+    </table>
+    
+    <!-- ======================================================================== -->
+    <!-- 8. INDICATEURS DE SUIVI -->
+    <!-- ======================================================================== -->
+    <h1>8. INDICATEURS DE SUIVI</h1>
+    
+    <div class="indicator-box">
+        <div class="indicator-item">
+            <strong>Enquêteurs actifs</strong>
+            <span>Cible M12: 3 | M24: 13 | M36: 20</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Observations réalisées</strong>
+            <span>Cible M12: 80 | M24: 500 | M36: 1 200</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Écarts identifiés</strong>
+            <span>Cible M12: 50 | M24: 300 | M36: 700</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Bonnes pratiques</strong>
+            <span>Cible M12: 20 | M24: 100 | M36: 250</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Alertes émises</strong>
+            <span>Cible M12: 5 | M24: 15 | M36: 30</span>
+        </div>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 9. EN RÉSUMÉ -->
+    <!-- ======================================================================== -->
+    <h1>9. EN RÉSUMÉ</h1>
+    
+    <div class="encadre">
+        <p style="font-size: 12pt; font-style: italic;">
+            L'enquêteur mystère est la piste de la transmission. Elle <strong>valorise</strong> ceux qui ont construit le métier. 
+            Elle <strong>protège</strong> ceux qui le font aujourd'hui. Elle <strong>éclaire</strong> ceux qui le feront demain. 
+            Ce que nous proposons, c'est de ne plus laisser 40 ans d'expérience s'éteindre avec les lumières du vestiaire. 
+            Ce que nous proposons, c'est de dire aux anciens : "Vous n'êtes pas devenus inutiles le jour de votre retraite." 
+            Ce que nous proposons, c'est de dire aux jeunes : "Regardez ces hommes et ces femmes. Ils savent. Apprenez d'eux."
+        </p>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 10. CE QUE NOUS PROPOSONS CONCRÈTEMENT -->
+    <!-- ======================================================================== -->
+    <h1>10. CE QUE NOUS PROPOSONS CONCRÈTEMENT</h1>
+    
+    <ol style="font-weight: bold; font-size: 12pt;">
+        <li>Recruter 3 anciens conducteurs volontaires pour une phase pilote</li>
+        <li>Concevoir une formation spécifique (observation, neutralité, rapport)</li>
+        <li>Tester sur une zone pilote pendant 3 mois</li>
+        <li>Évaluer la qualité des remontées et l'acceptation terrain</li>
+    </ol>
+    
+    <!-- Pied de page -->
+    <div class="footer">
+        <p>PISTE 19 - L'Enquêteur Mystère Sécurité | Version 1.0 | Mars 2026 | CDG - CSCA</p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PISTE 14 - Sécurité Collaborative Inter-entreprises</title>
+    <style>
+        /* Styles généraux pour l'impression */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            line-height: 1.5;
+            color: #333;
+            background-color: white;
+            font-size: 10.5pt;
+            margin: 0;
+            padding: 15px;
+        }
+        
+        /* Styles pour l'impression PDF */
+        @media print {
+            body {
+                padding: 0.5cm;
+            }
+            .page-break {
+                page-break-before: always;
+            }
+            .no-break {
+                page-break-inside: avoid;
+            }
+            h1, h2, h3, h4 {
+                page-break-after: avoid;
+            }
+            table {
+                page-break-inside: avoid;
+            }
+        }
+        
+        /* En-tête du document */
+        .document-header {
+            border-bottom: 3px solid #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+        
+        .document-title {
+            font-size: 24pt;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .document-subtitle {
+            font-size: 14pt;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+        
+        .document-meta {
+            text-align: right;
+            color: #7f8c8d;
+            font-size: 10pt;
+        }
+        
+        .tagline {
+            background-color: #ecf0f1;
+            padding: 8px 15px;
+            border-left: 5px solid #e67e22;
+            margin-bottom: 20px;
+            font-weight: bold;
+            font-size: 12pt;
+        }
+        
+        /* Typographie */
+        h1 {
+            font-size: 18pt;
+            color: #2c3e50;
+            margin: 25px 0 10px 0;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #bdc3c7;
+        }
+        
+        h2 {
+            font-size: 14pt;
+            color: #34495e;
+            margin: 20px 0 10px 0;
+            padding-left: 5px;
+            border-left: 4px solid #e67e22;
+        }
+        
+        h3 {
+            font-size: 12pt;
+            color: #555;
+            margin: 15px 0 8px 0;
+            font-weight: bold;
+        }
+        
+        h4 {
+            font-size: 11pt;
+            color: #666;
+            margin: 12px 0 5px 0;
+            font-weight: bold;
+        }
+        
+        p {
+            margin-bottom: 8px;
+            text-align: justify;
+        }
+        
+        ul, ol {
+            margin: 8px 0 12px 25px;
+        }
+        
+        li {
+            margin-bottom: 3px;
+        }
+        
+        /* Boîtes d'information */
+        .encadre {
+            border: 1px solid #bdc3c7;
+            padding: 12px;
+            background-color: #f9f9f9;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        
+        .important {
+            background-color: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 8px 12px;
+            margin: 12px 0;
+        }
+        
+        .hypothese {
+            background-color: #d4edda;
+            border-left: 5px solid #28a745;
+            padding: 8px 12px;
+            margin: 12px 0;
+            font-style: italic;
+        }
+        
+        /* Tableaux */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0 18px 0;
+            font-size: 9.5pt;
+        }
+        
+        th {
+            background-color: #2c3e50;
+            color: white;
+            font-weight: bold;
+            padding: 6px 4px;
+            text-align: left;
+            border: 1px solid #34495e;
+        }
+        
+        td {
+            padding: 5px 4px;
+            border: 1px solid #ddd;
+            vertical-align: top;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        /* Tableau de cartographie des risques avec couleurs */
+        .risk-table td:nth-child(7) {
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-orange {
+            background-color: #FFA500 !important;
+            color: black;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-red {
+            background-color: #FF0000 !important;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-yellow {
+            background-color: #FFFF00 !important;
+            color: black;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-green {
+            background-color: #008000 !important;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        /* Grille de cotation */
+        .cotation-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 12px 0;
+        }
+        
+        .cotation-box {
+            border: 1px solid #ddd;
+            padding: 8px;
+            background-color: #f9f9f9;
+        }
+        
+        .cotation-box h4 {
+            background-color: #2c3e50;
+            color: white;
+            padding: 4px 8px;
+            margin: -8px -8px 8px -8px;
+            font-size: 11pt;
+        }
+        
+        /* Pied de page */
+        .footer {
+            margin-top: 25px;
+            padding-top: 8px;
+            border-top: 1px solid #bdc3c7;
+            font-size: 9pt;
+            color: #7f8c8d;
+            text-align: center;
+        }
+        
+        .page-break {
+            page-break-before: always;
+        }
+        
+        /* Indicateurs */
+        .indicator-box {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 12px 0;
+        }
+        
+        .indicator-item {
+            flex: 1 1 200px;
+            background-color: #ecf0f1;
+            padding: 8px;
+            border-radius: 5px;
+            border-left: 4px solid #e67e22;
+        }
+        
+        .indicator-item strong {
+            display: block;
+            font-size: 10.5pt;
+            color: #2c3e50;
+        }
+        
+        .indicator-item span {
+            font-size: 9pt;
+            color: #555;
+        }
+        
+        /* Légende des couleurs */
+        .color-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 12px 0;
+            padding: 8px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .color-box {
+            width: 20px;
+            height: 20px;
+            border: 1px solid #333;
+        }
+        
+        /* Texte centré */
+        .text-center {
+            text-align: center;
+        }
+        
+        /* Badge */
+        .badge {
+            background-color: #e67e22;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 9pt;
+            font-weight: bold;
+            display: inline-block;
+        }
+        
+        /* Simulation de fiche REX */
+        .rex-card {
+            border: 2px solid #3498db;
+            border-radius: 5px;
+            padding: 10px;
+            background-color: #f0f8ff;
+            margin: 15px 0;
+        }
+        
+        .rex-header {
+            background-color: #3498db;
+            color: white;
+            padding: 5px;
+            margin: -10px -10px 10px -10px;
+            border-radius: 5px 5px 0 0;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .rex-section {
+            margin-bottom: 10px;
+            padding: 5px;
+            border-left: 3px solid #3498db;
+            background-color: white;
+        }
+        
+        /* Grille architecture */
+        .arch-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .arch-card {
+            border: 1px solid #2c3e50;
+            border-radius: 5px;
+            padding: 10px;
+            background-color: #ecf0f1;
+        }
+        
+        .arch-card h4 {
+            background-color: #2c3e50;
+            color: white;
+            padding: 5px;
+            margin: -10px -10px 10px -10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- En-tête du document -->
+    <div class="document-header">
+        <div>
+            <div class="document-title">PISTE 14</div>
+            <div class="document-subtitle">Sécurité Collaborative Inter-entreprises</div>
+        </div>
+        <div class="document-meta">
+            <div>Version 1.0</div>
+            <div>Mars 2026</div>
+            <div>CDG - CSCA</div>
+        </div>
+    </div>
+    
+    <!-- Tagline -->
+    <div class="tagline">
+        BRISER LES SILOS, PARTAGER LES BONNES PRATIQUES
+    </div>
+    
+    <!-- Description -->
+    <p style="font-size: 11pt; font-weight: bold; text-align: center; margin: 20px 0;">
+        Réseau de partage d'expériences, base REX commune, achats et formations groupés.
+    </p>
+    
+    <p>
+        CDG, c'est 20+ entreprises de handling qui travaillent côte à côte sur la même plateforme, avec les mêmes avions, les mêmes pistes, 
+        les mêmes risques. Pourtant, chacun travaille dans son silo. Une bonne pratique développée par l'une reste confinée. Un accident subi 
+        par l'une est subi par une autre 6 mois plus tard. Les investissements et formations sont doublés. La quatorzième piste propose de 
+        briser ces silos pour multiplier par 20 l'intelligence collective disponible.
+    </p>
+    
+    <!-- ======================================================================== -->
+    <!-- 1. PROBLÉMATIQUE ADRESSÉE -->
+    <!-- ======================================================================== -->
+    <h1>1. PROBLÉMATIQUE ADRESSÉE</h1>
+    
+    <p><strong>Constat fondamental :</strong> CDG, c'est <strong>20+ entreprises de handling</strong> qui travaillent côte à côte sur la même plateforme, avec les mêmes avions, les mêmes pistes, les mêmes risques.</p>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Entreprise A</th>
+                <th>Entreprise B</th>
+                <th>Problème</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>A développé une bonne pratique</td><td>Ne le sait pas</td><td>La bonne pratique reste confinée</td></tr>
+            <tr><td>A subi un accident</td><td>Subit le même accident 6 mois plus tard</td><td>L'expérience n'est pas partagée</td></tr>
+            <tr><td>A investi dans un équipement innovant</td><td>Cherche une solution similaire</td><td>Doublon d'investissement</td></tr>
+            <tr><td>A formé ses conducteurs</td><td>Doit former les siens</td><td>Doublon de coût de formation</td></tr>
+        </tbody>
+    </table>
+    
+    <div class="important">
+        <strong>Paradoxe :</strong>
+        <ul>
+            <li>Les conducteurs se croisent quotidiennement sur le tarmac</li>
+            <li>Ils partagent les mêmes difficultés, les mêmes frustrations</li>
+            <li>Mais leurs retours d'expérience ne sont <strong>jamais partagés</strong></li>
+        </ul>
+    </div>
+    
+    <div class="hypothese">
+        <strong>Notre hypothèse :</strong> La sécurité n'est pas un sujet de compétition. C'est un sujet de <strong>coopération</strong>.
+        <p>Ce qui est bon pour un handler est bon pour tous. Ce qui est dangereux pour l'un est dangereux pour tous.</p>
+        <p><strong>Briser les silos, c'est multiplier par 20 l'intelligence collective disponible.</strong></p>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 2. CARTOGRAPHIE DES RISQUES (MISE À JOUR POUR PISTE 14) -->
+    <!-- ======================================================================== -->
+    <h1>2. CARTOGRAPHIE DES RISQUES</h1>
+    
+    <!-- Légende des couleurs -->
+    <div class="color-legend">
+        <div class="legend-item"><div class="color-box" style="background-color: #FF0000;"></div> <strong>Rouge</strong> - Risque très élevé (intolérable)</div>
+        <div class="legend-item"><div class="color-box" style="background-color: #FFA500;"></div> <strong>Orange</strong> - Risque élevé (actions nécessaires)</div>
+        <div class="legend-item"><div class="color-box" style="background-color: #FFFF00;"></div> <strong>Jaune</strong> - Risque moyen (tolérable)</div>
+        <div class="legend-item"><div class="color-box" style="background-color: #008000;"></div> <strong>Vert</strong> - Risque faible (acceptable)</div>
+    </div>
+    
+    <table class="risk-table">
+        <thead>
+            <tr>
+                <th>Réf.</th>
+                <th>Danger</th>
+                <th>Causes</th>
+                <th>Conséquences</th>
+                <th>Gravité</th>
+                <th>Probabilité</th>
+                <th>Criticité</th>
+                <th>Barrières Piste 14</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>SIL 01.1</strong></td>
+                <td>Bonnes pratiques non partagées entre entreprises</td>
+                <td>Absence de réseau, culture du secret, concurrence</td>
+                <td>Innovations confinées, progression lente</td>
+                <td>2 (Mineure)</td>
+                <td>A (Fréquent)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Réseau trimestriel, bibliothèque bonnes pratiques</td>
+            </tr>
+            <tr>
+                <td><strong>SIL 01.2</strong></td>
+                <td>Répétition des mêmes accidents entre entreprises</td>
+                <td>Retours d'expérience non partagés, absence de base REX commune</td>
+                <td>Accidents évitables, pertes humaines et matérielles</td>
+                <td>3 (Majeure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-red">ROUGE</td>
+                <td>Base REX partagée, fiches anonymisées, alertes automatiques</td>
+            </tr>
+            <tr>
+                <td><strong>SIL 02.1</strong></td>
+                <td>Doublons d'investissement en sécurité</td>
+                <td>Absence de coordination, chacun fait ses propres achats</td>
+                <td>Coûts plus élevés, budgets sécurité moins efficaces</td>
+                <td>2 (Mineure)</td>
+                <td>A (Fréquent)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Achats groupés, économies d'échelle (-15 à -30%)</td>
+            </tr>
+            <tr>
+                <td><strong>SIL 02.2</strong></td>
+                <td>Doublons de coûts de formation</td>
+                <td>Formations développées en interne par chaque entreprise</td>
+                <td>Coûts élevés, qualité hétérogène</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Formations mutualisées, catalogue commun, -33% coûts</td>
+            </tr>
+            <tr>
+                <td><strong>SIL 03.1</strong></td>
+                <td>Hétérogénéité des standards entre entreprises</td>
+                <td>Procédures différentes, signalétiques variables</td>
+                <td>Confusion des conducteurs en mobilité, risques accrus</td>
+                <td>3 (Majeure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Standards communs, harmonisation procédures et signalétique</td>
+            </tr>
+            <tr>
+                <td><strong>SIL 03.2</strong></td>
+                <td>Mobilité des conducteurs risquée</td>
+                <td>Chaque entreprise a ses codes, ses règles</td>
+                <td>Conducteurs en prêt non opérationnels, accidents</td>
+                <td>3 (Majeure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Standards communs, conducteurs immédiatement opérationnels</td>
+            </tr>
+            <tr>
+                <td><strong>SIL 04.1</strong></td>
+                <td>Absence de culture sécurité commune</td>
+                <td>Chaque entreprise a sa propre culture, pas de partage</td>
+                <td>Difficultés de coordination, incompréhensions</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Rencontres, ateliers, partage de valeurs communes</td>
+            </tr>
+            <tr>
+                <td><strong>SIL 04.2</strong></td>
+                <td>Absence de reconnaissance collective</td>
+                <td>Pas de valorisation des efforts collaboratifs</td>
+                <td>Démotivation, repli sur soi</td>
+                <td>1 (Négligeable)</td>
+                <td>C (Rare)</td>
+                <td class="risk-green">VERT</td>
+                <td>Trophée sécurité, prix innovation, label collaboratif</td>
+            </tr>
+            <tr>
+                <td><strong>SIL 05.1</strong></td>
+                <td>Méconnaissance des compétences disponibles</td>
+                <td>Pas d'annuaire, pas de visibilité sur l'expertise externe</td>
+                <td>Sous-utilisation des ressources, perte de temps</td>
+                <td>1 (Négligeable)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-green">VERT</td>
+                <td>Annuaire des compétences inter-entreprises</td>
+            </tr>
+            <tr>
+                <td><strong>ECO 01.1</strong></td>
+                <td>Coûts de sécurité excessifs pour les petits handlers</td>
+                <td>Pas de mutualisation, économies d'échelle impossibles</td>
+                <td>Inégalité de sécurité entre entreprises</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Achats groupés, formations mutualisées, coûts réduits</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <!-- Échelle de cotation -->
+    <h3>Échelle de cotation utilisée</h3>
+    
+    <div class="cotation-grid">
+        <div class="cotation-box">
+            <h4>Gravité</h4>
+            <ul>
+                <li><strong>1</strong> - Négligeable</li>
+                <li><strong>2</strong> - Mineure</li>
+                <li><strong>3</strong> - Majeure</li>
+                <li><strong>4</strong> - Catastrophique</li>
+            </ul>
+        </div>
+        <div class="cotation-box">
+            <h4>Probabilité</h4>
+            <ul>
+                <li><strong>A</strong> - Fréquent (quotidien)</li>
+                <li><strong>B</strong> - Occasionnel (hebdo/mensuel)</li>
+                <li><strong>C</strong> - Rare (annuel)</li>
+                <li><strong>D</strong> - Très rare (>1 an)</li>
+                <li><strong>E</strong> - Extrêmement rare (jamais observé)</li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 3. CONCEPT D'ENSEMBLE -->
+    <!-- ======================================================================== -->
+    <h1>3. CONCEPT D'ENSEMBLE</h1>
+    
+    <div class="arch-grid">
+        <div class="arch-card">
+            <h4>RENCONTRES</h4>
+            <ul>
+                <li>Réseau trimestriel</li>
+                <li>Visites croisées</li>
+                <li>Ateliers thématiques</li>
+                <li>Retours d'expérience</li>
+            </ul>
+        </div>
+        <div class="arch-card">
+            <h4>OUTILS</h4>
+            <ul>
+                <li>Base REX partagée</li>
+                <li>Fiches bonnes pratiques</li>
+                <li>Annuaire des compétences</li>
+                <li>Bibliothèque formations</li>
+            </ul>
+        </div>
+        <div class="arch-card">
+            <h4>PROJETS COMMUNS</h4>
+            <ul>
+                <li>Achats groupés</li>
+                <li>Formations mutualisées</li>
+                <li>Standards communs</li>
+                <li>Expérimentations pilotes</li>
+            </ul>
+        </div>
+        <div class="arch-card">
+            <h4>RECONNAISSANCE</h4>
+            <ul>
+                <li>Trophée sécurité</li>
+                <li>Prix innovation</li>
+                <li>Label collaboratif</li>
+                <li>Cérémonie annuelle</li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 4. AXE 1 - RENCONTRES ET ÉCHANGES -->
+    <!-- ======================================================================== -->
+    <h1>4. AXE 1 - RENCONTRES ET ÉCHANGES</h1>
+    
+    <h2>4.1 Réseau sécurité trimestriel</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Critère</th>
+                <th>Proposition</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Fréquence</td><td>4 fois par an (trimestriel)</td></tr>
+            <tr><td>Durée</td><td>2h30</td></tr>
+            <tr><td>Participants</td><td>1 responsable sécurité + 1 conducteur par entreprise</td></tr>
+            <tr><td>Animation</td><td>CSCA + rotation entre entreprises</td></tr>
+            <tr><td>Lieu</td><td>Tournant (ADP, Air France, handlers)</td></tr>
+        </tbody>
+    </table>
+    
+    <p><strong>Ordre du jour type :</strong> Tour de table (15 min) → Retour d'expérience (30 min) → Bonne pratique du mois (20 min) → Atelier thématique (45 min) → Actions communes (20 min)</p>
+    <p><strong>Coût annuel :</strong> 800 € (4 × 200 € de collation)</p>
+    
+    <h2>4.2 Visites croisées terrain</h2>
+    
+    <div style="border: 1px solid #ddd; padding: 10px; margin: 10px 0;">
+        <h4 style="color: #e67e22;">FICHE DE VISITE CROISÉE</h4>
+        <p><strong>Entreprise visitée :</strong> ______________ <strong>Date :</strong> __/__/____</p>
+        <p><strong>Visiteur :</strong> _________________________</p>
+        <p><strong>1. Pratiques intéressantes observées :</strong> _________________________</p>
+        <p><strong>2. Équipements / Outils remarquables :</strong> _________________________</p>
+        <p><strong>3. Points de vigilance partagés :</strong> _________________________</p>
+        <p><strong>4. Idée à transposer :</strong> _________________________</p>
+        <p><strong>5. Suite donnée :</strong> □ Testé et adopté □ En cours □ Non transposable</p>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 5. AXE 2 - OUTILS PARTAGÉS -->
+    <!-- ======================================================================== -->
+    <h1>5. AXE 2 - OUTILS PARTAGÉS</h1>
+    
+    <h2>5.1 Base REX partagée</h2>
+    
+    <div class="rex-card">
+        <div class="rex-header">FICHE RETOUR D'EXPÉRIENCE (ANONYMISÉE) - REX-2026-012</div>
+        <div class="rex-section"><strong>TYPE :</strong> ☒ Accident ☐ Incident ☐ Near-miss</div>
+        <div class="rex-section"><strong>CONTEXTE :</strong> Parking T2E - PUSH - 08h45 (pic trafic) - Jour, sol sec</div>
+        <div class="rex-section"><strong>DESCRIPTION :</strong> Collision PUSH/LOADER lors manœuvre recul. Vitesse excessive (18 km/h), angle mort non vérifié.</div>
+        <div class="rex-section"><strong>CAUSES :</strong> Facteur humain : précipitation • Facteur matériel : absence caméra 360° • Facteur organisationnel : pression temporelle</div>
+        <div class="rex-section"><strong>ACTIONS CORRECTIVES :</strong> Rappel règles vitesse • Installation caméras 360° sur 10 PUSH • Module formation "Gestion du stress"</div>
+        <div class="rex-section"><strong>ENSEIGNEMENTS :</strong> Nécessité équiper PUSH caméras 360° • Renforcer signalétique zone T2E</div>
+    </div>
+    
+    <p><strong>Développement :</strong> Intégration application P3 - 15 k€ + 2 k€/an hébergement</p>
+    
+    <h2>5.2 Bibliothèque de bonnes pratiques</h2>
+    
+    <div style="border: 1px solid #ddd; padding: 10px; margin: 10px 0;">
+        <h4 style="color: #e67e22;">BONNE PRATIQUE - FICHE N°024</h4>
+        <p><strong>TITRE :</strong> Éthylotest anti-démarrage sur PUSH</p>
+        <p><strong>ENTREPRISE PILOTE :</strong> Handler A - Septembre 2025</p>
+        <p><strong>DESCRIPTION :</strong> Installation éthylotest portable connecté sur 20 PUSH. Test obligatoire avant démarrage. Alerte superviseur si positif (>0,2g/L).</p>
+        <p><strong>BÉNÉFICES MESURÉS :</strong> 0 conduite en état d'ivresse • 4 tentatives bloquées • 82% conducteurs satisfaits</p>
+        <p><strong>CONDITIONS :</strong> Coût 400 €/engin • Formation 15 min • Nécessite accord CSE</p>
+    </div>
+    
+    <h2>5.3 Annuaire des compétences</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Compétence</th>
+                <th>Personne référente</th>
+                <th>Entreprise</th>
+                <th>Disponibilité</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Formateur Permis T</td><td>Jean D.</td><td>Handler A</td><td>Missions ponctuelles</td></tr>
+            <tr><td>Expert angles morts</td><td>Sarah K.</td><td>Handler B</td><td>Consultante</td></tr>
+            <tr><td>Rétrofit caméras</td><td>Marc P.</td><td>Handler C</td><td>Prestataire</td></tr>
+            <tr><td>Formation VR</td><td>Thomas R.</td><td>Handler A</td><td>Formateur</td></tr>
+            <tr><td>Audit sécurité</td><td>Fatima Z.</td><td>CSCA</td><td>Référente</td></tr>
+        </tbody>
+    </table>
+    <p><strong>Coût :</strong> 3 k€ (développement annuaire en ligne)</p>
+    
+    <!-- ======================================================================== -->
+    <!-- 6. AXE 3 - PROJETS COMMUNS -->
+    <!-- ======================================================================== -->
+    <h1>6. AXE 3 - PROJETS COMMUNS</h1>
+    
+    <h2>6.1 Achats groupés</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Équipement</th>
+                <th>Coût unitaire</th>
+                <th>Volume CDG</th>
+                <th>Économie potentielle</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Kit caméra 360°</td><td>2 000 €</td><td>1 000 engins</td><td>-15% (300 k€)</td></tr>
+            <tr><td>Détecteurs de proximité</td><td>1 200 €</td><td>1 000 engins</td><td>-15% (180 k€)</td></tr>
+            <tr><td>Éthylotests portables</td><td>400 €</td><td>400 engins</td><td>-20% (32 k€)</td></tr>
+            <tr><td>Casques VR</td><td>800 €</td><td>50 casques</td><td>-25% (10 k€)</td></tr>
+            <tr><td>Gourdes réutilisables</td><td>10 €</td><td>5 000 unités</td><td>-30% (15 k€)</td></tr>
+        </tbody>
+    </table>
+    <p><strong>TOTAL ÉCONOMIES POTENTIELLES :</strong> ~537 k€</p>
+    
+    <h2>6.2 Formations mutualisées</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Formation</th>
+                <th>Coût actuel (interne)</th>
+                <th>Coût mutualisé</th>
+                <th>Économie</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Permis T (initial)</td><td>1 200 €/pers</td><td>800 €/pers</td><td>-33%</td></tr>
+            <tr><td>Conduite PUSH</td><td>1 500 €/pers</td><td>1 000 €/pers</td><td>-33%</td></tr>
+            <tr><td>Formation formateurs</td><td>3 000 €/pers</td><td>2 000 €/pers</td><td>-33%</td></tr>
+            <tr><td>Gestion du stress</td><td>500 €/pers</td><td>300 €/pers</td><td>-40%</td></tr>
+        </tbody>
+    </table>
+    
+    <!-- ======================================================================== -->
+    <!-- 7. BUDGET TOTAL -->
+    <!-- ======================================================================== -->
+    <h1>7. BUDGET TOTAL</h1>
+    
+    <h2>7.1 Investissement initial</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Poste</th>
+                <th>Coût</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Développement base REX (intégration P3)</td><td>15 k€</td></tr>
+            <tr><td>Développement annuaire compétences</td><td>3 k€</td></tr>
+            <tr><td>Kit de lancement (supports, communication)</td><td>5 k€</td></tr>
+            <tr><td><strong>TOTAL INVESTISSEMENT</strong></td><td><strong>23 k€</strong></td></tr>
+        </tbody>
+    </table>
+    
+    <h2>7.2 Coûts annuels de fonctionnement</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Poste</th>
+                <th>Coût</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Rencontres trimestrielles (4 × 200 €)</td><td>800 €/an</td></tr>
+            <tr><td>Ateliers thématiques (4 × 1 200 €)</td><td>4 800 €/an</td></tr>
+            <tr><td>Base REX (hébergement)</td><td>2 000 €/an</td></tr>
+            <tr><td>Coordination achats groupés (0,1 ETP)</td><td>5 000 €/an</td></tr>
+            <tr><td>Coordination formations (0,1 ETP)</td><td>3 000 €/an</td></tr>
+            <tr><td>Trophée sécurité (organisation + trophée)</td><td>5 000 €/an</td></tr>
+            <tr><td>Prix innovation (dotation + trophées)</td><td>7 000 €/an</td></tr>
+            <tr><td><strong>TOTAL ANNUEL</strong></td><td><strong>27 600 €/an</strong></td></tr>
+        </tbody>
+    </table>
+    
+    <p><strong>TOTAL 3 ANS :</strong> 23 k€ + (3 × 27,6 k€) = <strong>105,8 k€</strong></p>
+    <p><strong>Mutualisation (20 entreprises) :</strong> Année 1 : 2 530 €/entreprise • Années 2-3 : 1 380 €/entreprise/an • Soit moins de 0,50 € par conducteur et par mois.</p>
+    
+    <!-- ======================================================================== -->
+    <!-- 8. BÉNÉFICES ATTENDUS -->
+    <!-- ======================================================================== -->
+    <h1>8. BÉNÉFICES ATTENDUS</h1>
+    
+    <h2>8.1 Bénéfices mesurables</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Indicateur</th>
+                <th>Baseline</th>
+                <th>Cible M12</th>
+                <th>Cible M24</th>
+                <th>Cible M36</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Entreprises participant aux rencontres</td><td>5</td><td>12</td><td>18</td><td>20</td></tr>
+            <tr><td>Fiches REX partagées</td><td>0</td><td>20</td><td>50</td><td>100</td></tr>
+            <tr><td>Bonnes pratiques identifiées</td><td>0</td><td>15</td><td>40</td><td>80</td></tr>
+            <tr><td>Achats groupés réalisés</td><td>0</td><td>1</td><td>3</td><td>5</td></tr>
+            <tr><td>Économies réalisées</td><td>0</td><td>50 k€</td><td>200 k€</td><td>500 k€</td></tr>
+        </tbody>
+    </table>
+    
+    <h2>8.2 Bénéfices qualitatifs</h2>
+    
+    <ul>
+        <li><strong>Accélération du progrès :</strong> Une bonne pratique se diffuse en mois, pas en années</li>
+        <li><strong>Évitement des doublons :</strong> On ne réinvente pas ce qui existe déjà</li>
+        <li><strong>Culture commune :</strong> Mêmes règles, mêmes réflexes, même langage</li>
+        <li><strong>Sentiment d'appartenance :</strong> "Nous travaillons tous sur la même plateforme"</li>
+        <li><strong>Résilience :</strong> Face à une crise, on se connaît, on se parle</li>
+    </ul>
+    
+    <!-- ======================================================================== -->
+    <!-- 9. RISQUES ET MESURES DE MITIGATION -->
+    <!-- ======================================================================== -->
+    <h1>9. RISQUES ET MESURES DE MITIGATION</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Risque</th>
+                <th>Probabilité</th>
+                <th>Gravité</th>
+                <th>Plan d'action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Non-participation des entreprises (manque de temps)</td><td>Élevée</td><td>Critique</td><td>Engagement direction, objectivation du temps (2h/trimestre), lien avec label P9</td></tr>
+            <tr><td>Rétention d'information (peur du jugement)</td><td>Élevée</td><td>Élevée</td><td>Anonymisation des REX, bienveillance des échanges, pas de lien avec contrôle</td></tr>
+            <tr><td>Concurrence (réticence à partager)</td><td>Élevée</td><td>Élevée</td><td>Focus sujets non concurrentiels, partage gagnant-gagnant, charte confidentialité</td></tr>
+            <tr><td>Essoufflement</td><td>Moyenne</td><td>Élevée</td><td>Rotation animation, événements marquants (trophées), sujets concrets</td></tr>
+            <tr><td>Coût</td><td>Faible</td><td>Faible</td><td>Mutualisation, coût infime par entreprise</td></tr>
+        </tbody>
+    </table>
+    
+    <!-- ======================================================================== -->
+    <!-- 10. INDICATEURS DE SUIVI -->
+    <!-- ======================================================================== -->
+    <h1>10. INDICATEURS DE SUIVI</h1>
+    
+    <div class="indicator-box">
+        <div class="indicator-item">
+            <strong>Entreprises participantes</strong>
+            <span>Cible M12: 12 | M24: 18 | M36: 20</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Fiches REX partagées</strong>
+            <span>Cible M12: 20 | M24: 50 | M36: 100</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Bonnes pratiques identifiées</strong>
+            <span>Cible M12: 15 | M24: 40 | M36: 80</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Achats groupés réalisés</strong>
+            <span>Cible M12: 1 | M24: 3 | M36: 5</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Économies réalisées</strong>
+            <span>Cible M12: 50 k€ | M24: 200 k€ | M36: 500 k€</span>
+        </div>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 11. CONDITIONS DE RÉUSSITE -->
+    <!-- ======================================================================== -->
+    <h1>11. CONDITIONS DE RÉUSSITE</h1>
+    
+    <h2>Facteurs clés</h2>
+    <ol>
+        <li><strong>Engagement direction :</strong> Participation inscrite dans les objectifs des responsables sécurité</li>
+        <li><strong>Confidentialité :</strong> Charte de non-divulgation, confiance mutuelle</li>
+        <li><strong>Utilité perçue :</strong> Sujets concrets, pas de réunions "pour rien"</li>
+        <li><strong>Bienveillance :</strong> Zéro jugement, zéro hiérarchie</li>
+        <li><strong>Équité :</strong> Grands et petits handlers sur un pied d'égalité</li>
+        <li><strong>Pérennité :</strong> Calendrier annuel fixe, rituel</li>
+    </ol>
+    
+    <h2>Pièges à éviter</h2>
+    <ul>
+        <li><strong>Réunionite :</strong> 2h30 max, ordre du jour serré</li>
+        <li><strong>Jargon :</strong> Parler simple, pas de sigles incompréhensibles</li>
+        <li><strong>Monologue :</strong> Animer, ne pas subir</li>
+        <li><strong>Entreprise "professeur" :</strong> Tous experts, tous apprenants</li>
+        <li><strong>Absence de suivi :</strong> Compte-rendu + plan d'action</li>
+    </ul>
+    
+    <!-- ======================================================================== -->
+    <!-- 12. EN RÉSUMÉ -->
+    <!-- ======================================================================== -->
+    <h1>12. EN RÉSUMÉ</h1>
+    
+    <div class="encadre">
+        <p style="font-size: 12pt; font-style: italic;">
+            CDG, c'est 20+ entreprises de handling qui travaillent côte à côte sur la même plateforme, avec les mêmes avions, les mêmes pistes, 
+            les mêmes risques. Pourtant, chacun travaille dans son silo. Briser les silos, c'est multiplier par 20 l'intelligence collective disponible.
+        </p>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 13. CE QUE NOUS PROPOSONS CONCRÈTEMENT -->
+    <!-- ======================================================================== -->
+    <h1>13. CE QUE NOUS PROPOSONS CONCRÈTEMENT</h1>
+    
+    <ol style="font-weight: bold; font-size: 12pt;">
+        <li>Mettre en place un réseau de rencontres trimestrielles entre responsables sécurité</li>
+        <li>Développer une base REX partagée et anonymisée (intégration P3)</li>
+        <li>Organiser des achats et formations groupés pour mutualiser les coûts</li>
+        <li>Créer un annuaire des compétences inter-entreprises</li>
+    </ol>
+    
+    <!-- Pied de page -->
+    <div class="footer">
+        <p>PISTE 14 - Sécurité Collaborative Inter-entreprises | Version 1.0 | Mars 2026 | CDG - CSCA</p>
+    </div>
+</body>
+</html>

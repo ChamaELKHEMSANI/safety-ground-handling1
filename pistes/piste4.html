@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PISTE 4 - Buddy System et parrainage</title>
+    <style>
+        /* Styles généraux pour l'impression */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            line-height: 1.5;
+            color: #333;
+            background-color: white;
+            font-size: 10.5pt;
+            margin: 0;
+            padding: 15px;
+        }
+        
+        /* Styles pour l'impression PDF */
+        @media print {
+            body {
+                padding: 0.5cm;
+            }
+            .page-break {
+                page-break-before: always;
+            }
+            .no-break {
+                page-break-inside: avoid;
+            }
+            h1, h2, h3, h4 {
+                page-break-after: avoid;
+            }
+            table {
+                page-break-inside: avoid;
+            }
+        }
+        
+        /* En-tête du document */
+        .document-header {
+            border-bottom: 3px solid #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+        
+        .document-title {
+            font-size: 24pt;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .document-subtitle {
+            font-size: 14pt;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+        
+        .document-meta {
+            text-align: right;
+            color: #7f8c8d;
+            font-size: 10pt;
+        }
+        
+        .tagline {
+            background-color: #ecf0f1;
+            padding: 8px 15px;
+            border-left: 5px solid #e67e22;
+            margin-bottom: 20px;
+            font-weight: bold;
+            font-size: 12pt;
+        }
+        
+        /* Typographie */
+        h1 {
+            font-size: 18pt;
+            color: #2c3e50;
+            margin: 25px 0 10px 0;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #bdc3c7;
+        }
+        
+        h2 {
+            font-size: 14pt;
+            color: #34495e;
+            margin: 20px 0 10px 0;
+            padding-left: 5px;
+            border-left: 4px solid #e67e22;
+        }
+        
+        h3 {
+            font-size: 12pt;
+            color: #555;
+            margin: 15px 0 8px 0;
+            font-weight: bold;
+        }
+        
+        h4 {
+            font-size: 11pt;
+            color: #666;
+            margin: 12px 0 5px 0;
+            font-weight: bold;
+        }
+        
+        p {
+            margin-bottom: 8px;
+            text-align: justify;
+        }
+        
+        ul, ol {
+            margin: 8px 0 12px 25px;
+        }
+        
+        li {
+            margin-bottom: 3px;
+        }
+        
+        /* Boîtes d'information */
+        .encadre {
+            border: 1px solid #bdc3c7;
+            padding: 12px;
+            background-color: #f9f9f9;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        
+        .important {
+            background-color: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 8px 12px;
+            margin: 12px 0;
+        }
+        
+        .hypothese {
+            background-color: #d4edda;
+            border-left: 5px solid #28a745;
+            padding: 8px 12px;
+            margin: 12px 0;
+            font-style: italic;
+        }
+        
+        /* Tableaux */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0 18px 0;
+            font-size: 9.5pt;
+        }
+        
+        th {
+            background-color: #2c3e50;
+            color: white;
+            font-weight: bold;
+            padding: 6px 4px;
+            text-align: left;
+            border: 1px solid #34495e;
+        }
+        
+        td {
+            padding: 5px 4px;
+            border: 1px solid #ddd;
+            vertical-align: top;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        /* Tableau de cartographie des risques avec couleurs */
+        .risk-table td:nth-child(7) {
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-orange {
+            background-color: #FFA500 !important;
+            color: black;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-red {
+            background-color: #FF0000 !important;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-yellow {
+            background-color: #FFFF00 !important;
+            color: black;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-green {
+            background-color: #008000 !important;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-blue {
+            background-color: #0000FF !important;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        /* Grille de cotation */
+        .cotation-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 12px 0;
+        }
+        
+        .cotation-box {
+            border: 1px solid #ddd;
+            padding: 8px;
+            background-color: #f9f9f9;
+        }
+        
+        .cotation-box h4 {
+            background-color: #2c3e50;
+            color: white;
+            padding: 4px 8px;
+            margin: -8px -8px 8px -8px;
+            font-size: 11pt;
+        }
+        
+        /* Pied de page */
+        .footer {
+            margin-top: 25px;
+            padding-top: 8px;
+            border-top: 1px solid #bdc3c7;
+            font-size: 9pt;
+            color: #7f8c8d;
+            text-align: center;
+        }
+        
+        .page-break {
+            page-break-before: always;
+        }
+        
+        /* Indicateurs */
+        .indicator-box {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 12px 0;
+        }
+        
+        .indicator-item {
+            flex: 1 1 200px;
+            background-color: #ecf0f1;
+            padding: 8px;
+            border-radius: 5px;
+            border-left: 4px solid #e67e22;
+        }
+        
+        .indicator-item strong {
+            display: block;
+            font-size: 10.5pt;
+            color: #2c3e50;
+        }
+        
+        .indicator-item span {
+            font-size: 9pt;
+            color: #555;
+        }
+        
+        /* Légende des couleurs */
+        .color-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 12px 0;
+            padding: 8px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .color-box {
+            width: 20px;
+            height: 20px;
+            border: 1px solid #333;
+        }
+        
+        /* Texte centré */
+        .text-center {
+            text-align: center;
+        }
+        
+        /* Badge */
+        .badge {
+            background-color: #e67e22;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 9pt;
+            font-weight: bold;
+            display: inline-block;
+        }
+        
+        /* Simulation de livret buddy */
+        .livret-buddy {
+            background-color: #f0f0f0;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            padding: 15px;
+            font-family: monospace;
+            margin: 15px 0;
+        }
+        
+        .livret-header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 8px;
+            border-radius: 5px 5px 0 0;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .livret-content {
+            background-color: white;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 0 0 5px 5px;
+        }
+        
+        /* Grille pour les phases */
+        .phases-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            margin: 15px 0;
+        }
+        
+        .phase-card {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 8px;
+            background-color: #f9f9f9;
+            text-align: center;
+        }
+        
+        .phase-card h4 {
+            margin: 0 0 5px 0;
+            color: #e67e22;
+            font-size: 10pt;
+        }
+        
+        .phase-card p {
+            font-size: 9pt;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- En-tête du document -->
+    <div class="document-header">
+        <div>
+            <div class="document-title">PISTE 4</div>
+            <div class="document-subtitle">Buddy System et parrainage</div>
+        </div>
+        <div class="document-meta">
+            <div>Version 1.0</div>
+            <div>Mars 2026</div>
+            <div>CDG - CSCA</div>
+        </div>
+    </div>
+    
+    <!-- Tagline -->
+    <div class="tagline">
+        LA TRANSMISSION PAR L'EXEMPLE ET LE COMPAGNONNAGE
+    </div>
+    
+    <!-- Description -->
+    <p style="font-size: 11pt; font-weight: bold; text-align: center; margin: 20px 0;">
+        Chaque nouvel embauché est accompagné pendant 3 mois par un conducteur expérimenté, volontaire et formé.
+    </p>
+    
+    <p>
+        La crise du COVID-19 a provoqué le départ massif de personnel expérimenté, tandis que la reprise a imposé 
+        l'embauche rapide d'une main-d'œuvre nouvelle, techniquement formée mais peu acculturée aux risques réels 
+        du terrain. Face à ce constat, la quatrième piste propose de recréer un lien de transmission fort en 
+        institutionnalisant le compagnonnage.
+    </p>
+    
+    <p>
+        Le concept est celui du "buddy system", ou système de parrainage. Il s'agit d'attribuer à chaque nouvel 
+        embauché conducteur un "buddy" : un conducteur expérimenté, volontaire, formé au tutorat et reconnu pour 
+        son exemplarité en matière de sécurité. L'idée est que la culture sécurité, les savoir-faire non écrits et 
+        l'intelligence du terrain se transmettent mieux par l'exemple et l'immersion que par les seuls cours théoriques.
+    </p>
+    
+    <!-- ======================================================================== -->
+    <!-- 1. PROBLÉMATIQUE ADRESSÉE -->
+    <!-- ======================================================================== -->
+    <h1>1. PROBLÉMATIQUE ADRESSÉE</h1>
+    
+    <p><strong>Constat clé du sujet :</strong></p>
+    <div class="important">
+        "La crise créée par le COVID-19 a amené les entreprises aéroportuaires à laisser partir des effectifs pour la plupart expérimentés. La reprise post-COVID a amené les entreprises à embaucher de la main d'œuvre nouvelle."
+    </div>
+    
+    <p><strong>Données terrain (hypothèses) :</strong></p>
+    <ul>
+        <li>Turnover estimé > 25% sur certaines catégories de personnel</li>
+        <li>Conducteurs expérimentés partis → perte de <strong>mémoire accidentologique</strong></li>
+        <li>Nouveaux embauchés formés techniquement, mais <strong>pas acculturés</strong> aux risques réels</li>
+    </ul>
+    
+    <div class="hypothese">
+        <strong>Notre hypothèse :</strong> La formation technique ne suffit pas. La <strong>culture sécurité</strong> se transmet par l'<strong>exemple</strong>, le <strong>compagnonnage</strong>, l'<strong>immersion</strong> avec un pair expérimenté.
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 2. CONCEPT DÉTAILLÉ -->
+    <!-- ======================================================================== -->
+    <h1>2. CONCEPT DÉTAILLÉ</h1>
+    
+    <h2>2.1 Principe général</h2>
+    <p><strong>Chaque nouvel embauché conducteur se voit attribuer un "buddy" :</strong> un conducteur expérimenté, volontaire et formé, qui l'accompagne pendant une période définie (3 mois).</p>
+    
+    <p><strong>Objectifs du binôme :</strong></p>
+    <ol>
+        <li><strong>Transmettre les savoir-faire non écrits</strong> (les "ficelles" du métier)</li>
+        <li><strong>Incarner les comportements sécuritaires</strong> (exemplarité)</li>
+        <li><strong>Rassurer et intégrer</strong> le nouvel arrivant</li>
+        <li><strong>Détecter précocement</strong> les difficultés ou comportements à risque</li>
+        <li><strong>Créer un lien durable</strong> entre générations</li>
+    </ol>
+    
+    <h2>2.2 Schéma de principe</h2>
+    
+    <table>
+        <tr>
+            <td style="width: 50%; background-color: #3498db; color: white; font-weight: bold; text-align: center; padding: 10px;">
+                NOUVEL EMBAUCHÉ
+            </td>
+            <td style="width: 50%; background-color: #e67e22; color: white; font-weight: bold; text-align: center; padding: 10px;">
+                BUDDY (ANCIEN)
+            </td>
+        </tr>
+        <tr>
+            <td style="vertical-align: top;">
+                <ul>
+                    <li>< 6 mois d'ancienneté</li>
+                    <li>Compétence technique validée</li>
+                    <li>Permis T obtenu</li>
+                    <li>Motivation à apprendre</li>
+                </ul>
+            </td>
+            <td style="vertical-align: top;">
+                <ul>
+                    <li>> 5 ans d'ancienneté</li>
+                    <li>0 accident responsable</li>
+                    <li>Volontaire</li>
+                    <li>Formé au tutorat</li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" style="background-color: #2c3e50; color: white; text-align: center; padding: 8px;">
+                <strong>BINÔME FORMEL - Durée : 3 mois</strong>
+            </td>
+        </tr>
+        <tr>
+            <td style="background-color: #ecf0f1; vertical-align: top;">
+                <strong>PHASE 1 - INTÉGRATION (Mois 1)</strong>
+                <ul>
+                    <li>Observation</li>
+                    <li>Explication des règles</li>
+                    <li>Visite des zones</li>
+                    <li>Présentation aux équipes</li>
+                </ul>
+            </td>
+            <td style="background-color: #ecf0f1; vertical-align: top;">
+                <strong>PHASE 2 - AUTONOMIE (Mois 2-3)</strong>
+                <ul>
+                    <li>Conduite supervisée</li>
+                    <li>Débriefings réguliers</li>
+                    <li>Évaluation continue</li>
+                    <li>Préparation à l'autonomie</li>
+                </ul>
+            </td>
+        </tr>
+    </table>
+    
+    <!-- ======================================================================== -->
+    <!-- 3. CARTOGRAPHIE DES RISQUES (MISE À JOUR POUR PISTE 4) -->
+    <!-- ======================================================================== -->
+    <h1>3. CARTOGRAPHIE DES RISQUES</h1>
+    
+    <!-- Légende des couleurs -->
+    <div class="color-legend">
+        <div class="legend-item"><div class="color-box" style="background-color: #FF0000;"></div> <strong>Rouge</strong> - Risque très élevé (intolérable)</div>
+        <div class="legend-item"><div class="color-box" style="background-color: #FFA500;"></div> <strong>Orange</strong> - Risque élevé (actions nécessaires)</div>
+        <div class="legend-item"><div class="color-box" style="background-color: #FFFF00;"></div> <strong>Jaune</strong> - Risque moyen (tolérable)</div>
+        <div class="legend-item"><div class="color-box" style="background-color: #008000;"></div> <strong>Vert</strong> - Risque faible (acceptable)</div>
+    </div>
+    
+    <table class="risk-table">
+        <thead>
+            <tr>
+                <th>Réf.</th>
+                <th>Danger</th>
+                <th>Causes</th>
+                <th>Conséquences</th>
+                <th>Gravité</th>
+                <th>Probabilité</th>
+                <th>Criticité</th>
+                <th>Barrières Piste 4</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>HUM 04.1</strong></td>
+                <td>Méconnaissance des risques spécifiques par les nouveaux</td>
+                <td>Formation théorique insuffisante, absence de transmission terrain</td>
+                <td>Erreurs de jugement, accidents évitables</td>
+                <td>3 (Majeure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Accompagnement buddy 3 mois, transmission des "ficelles"</td>
+            </tr>
+            <tr>
+                <td><strong>HUM 04.2</strong></td>
+                <td>Perte de la mémoire accidentologique</td>
+                <td>Départ des anciens, absence de transmission structurée</td>
+                <td>Répétition des erreurs du passé, non-apprentissage</td>
+                <td>3 (Majeure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Capitalisation par les buddies, transmission orale des récits</td>
+            </tr>
+            <tr>
+                <td><strong>HUM 04.3</strong></td>
+                <td>Stress et anxiété des nouveaux conducteurs</td>
+                <td>Isolement, pression de la performance, peur de l'erreur</td>
+                <td>Erreurs, maladresses, accidents</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Référent unique et bienveillant, soutien psychologique buddy</td>
+            </tr>
+            <tr>
+                <td><strong>HUM 04.4</strong></td>
+                <td>Mauvaise intégration dans l'équipe</td>
+                <td>Turnover élevé, absence de lien avec les anciens</td>
+                <td>Isolement, démotivation, turnover accéléré</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Présentation aux équipes par le buddy, intégration facilitée</td>
+            </tr>
+            <tr>
+                <td><strong>HUM 04.5</strong></td>
+                <td>Développement de mauvaises habitudes</td>
+                <td>Absence de modèle positif, apprentissage par essais-erreurs</td>
+                <td>Prises de risque, non-respect des procédures</td>
+                <td>3 (Majeure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Buddy exemplaire, correction immédiate des écarts</td>
+            </tr>
+            <tr>
+                <td><strong>HUM 04.6</strong></td>
+                <td>Difficultés non détectées chez le nouveau</td>
+                <td>Absence de suivi rapproché, non-détection précoce</td>
+                <td>Aggravation des difficultés, accident</td>
+                <td>3 (Majeure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Observation continue, débriefings réguliers, alerte précoce</td>
+            </tr>
+            <tr>
+                <td><strong>FOR 01.1</strong></td>
+                <td>Formation trop théorique et déconnectée</td>
+                <td>Manque de pratique, absence de contextualisation</td>
+                <td>Incompréhension des enjeux terrain</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Apprentissage par l'action, immersion en double commande</td>
+            </tr>
+            <tr>
+                <td><strong>FOR 01.2</strong></td>
+                <td>Non-transmission des savoir-faire implicites</td>
+                <td>Connaissances tacites non formalisées, non-dites</td>
+                <td>Perte d'expertise, inefficacité</td>
+                <td>2 (Mineure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-green">VERT</td>
+                <td>Transmission orale, démonstration, commentaires en continu</td>
+            </tr>
+            <tr>
+                <td><strong>ACC 01.1</strong></td>
+                <td>Accidents chez les nouveaux conducteurs (<1 an)</td>
+                <td>Inexpérience, méconnaissance des risques, absence de repères</td>
+                <td>Accidents corporels et matériels</td>
+                <td>3 (Majeure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-red">ROUGE</td>
+                <td>Réduction ciblée de -30% à -50% grâce à l'accompagnement</td>
+            </tr>
+            <tr>
+                <td><strong>RH 01.1</strong></td>
+                <td>Turnover élevé des nouveaux</td>
+                <td>Mauvaise intégration, choc culturel, difficultés d'adaptation</td>
+                <td>Perte de compétences, coûts de recrutement</td>
+                <td>2 (Mineure)</td>
+                <td>A (Fréquent)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Réduction du turnover à 1 an de 25% à 15% (cible M36)</td>
+            </tr>
+            <tr>
+                <td><strong>RH 01.2</strong></td>
+                <td>Démotivation et usure des conducteurs expérimentés</td>
+                <td>Répétitivité des tâches, absence de reconnaissance</td>
+                <td>Baisse de vigilance, absentéisme</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Valorisation par le rôle de buddy, prime, reconnaissance</td>
+            </tr>
+            <tr>
+                <td><strong>ORG 02.1</strong></td>
+                <td>Absence de standardisation de l'accueil</td>
+                <td>Pratiques variables selon les entreprises, pas de cadre commun</td>
+                <td>Hétérogénéité des compétences, insécurité</td>
+                <td>2 (Mineure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-green">VERT</td>
+                <td>Livret de suivi standardisé, checklists communes</td>
+            </tr>
+            <tr>
+                <td><strong>BUD 01.1</strong></td>
+                <td>Buddy non exemplaire</td>
+                <td>Mauvaise sélection, absence de formation, désignation forcée</td>
+                <td>Transmission de mauvaises pratiques, risque accru</td>
+                <td>3 (Majeure)</td>
+                <td>D (Très rare)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Sélection rigoureuse (0 accident), formation 2 jours, audit</td>
+            </tr>
+            <tr>
+                <td><strong>BUD 01.2</strong></td>
+                <td>Buddy indisponible (pression production)</td>
+                <td>Manque de temps dédié, objectifs de production prioritaires</td>
+                <td>Dispositif virtuel, nouveau livré à lui-même</td>
+                <td>3 (Majeure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Engagement direction, 1h/semaine dédiée objectivée</td>
+            </tr>
+            <tr>
+                <td><strong>BUD 01.3</strong></td>
+                <td>Absence de vivier de buddies</td>
+                <td>Turnover des buddies, non-renouvellement</td>
+                <td>Dispositif à l'arrêt, nouveaux non accompagnés</td>
+                <td>2 (Mineure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-green">VERT</td>
+                <td>Formation continue, objectif 15% de buddies actifs</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <!-- Échelle de cotation -->
+    <h3>Échelle de cotation utilisée</h3>
+    
+    <div class="cotation-grid">
+        <div class="cotation-box">
+            <h4>Gravité</h4>
+            <ul>
+                <li><strong>1</strong> - Négligeable</li>
+                <li><strong>2</strong> - Mineure</li>
+                <li><strong>3</strong> - Majeure</li>
+                <li><strong>4</strong> - Catastrophique</li>
+            </ul>
+        </div>
+        <div class="cotation-box">
+            <h4>Probabilité</h4>
+            <ul>
+                <li><strong>A</strong> - Fréquent (quotidien)</li>
+                <li><strong>B</strong> - Occasionnel (hebdo/mensuel)</li>
+                <li><strong>C</strong> - Rare (annuel)</li>
+                <li><strong>D</strong> - Très rare (>1 an)</li>
+                <li><strong>E</strong> - Extrêmement rare (jamais observé)</li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 4. PROFIL ET SÉLECTION DES BUDDIES -->
+    <!-- ======================================================================== -->
+    <h1>4. PROFIL ET SÉLECTION DES BUDDIES</h1>
+    
+    <h2>4.1 Critères d'éligibilité</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Critère</th>
+                <th>Niveau requis</th>
+                <th>Pourquoi ?</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Ancienneté</td><td>> 5 ans sur le poste</td><td>Crédibilité, maturité</td></tr>
+            <tr><td>Discipline</td><td>0 accident responsable sur 3 ans</td><td>Exemplarité non négociable</td></tr>
+            <tr><td>Assiduité</td><td>< 3 jours d'absence/an</td><td>Disponibilité</td></tr>
+            <tr><td>Compétences pédagogiques</td><td>Formation tutorat obligatoire</td><td>Savoir transmettre</td></tr>
+            <tr><td>Aptitudes relationnelles</td><td>Évaluation manager</td><td>Patience, écoute</td></tr>
+            <tr><td>Volontariat</td><td>Oui (pas de désignation forcée)</td><td>Motivation intrinsèque</td></tr>
+        </tbody>
+    </table>
+    
+    <h2>4.2 Processus de sélection</h2>
+    
+    <table>
+        <tr>
+            <td style="background-color: #2c3e50; color: white; font-weight: bold; text-align: center;" colspan="2">
+                PROCESSUS DE SÉLECTION DES BUDDIES
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 25%; background-color: #3498db; color: white; text-align: center;">ÉTAPE 1</td>
+            <td><strong>Appel à candidatures</strong> - Communication interne, présentation en réunion d'équipe, valorisation du rôle</td>
+        </tr>
+        <tr>
+            <td style="background-color: #3498db; color: white; text-align: center;">ÉTAPE 2</td>
+            <td><strong>Pré-sélection</strong> - Vérification critères objectifs, entretien avec le manager</td>
+        </tr>
+        <tr>
+            <td style="background-color: #3498db; color: white; text-align: center;">ÉTAPE 3</td>
+            <td><strong>Formation</strong> - Module "Tuteur sécurité" (2 jours), validation des acquis</td>
+        </tr>
+        <tr>
+            <td style="background-color: #3498db; color: white; text-align: center;">ÉTAPE 4</td>
+            <td><strong>Habilitation</strong> - Inscription registre tuteurs, badge spécifique "BUDDY"</td>
+        </tr>
+    </table>
+    
+    <h2>4.3 Valorisation du rôle</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Type de reconnaissance</th>
+                <th>Proposition</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Financière</td><td>Prime de tutorat : 150€/mois pendant la durée du binôme</td></tr>
+            <tr><td>Statutaire</td><td>Badge distinctif, casquette "BUDDY"</td></tr>
+            <tr><td>Temps</td><td>1h/semaine dédiée au débriefing (hors production)</td></tr>
+            <tr><td>Formation</td><td>Accès prioritaire aux formations évolutives</td></tr>
+            <tr><td>Symbolique</td><td>Trophée "Buddy de l'année" - cérémonie annuelle CSCA</td></tr>
+        </tbody>
+    </table>
+    
+    <p><strong>Coût estimé par buddy :</strong> 150€/mois × 3 mois = 450€ par nouveau conducteur accompagné</p>
+    
+    <!-- ======================================================================== -->
+    <!-- 5. PARCOURS D'INTÉGRATION DU NOUVEL EMBAUCHÉ -->
+    <!-- ======================================================================== -->
+    <h1>5. PARCOURS D'INTÉGRATION DU NOUVEL EMBAUCHÉ</h1>
+    
+    <h2>5.1 Programme détaillé sur 3 mois</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Semaine</th>
+                <th>Phase</th>
+                <th>Activités buddy / nouveau</th>
+                <th>Objectifs</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>S1</td><td>Accueil</td><td>Visite complète plateforme, présentation aux équipes, explication des hotspots</td><td>Créer du lien, donner du sens</td></tr>
+            <tr><td>S2</td><td>Observation</td><td>Immersion en double commande, nouveau observe, buddy conduit, commentaire en continu</td><td>Comprendre les bonnes pratiques</td></tr>
+            <tr><td>S3-4</td><td>Imitation</td><td>Conduite supervisée, buddy observe, nouveau conduit, correction immédiate</td><td>Appliquer sous contrôle</td></tr>
+            <tr><td>S5-8</td><td>Autonomie progressive</td><td>Conduite solo + débriefing quotidien, points hebdomadaires formels</td><td>Gagner en confiance</td></tr>
+            <tr><td>S9-12</td><td>Consolidation</td><td>Conduite autonome, buddy disponible en appui, évaluation finale</td><td>Valider l'autonomie</td></tr>
+        </tbody>
+    </table>
+    
+    <h2>5.2 Livret de suivi buddy</h2>
+    
+    <div class="livret-buddy">
+        <div class="livret-header">LIVRET DE SUIVI BUDDY - CDG 2026</div>
+        <div class="livret-content">
+            <p><strong>NOUVEAU :</strong> [Nom] &nbsp;&nbsp;&nbsp; <strong>BUDDY :</strong> [Nom]</p>
+            <p><strong>Date début :</strong> __/__/____ &nbsp;&nbsp;&nbsp; <strong>Date fin :</strong> __/__/____</p>
+            <p>────────────────────────────────────</p>
+            <p><strong>OBJECTIFS DE LA SEMAINE (SEMAINE X) :</strong></p>
+            <p>1. _______________________________ [ ] Validé</p>
+            <p>2. _______________________________ [ ] Validé</p>
+            <p>3. _______________________________ [ ] Validé</p>
+            <p><strong>POINTS DE VIGILANCE :</strong></p>
+            <p>______________________________________</p>
+            <p><strong>DIFFICULTÉS RENCONTRÉES :</strong></p>
+            <p>______________________________________</p>
+            <p><strong>SIGNATURE NOUVEAU :</strong> ___________ <strong>BUDDY :</strong> ___________</p>
+        </div>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 6. FORMATION DES BUDDIES -->
+    <!-- ======================================================================== -->
+    <h1>6. FORMATION DES BUDDIES</h1>
+    
+    <h2>6.1 Programme de formation "Tuteur sécurité" (2 jours)</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Module</th>
+                <th>Contenu</th>
+                <th>Durée</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>1 - Rôle et posture</td><td>Mission du buddy, limites du rôle, éthique et exemplarité</td><td>3h</td></tr>
+            <tr><td>2 - Pédagogie pour adultes</td><td>Comment transmettre un savoir-faire, donner du feedback constructif, adapter son discours</td><td>4h</td></tr>
+            <tr><td>3 - Gestion de situations difficiles</td><td>Détecter un comportement à risque, aborder un problème sans braquer, quand alerter le manager</td><td>3h</td></tr>
+            <tr><td>4 - Outils et traçabilité</td><td>Utilisation du livret de suivi, évaluation des acquis, reporting au manager</td><td>2h</td></tr>
+            <tr><td>5 - Retours d'expérience</td><td>Témoignages de buddies expérimentés, études de cas</td><td>4h</td></tr>
+        </tbody>
+    </table>
+    
+    <p><strong>Validation :</strong> Quiz final (20 questions), mise en situation simulée<br>
+    <strong>Certificat :</strong> "Buddy - Tuteur sécurité"<br>
+    <strong>Coût formation :</strong> 800€/stagiaire</p>
+    
+    <!-- ======================================================================== -->
+    <!-- 7. BUDGET ESTIMÉ -->
+    <!-- ======================================================================== -->
+    <h1>7. BUDGET ESTIMÉ</h1>
+    
+    <h2>7.1 Coûts directs par nouveau conducteur (base 100 nouveaux/an)</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Poste</th>
+                <th>Coût unitaire</th>
+                <th>Quantité</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Prime buddy (3 mois)</td><td>150€/mois</td><td>100 × 3 mois</td><td>45 000€</td></tr>
+            <tr><td>Formation buddy (investissement)</td><td>800€</td><td>25 nouveaux buddies/an</td><td>20 000€</td></tr>
+            <tr><td>Livret de suivi</td><td>5€</td><td>100 exemplaires</td><td>500€</td></tr>
+            <tr><td>Badge/casquette</td><td>15€</td><td>100</td><td>1 500€</td></tr>
+        </tbody>
+    </table>
+    
+    <p><strong>Coût annuel variable :</strong> ~67 000€ (pour 100 nouveaux)</p>
+    
+    <h2>7.2 Coûts fixes mutualisables (CSCA)</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Poste</th>
+                <th>Coût</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Conception programme formation (AMO)</td><td>15 000€</td></tr>
+            <tr><td>Développement application suivi (option)</td><td>30 000€</td></tr>
+            <tr><td>Communication interne (campagne annuelle)</td><td>5 000€</td></tr>
+            <tr><td>Cérémonie "Buddy de l'année"</td><td>8 000€</td></tr>
+        </tbody>
+    </table>
+    
+    <p><strong>Coût fixe annuel mutualisé :</strong> ~58 000€</p>
+    
+    <h2>7.3 Économies potentielles</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Accident</th>
+                <th>Coût unitaire</th>
+                <th>Volume actuel (estimation)</th>
+                <th>Économie</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Matériel</td><td>15 000€</td><td>15 accidents/an</td><td>67 500€</td></tr>
+            <tr><td>Corporel</td><td>45 000€</td><td>8 accidents/an</td><td>108 000€</td></tr>
+        </tbody>
+    </table>
+    
+    <p><strong>Économie annuelle estimée :</strong> ~175 000€<br>
+    <strong>Retour sur investissement :</strong> 12-18 mois</p>
+    
+    <!-- ======================================================================== -->
+    <!-- 8. RISQUES ET MESURES DE MITIGATION -->
+    <!-- ======================================================================== -->
+    <h1>8. RISQUES ET MESURES DE MITIGATION</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Risque</th>
+                <th>Probabilité</th>
+                <th>Gravité</th>
+                <th>Plan d'action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Buddy non exemplaire malgré sélection</td><td>Moyenne</td><td>Critique</td><td>Audit aléatoire ; Signalement anonyme possible ; Retrait immédiat du dispositif</td></tr>
+            <tr><td>Buddy non disponible (pression production)</td><td>Élevée</td><td>Élevée</td><td>Engagement direction ; Objectivation du temps buddy (1h/semaine) ; Reporting au COMEX</td></tr>
+            <tr><td>Dérive du buddy vers rôle de contremaître</td><td>Moyenne</td><td>Modérée</td><td>Formation à la posture ; Supervision par manager ; Évaluation 360°</td></tr>
+            <tr><td>Nouveau rejette le dispositif</td><td>Faible</td><td>Modérée</td><td>Explication en amont ; Possibilité de changer de buddy ; Pas de caractère obligatoire</td></tr>
+            <tr><td>Turnover des buddies</td><td>Élevée</td><td>Modérée</td><td>Vivier élargi ; Formation continue ; Reconnaissance valorisante</td></tr>
+            <tr><td>Effet "club des anciens"</td><td>Faible</td><td>Faible</td><td>Rotation des binômes ; Mixité inter-entreprises possible</td></tr>
+        </tbody>
+    </table>
+    
+    <!-- ======================================================================== -->
+    <!-- 9. COMPARAISON AVEC DISPOSITIFS EXISTANTS -->
+    <!-- ======================================================================== -->
+    <h1>9. COMPARAISON AVEC DISPOSITIFS EXISTANTS</h1>
+    
+    <h2>9.1 Dans le transport aérien</h2>
+    <p><strong>Aéroport de Singapour (SIN) - "Buddy Program" :</strong> Existe depuis 2018, taux de rétention à 1 an : 92% (vs 78% avant), -45% d'incidents conducteurs < 1 an. Facteur clé : reconnaissance sociale forte (photo des buddies dans le hall d'honneur).</p>
+    <p><strong>Air France - "Marrainage" au sol :</strong> Dispositif informel, non structuré, dépendant des bonnes volontés individuelles, pas de formation des tuteurs, pas de mesure d'impact.</p>
+    
+    <h2>9.2 Hors secteur aérien</h2>
+    <p><strong>EDF - Nucléaire :</strong> Parrainage obligatoire (6 mois) pour tout nouvel intervenant, tuteur formé et certifié, <strong>0 accident grave</strong> depuis 12 ans chez les nouveaux parrainés. Facteur clé : exigence d'exemplarité absolue du tuteur.</p>
+    <p><strong>Armée française - Système du "parrain" :</strong> Intégration des jeunes appelés/engagés, transmission des "valeurs" autant que des compétences, lien durable au-delà de la période formelle.</p>
+    <p><strong>BTP - Compagnonnage :</strong> Modèle historique de transmission, 3 à 5 ans d'accompagnement, reconnaissance par les pairs.</p>
+    
+    <!-- ======================================================================== -->
+    <!-- 10. PROPOSITION DE DÉPLOIEMENT PAR PHASES -->
+    <!-- ======================================================================== -->
+    <h1>10. PROPOSITION DE DÉPLOIEMENT PAR PHASES</h1>
+    
+    <h2>Phase 1 - Pilote (3 mois)</h2>
+    <p><strong>Périmètre :</strong> 1 entreprise volontaire, 1 catégorie d'engin (PUSH ou LOADER), 5 binômes</p>
+    <ul>
+        <li>Sélection entreprise pilote</li>
+        <li>Appel à candidature buddies (10 volontaires)</li>
+        <li>Formation des buddies (2 jours)</li>
+        <li>Constitution des 5 premiers binômes</li>
+        <li>Suivi hebdomadaire par l'équipe projet</li>
+        <li>Évaluation intermédiaire</li>
+    </ul>
+    
+    <h2>Phase 2 - Extension (6 mois)</h2>
+    <p><strong>Périmètre :</strong> Extension à 2-3 entreprises, toutes catégories d'engins critiques</p>
+    <ul>
+        <li>Retour d'expérience pilote</li>
+        <li>Ajustement dispositif (barème prime, contenu formation)</li>
+        <li>Recrutement et formation 50 buddies</li>
+        <li>Déploiement sur 50 binômes</li>
+        <li>Développement application suivi (optionnel)</li>
+        <li>Campagne de communication interne</li>
+    </ul>
+    
+    <h2>Phase 3 - Généralisation (12 mois)</h2>
+    <p><strong>Périmètre :</strong> Toutes entreprises signataires CSCA, plateformes CDG/Orly/province</p>
+    <ul>
+        <li>Généralisation à CDG</li>
+        <li>Extension à Orly</li>
+        <li>Extension aux aéroports de province</li>
+        <li>Intégration au référentiel CSCE</li>
+        <li>Évaluation d'impact à 2 ans</li>
+    </ul>
+    
+    <!-- ======================================================================== -->
+    <!-- 11. INDICATEURS DE SUIVI -->
+    <!-- ======================================================================== -->
+    <h1>11. INDICATEURS DE SUIVI</h1>
+    
+    <h2>11.1 Indicateurs de processus</h2>
+    
+    <div class="indicator-box">
+        <div class="indicator-item">
+            <strong>% nouveaux embauchés avec buddy</strong>
+            <span>Cible M12 : 50% | Cible M24 : 100%</span>
+        </div>
+        <div class="indicator-item">
+            <strong>% buddies formés</strong>
+            <span>Cible M12 : 80% | Cible M24 : 100%</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Durée moyenne accompagnement</strong>
+            <span>Cible M12 : 8 semaines | Cible M24 : 12 semaines</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Satisfaction nouveaux</strong>
+            <span>Cible M12 : 4,0/5 | Cible M24 : 4,5/5</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Satisfaction buddies</strong>
+            <span>Cible M12 : 3,5/5 | Cible M24 : 4,0/5</span>
+        </div>
+    </div>
+    
+    <h2>11.2 Indicateurs d'impact</h2>
+    
+    <div class="indicator-box">
+        <div class="indicator-item">
+            <strong>Accidents - conducteurs < 1 an</strong>
+            <span>Baseline 2025 : 15/an | Cible M24 : -30% | Cible M36 : -50%</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Accidents corporels - nouveaux</strong>
+            <span>Baseline 2025 : 5/an | Cible M24 : -40% | Cible M36 : -60%</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Turnover à 1 an</strong>
+            <span>Baseline 2025 : 25% | Cible M24 : 20% | Cible M36 : 15%</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Délai d'autonomie complète</strong>
+            <span>Baseline 2025 : 6 mois | Cible M24 : 4 mois | Cible M36 : 3 mois</span>
+        </div>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 12. SYNTHÈSE - AVANTAGES COMPARATIFS -->
+    <!-- ======================================================================== -->
+    <h1>12. SYNTHÈSE - AVANTAGES COMPARATIFS</h1>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 15px 0;">
+        <div style="border: 1px solid #ddd; padding: 10px; background-color: #f9f9f9;">
+            <h4 style="color: #e67e22;">Pour le nouvel embauché</h4>
+            <ul>
+                <li>Intégration accélérée</li>
+                <li>Référent unique et bienveillant</li>
+                <li>Transmission des "secrets du métier"</li>
+                <li>Confiance en soi renforcée</li>
+            </ul>
+        </div>
+        <div style="border: 1px solid #ddd; padding: 10px; background-color: #f9f9f9;">
+            <h4 style="color: #e67e22;">Pour le buddy (ancien)</h4>
+            <ul>
+                <li>Valorisation de l'expérience</li>
+                <li>Transmission de son savoir</li>
+                <li>Reconnaissance institutionnelle</li>
+                <li>Sens renouvelé au travail</li>
+            </ul>
+        </div>
+        <div style="border: 1px solid #ddd; padding: 10px; background-color: #f9f9f9;">
+            <h4 style="color: #e67e22;">Pour l'entreprise</h4>
+            <ul>
+                <li>Acculturation sécurité dès l'arrivée</li>
+                <li>Détection précoce des difficultés</li>
+                <li>Cohésion intergénérationnelle</li>
+                <li>Réduction accidents et turnover</li>
+            </ul>
+        </div>
+        <div style="border: 1px solid #ddd; padding: 10px; background-color: #f9f9f9;">
+            <h4 style="color: #e67e22;">Pour la plateforme</h4>
+            <ul>
+                <li>Harmonisation des pratiques</li>
+                <li>Culture sécurité partagée</li>
+                <li>Exemplarité visible</li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 13. CONDITIONS DE RÉUSSITE -->
+    <!-- ======================================================================== -->
+    <h1>13. CONDITIONS DE RÉUSSITE</h1>
+    
+    <h2>Facteurs clés de succès</h2>
+    <ol>
+        <li><strong>Exemplarité absolue des buddies</strong> → Un buddy qui commet une infraction est retiré immédiatement</li>
+        <li><strong>Engagement direction</strong> → Le temps buddy doit être objectivé et protégé</li>
+        <li><strong>Reconnaissance tangible</strong> → Prime et visibilité (pas seulement symbolique)</li>
+        <li><strong>Formation solide</strong> → On ne naît pas tuteur, on le devient</li>
+        <li><strong>Suivi dans la durée</strong> → Ne pas abandonner le nouveau après les 3 mois</li>
+        <li><strong>Évaluation continue</strong> → Mesurer pour améliorer</li>
+    </ol>
+    
+    <h2>Pièges à éviter</h2>
+    <ol>
+        <li>Désigner des buddies sans formation → Contre-productif</li>
+        <li>Choisir des buddies uniquement sur l'ancienneté → L'exemplarité prime</li>
+        <li>Ne pas libérer de temps → Le dispositif devient virtuel</li>
+        <li>Oublier la reconnaissance → Le bénévolat s'essouffle</li>
+        <li>Sanctuariser le dispositif → Doit évoluer avec les retours terrain</li>
+    </ol>
+    
+    <!-- ======================================================================== -->
+    <!-- 14. EN RÉSUMÉ -->
+    <!-- ======================================================================== -->
+    <h1>14. EN RÉSUMÉ</h1>
+    
+    <div class="encadre">
+        <p style="font-size: 12pt; font-style: italic;">
+            Nous avons perdu une génération de conducteurs expérimentés. Nous formons techniquement les nouveaux, 
+            mais nous ne leur transmettons plus la culture sécurité. Le buddy system n'est pas une option, c'est une 
+            nécessité pour recréer le lien entre générations et éviter que les erreurs du passé ne se répètent.
+        </p>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 15. CE QUE NOUS PROPOSONS CONCRÈTEMENT -->
+    <!-- ======================================================================== -->
+    <h1>15. CE QUE NOUS PROPOSONS CONCRÈTEMENT</h1>
+    
+    <ol style="font-weight: bold; font-size: 12pt;">
+        <li>Lancer un pilote immédiat avec une entreprise volontaire (Air France / G3S)</li>
+        <li>Identifier 5 à 10 buddies potentiels et les former dès mars 2026</li>
+        <li>Constituer les premiers binômes et les suivre pendant 3 mois</li>
+        <li>Mesurer l'impact sur la satisfaction, la confiance et les comportements</li>
+    </ol>
+    
+    <!-- Pied de page -->
+    <div class="footer">
+        <p>PISTE 4 - Buddy System et parrainage | Version 1.0 | Mars 2026 | CDG - CSCA</p>
+    </div>
+</body>
+</html>

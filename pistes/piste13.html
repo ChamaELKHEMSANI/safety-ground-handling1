@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PISTE 13 - Management Visuel de la Sécurité</title>
+    <style>
+        /* Styles généraux pour l'impression */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            line-height: 1.5;
+            color: #333;
+            background-color: white;
+            font-size: 10.5pt;
+            margin: 0;
+            padding: 15px;
+        }
+        
+        /* Styles pour l'impression PDF */
+        @media print {
+            body {
+                padding: 0.5cm;
+            }
+            .page-break {
+                page-break-before: always;
+            }
+            .no-break {
+                page-break-inside: avoid;
+            }
+            h1, h2, h3, h4 {
+                page-break-after: avoid;
+            }
+            table {
+                page-break-inside: avoid;
+            }
+        }
+        
+        /* En-tête du document */
+        .document-header {
+            border-bottom: 3px solid #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+        
+        .document-title {
+            font-size: 24pt;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .document-subtitle {
+            font-size: 14pt;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+        
+        .document-meta {
+            text-align: right;
+            color: #7f8c8d;
+            font-size: 10pt;
+        }
+        
+        .tagline {
+            background-color: #ecf0f1;
+            padding: 8px 15px;
+            border-left: 5px solid #e67e22;
+            margin-bottom: 20px;
+            font-weight: bold;
+            font-size: 12pt;
+        }
+        
+        /* Typographie */
+        h1 {
+            font-size: 18pt;
+            color: #2c3e50;
+            margin: 25px 0 10px 0;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #bdc3c7;
+        }
+        
+        h2 {
+            font-size: 14pt;
+            color: #34495e;
+            margin: 20px 0 10px 0;
+            padding-left: 5px;
+            border-left: 4px solid #e67e22;
+        }
+        
+        h3 {
+            font-size: 12pt;
+            color: #555;
+            margin: 15px 0 8px 0;
+            font-weight: bold;
+        }
+        
+        h4 {
+            font-size: 11pt;
+            color: #666;
+            margin: 12px 0 5px 0;
+            font-weight: bold;
+        }
+        
+        p {
+            margin-bottom: 8px;
+            text-align: justify;
+        }
+        
+        ul, ol {
+            margin: 8px 0 12px 25px;
+        }
+        
+        li {
+            margin-bottom: 3px;
+        }
+        
+        /* Boîtes d'information */
+        .encadre {
+            border: 1px solid #bdc3c7;
+            padding: 12px;
+            background-color: #f9f9f9;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        
+        .important {
+            background-color: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 8px 12px;
+            margin: 12px 0;
+        }
+        
+        .hypothese {
+            background-color: #d4edda;
+            border-left: 5px solid #28a745;
+            padding: 8px 12px;
+            margin: 12px 0;
+            font-style: italic;
+        }
+        
+        /* Tableaux */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0 18px 0;
+            font-size: 9.5pt;
+        }
+        
+        th {
+            background-color: #2c3e50;
+            color: white;
+            font-weight: bold;
+            padding: 6px 4px;
+            text-align: left;
+            border: 1px solid #34495e;
+        }
+        
+        td {
+            padding: 5px 4px;
+            border: 1px solid #ddd;
+            vertical-align: top;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        /* Tableau de cartographie des risques avec couleurs */
+        .risk-table td:nth-child(7) {
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-orange {
+            background-color: #FFA500 !important;
+            color: black;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-red {
+            background-color: #FF0000 !important;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-yellow {
+            background-color: #FFFF00 !important;
+            color: black;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-green {
+            background-color: #008000 !important;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        /* Grille de cotation */
+        .cotation-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 12px 0;
+        }
+        
+        .cotation-box {
+            border: 1px solid #ddd;
+            padding: 8px;
+            background-color: #f9f9f9;
+        }
+        
+        .cotation-box h4 {
+            background-color: #2c3e50;
+            color: white;
+            padding: 4px 8px;
+            margin: -8px -8px 8px -8px;
+            font-size: 11pt;
+        }
+        
+        /* Pied de page */
+        .footer {
+            margin-top: 25px;
+            padding-top: 8px;
+            border-top: 1px solid #bdc3c7;
+            font-size: 9pt;
+            color: #7f8c8d;
+            text-align: center;
+        }
+        
+        .page-break {
+            page-break-before: always;
+        }
+        
+        /* Indicateurs */
+        .indicator-box {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 12px 0;
+        }
+        
+        .indicator-item {
+            flex: 1 1 200px;
+            background-color: #ecf0f1;
+            padding: 8px;
+            border-radius: 5px;
+            border-left: 4px solid #e67e22;
+        }
+        
+        .indicator-item strong {
+            display: block;
+            font-size: 10.5pt;
+            color: #2c3e50;
+        }
+        
+        .indicator-item span {
+            font-size: 9pt;
+            color: #555;
+        }
+        
+        /* Légende des couleurs */
+        .color-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 12px 0;
+            padding: 8px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .color-box {
+            width: 20px;
+            height: 20px;
+            border: 1px solid #333;
+        }
+        
+        /* Texte centré */
+        .text-center {
+            text-align: center;
+        }
+        
+        /* Badge */
+        .badge {
+            background-color: #e67e22;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 9pt;
+            font-weight: bold;
+            display: inline-block;
+        }
+        
+        /* Simulation de tableau visuel */
+        .tableau-visuel {
+            border: 3px solid #2c3e50;
+            border-radius: 5px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            margin: 15px 0;
+        }
+        
+        .tableau-header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 8px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 14pt;
+            margin: -15px -15px 15px -15px;
+            border-radius: 5px 5px 0 0;
+        }
+        
+        .tableau-section {
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            background-color: white;
+        }
+        
+        .progress-bar {
+            height: 25px;
+            background-color: #2ecc71;
+            color: white;
+            text-align: center;
+            line-height: 25px;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+        
+        .indicator-line {
+            display: flex;
+            align-items: center;
+            margin: 5px 0;
+        }
+        
+        .indicator-label {
+            width: 200px;
+            font-weight: bold;
+        }
+        
+        .indicator-value {
+            margin-left: 10px;
+        }
+        
+        .hero-box {
+            background-color: #f1c40f;
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <!-- En-tête du document -->
+    <div class="document-header">
+        <div>
+            <div class="document-title">PISTE 13</div>
+            <div class="document-subtitle">Management Visuel de la Sécurité</div>
+        </div>
+        <div class="document-meta">
+            <div>Version 1.0</div>
+            <div>Mars 2026</div>
+            <div>CDG - CSCA</div>
+        </div>
+    </div>
+    
+    <!-- Tagline -->
+    <div class="tagline">
+        RENDRE VISIBLE L'INVISIBLE
+    </div>
+    
+    <!-- Description -->
+    <p style="font-size: 11pt; font-weight: bold; text-align: center; margin: 20px 0;">
+        Tableaux physiques et numériques affichant en temps réel les indicateurs sécurité.
+    </p>
+    
+    <p>
+        La sécurité souffre d'un paradoxe fondamental : elle est aujourd'hui largement invisible. Ce qui est visible, c'est l'accident, 
+        la sanction, la panne. Ce qui reste invisible, ce sont les 365 jours sans accident, le conducteur exemplaire, la maintenance préventive, 
+        le near-miss évité. Seule l'erreur est visible, ce qui associe la sécurité à la sanction dans l'esprit des équipes. Les bons comportements 
+        sont ignorés, faute de reconnaissance. Les indicateurs, abstraits ("notre taux de fréquence est de 8,7"), ne parlent à personne. 
+        La treizième piste propose de renverser cette logique en rendant visible ce qui compte vraiment.
+    </p>
+    
+    <!-- ======================================================================== -->
+    <!-- 1. PROBLÉMATIQUE ADRESSÉE -->
+    <!-- ======================================================================== -->
+    <h1>1. PROBLÉMATIQUE ADRESSÉE</h1>
+    
+    <p><strong>Constat fondamental :</strong> La sécurité est aujourd'hui <strong>invisible</strong>.</p>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Ce qui est visible</th>
+                <th>Ce qui est invisible</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>• L'accident</td><td>• 365 jours sans accident</td></tr>
+            <tr><td>• La sanction</td><td>• Le conducteur exemplaire</td></tr>
+            <tr><td>• La panne</td><td>• La maintenance préventive</td></tr>
+            <tr><td>• Le retard</td><td>• L'anticipation</td></tr>
+            <tr><td>• L'incident</td><td>• Le near-miss évité</td></tr>
+        </tbody>
+    </table>
+    
+    <p><strong>Conséquences :</strong></p>
+    <ul>
+        <li><strong>Seule l'erreur est visible</strong> → La sécurité est associée à la sanction</li>
+        <li><strong>Les bons comportements sont ignorés</strong> → Pas de reconnaissance, pas de motivation</li>
+        <li><strong>Les indicateurs sont abstraits</strong> → "Notre taux de fréquence est de 8,7" → personne ne comprend</li>
+        <li><strong>Les objectifs sont flous</strong> → "Il faut être plus sûr" → comment ?</li>
+        <li><strong>Le progrès est imperceptible</strong> → On ne voit pas le chemin parcouru</li>
+    </ul>
+    
+    <div class="hypothese">
+        <strong>Notre hypothèse :</strong> 
+        <p><strong>Ce qui est visible est discuté. Ce qui est discuté est amélioré. Ce qui est amélioré est valorisé.</strong></p>
+        <p>Le management visuel transforme la sécurité, qui était une <strong>contrainte abstraite</strong>, en un <strong>défi collectif concret</strong>.</p>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 2. CARTOGRAPHIE DES RISQUES (MISE À JOUR POUR PISTE 13) -->
+    <!-- ======================================================================== -->
+    <h1>2. CARTOGRAPHIE DES RISQUES</h1>
+    
+    <!-- Légende des couleurs -->
+    <div class="color-legend">
+        <div class="legend-item"><div class="color-box" style="background-color: #FF0000;"></div> <strong>Rouge</strong> - Risque très élevé (intolérable)</div>
+        <div class="legend-item"><div class="color-box" style="background-color: #FFA500;"></div> <strong>Orange</strong> - Risque élevé (actions nécessaires)</div>
+        <div class="legend-item"><div class="color-box" style="background-color: #FFFF00;"></div> <strong>Jaune</strong> - Risque moyen (tolérable)</div>
+        <div class="legend-item"><div class="color-box" style="background-color: #008000;"></div> <strong>Vert</strong> - Risque faible (acceptable)</div>
+    </div>
+    
+    <table class="risk-table">
+        <thead>
+            <tr>
+                <th>Réf.</th>
+                <th>Danger</th>
+                <th>Causes</th>
+                <th>Conséquences</th>
+                <th>Gravité</th>
+                <th>Probabilité</th>
+                <th>Criticité</th>
+                <th>Barrières Piste 13</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>VIS 01.1</strong></td>
+                <td>Invisibilité des comportements vertueux</td>
+                <td>Absence de suivi, pas de valorisation des bons comportements</td>
+                <td>Démotivation, perte de sens, baisse d'engagement</td>
+                <td>2 (Mineure)</td>
+                <td>A (Fréquent)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Affichage des indicateurs positifs, "héros du mois", reconnaissance</td>
+            </tr>
+            <tr>
+                <td><strong>VIS 01.2</strong></td>
+                <td>Non-reconnaissance des efforts quotidiens</td>
+                <td>Pas de feedback positif, absence de célébration des succès</td>
+                <td>Sentiment d'inutilité, turnover</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Mise en lumière des contributeurs, valorisation collective</td>
+            </tr>
+            <tr>
+                <td><strong>VIS 02.1</strong></td>
+                <td>Incompréhension des objectifs sécurité</td>
+                <td>Indicateurs abstraits, jargon technique, absence de visualisation</td>
+                <td>Objectifs non partagés, efforts dispersés</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Jauges visuelles, code couleur, pictogrammes, langage simple</td>
+            </tr>
+            <tr>
+                <td><strong>VIS 02.2</strong></td>
+                <td>Manque de visibilité sur la progression collective</td>
+                <td>Pas de suivi partagé, chacun ignore la performance de l'équipe</td>
+                <td>Absence de cohésion, pas d'émulation</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Compteur jours sans accident, indicateurs collectifs</td>
+            </tr>
+            <tr>
+                <td><strong>VIS 03.1</strong></td>
+                <td>Absence de défi collectif</td>
+                <td>Pas d'objectif commun mobilisateur, routine</td>
+                <td>Engagement en berne, absence de dynamique d'équipe</td>
+                <td>1 (Négligeable)</td>
+                <td>C (Rare)</td>
+                <td class="risk-green">VERT</td>
+                <td>Défi hebdomadaire, objectif collectif, barre de progression</td>
+            </tr>
+            <tr>
+                <td><strong>VIS 03.2</strong></td>
+                <td>Absence d'alerte sur les points de vigilance</td>
+                <td>Informations critiques noyées, pas de rappel visuel</td>
+                <td>Oubli, négligence, incidents évitables</td>
+                <td>2 (Mineure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Zone d'alertes sur le tableau, rappels visuels</td>
+            </tr>
+            <tr>
+                <td><strong>CUL 01.1</strong></td>
+                <td>Culture de sanction plutôt que de valorisation</td>
+                <td>Focalisation sur les erreurs, absence de feedback positif</td>
+                <td>Climat social dégradé, peur de l'erreur</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Mise en avant des succès, équilibre positif/négatif</td>
+            </tr>
+            <tr>
+                <td><strong>CUL 01.2</strong></td>
+                <td>Absence de fierté d'appartenance</td>
+                <td>Pas de visibilité sur la performance collective, anonymat</td>
+                <td>Désengagement, turnover</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Photo des équipes, célébration des réussites</td>
+            </tr>
+            <tr>
+                <td><strong>COM 01.1</strong></td>
+                <td>Sous-déclaration des near-miss</td>
+                <td>Pas de valorisation du signalement, absence de feedback</td>
+                <td>Perte d'information, prévention inefficace</td>
+                <td>3 (Majeure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-red">ROUGE</td>
+                <td>Affichage du nombre de signalements, valorisation des contributeurs</td>
+            </tr>
+            <tr>
+                <td><strong>COM 01.2</strong></td>
+                <td>Méconnaissance des progrès réalisés</td>
+                <td>Pas de suivi historique, pas de visualisation de l'amélioration</td>
+                <td>Démotivation, impression de stagner</td>
+                <td>1 (Négligeable)</td>
+                <td>C (Rare)</td>
+                <td class="risk-green">VERT</td>
+                <td>Comparaison mois précédent, tendances visuelles</td>
+            </tr>
+            <tr>
+                <td><strong>MAN 01.1</strong></td>
+                <td>Animation sécurité insuffisante des managers</td>
+                <td>Manque de temps, absence d'outils, pas de méthode</td>
+                <td>Réunions inefficaces, équipes non mobilisées</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Formation des managers, rituels structurés, tableau support</td>
+            </tr>
+            <tr>
+                <td><strong>ORG 01.1</strong></td>
+                <td>Absence de standardisation du suivi sécurité</td>
+                <td>Pratiques variables selon les équipes, pas de vision consolidée</td>
+                <td>Inégalité de traitement, difficulté de pilotage</td>
+                <td>2 (Mineure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-green">VERT</td>
+                <td>Dashboard numérique consolidé, indicateurs communs</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <!-- Échelle de cotation -->
+    <h3>Échelle de cotation utilisée</h3>
+    
+    <div class="cotation-grid">
+        <div class="cotation-box">
+            <h4>Gravité</h4>
+            <ul>
+                <li><strong>1</strong> - Négligeable</li>
+                <li><strong>2</strong> - Mineure</li>
+                <li><strong>3</strong> - Majeure</li>
+                <li><strong>4</strong> - Catastrophique</li>
+            </ul>
+        </div>
+        <div class="cotation-box">
+            <h4>Probabilité</h4>
+            <ul>
+                <li><strong>A</strong> - Fréquent (quotidien)</li>
+                <li><strong>B</strong> - Occasionnel (hebdo/mensuel)</li>
+                <li><strong>C</strong> - Rare (annuel)</li>
+                <li><strong>D</strong> - Très rare (>1 an)</li>
+                <li><strong>E</strong> - Extrêmement rare (jamais observé)</li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 3. CONCEPT D'ENSEMBLE -->
+    <!-- ======================================================================== -->
+    <h1>3. CONCEPT D'ENSEMBLE</h1>
+    
+    <table>
+        <tr>
+            <td style="width: 33%; background-color: #3498db; color: white; text-align: center; padding: 10px;">
+                <strong>TABLEAU PHYSIQUE</strong>
+            </td>
+            <td style="width: 34%; background-color: #e67e22; color: white; text-align: center; padding: 10px;">
+                <strong>DASHBOARD NUMÉRIQUE</strong>
+            </td>
+            <td style="width: 33%; background-color: #2c3e50; color: white; text-align: center; padding: 10px;">
+                <strong>APPLICATION MOBILE (P3)</strong>
+            </td>
+        </tr>
+        <tr>
+            <td>Vestiaires/salles pause<br>Mise à jour hebdo<br>Visible par tous</td>
+            <td>Écrans dynamiques<br>Temps réel<br>Données consolidées</td>
+            <td>Version personnelle<br>Notifications/défis<br>Progression individuelle</td>
+        </tr>
+    </table>
+    
+    <!-- ======================================================================== -->
+    <!-- 4. LE TABLEAU PHYSIQUE -->
+    <!-- ======================================================================== -->
+    <h1>4. LE TABLEAU PHYSIQUE - MODÈLE CIBLE</h1>
+    
+    <div class="tableau-visuel">
+        <div class="tableau-header">TABLEAU SÉCURITÉ - ÉQUIPE ALPHA - SEMAINE 8 - 2026</div>
+        
+        <div class="tableau-section">
+            <strong>🟢 JOURS SANS ACCIDENT</strong>
+            <div class="progress-bar" style="width: 100%;">45 jours</div>
+        </div>
+        
+        <div class="tableau-section">
+            <strong>📊 NOS INDICATEURS CLÉS</strong>
+            <div class="indicator-line">
+                <span class="indicator-label">Signalements near-miss :</span>
+                <span class="indicator-value">12 ▲ +3 (Objectif: 15 )</span>
+            </div>
+            <div class="indicator-line">
+                <span class="indicator-label">Conducteurs formés VR :</span>
+                <span class="indicator-value">18/24 [████████░░] 75%</span>
+            </div>
+            <div class="indicator-line">
+                <span class="indicator-label">Permis à points moyen :</span>
+                <span class="indicator-value">10,2/12 [████████░░]</span>
+            </div>
+            <div class="indicator-line">
+                <span class="indicator-label">Badges "Œil de lynx" :</span>
+                <span class="indicator-value">🦅🦅🦅🦅🦅🦅🦅 (7)</span>
+            </div>
+            <div class="indicator-line">
+                <span class="indicator-label">Visites sécurité :</span>
+                <span class="indicator-value">3/4 [███████░░░] 75%</span>
+            </div>
+        </div>
+        
+        <div class="tableau-section">
+            <strong>🏆 NOTRE DÉFI SEMAINE</strong>
+            <p>"OPÉRATION ANGLE MORT"</p>
+            <p>Objectif : 20 vérifications signalées</p>
+            <div class="progress-bar" style="width: 60%; background-color: #f39c12;">12/20 (60%)</div>
+            <p>▶ À 8 vérifications du succès !</p>
+        </div>
+        
+        <div class="tableau-section">
+            <strong>⚠️ NOS ALERTES</strong>
+            <ul>
+                <li>Zone Fret Nord : 2 excès vitesse cette semaine (rappel)</li>
+                <li>Éthylotest anti-démarrage : 100% conformité </li>
+                <li>Nouvel embauché : Thomas - Buddy : Marc (J+15)</li>
+            </ul>
+        </div>
+        
+        <div class="hero-box">
+            🌟 FÉLICITATIONS À THOMAS D. !<br>
+            3 signalements, 0 incident - Badge "Œil de lynx" débloqué !
+        </div>
+    </div>
+    
+    <h2>4.3 Les 5 zones fonctionnelles</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Zone</th>
+                <th>Contenu</th>
+                <th>Fréquence mise à jour</th>
+                <th>Responsable</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>1. Compteur</td><td>Jours sans accident</td><td>Quotidienne</td><td>Manager</td></tr>
+            <tr><td>2. Indicateurs</td><td>KPIs sécurité (graphiques)</td><td>Hebdomadaire</td><td>Relais sécurité</td></tr>
+            <tr><td>3. Défi</td><td>Objectif collectif du moment</td><td>Hebdomadaire</td><td>Équipe</td></tr>
+            <tr><td>4. Alertes</td><td>Points de vigilance, rappels</td><td>Hebdomadaire</td><td>Manager</td></tr>
+            <tr><td>5. Reconnaissance</td><td>Héros du mois, badges</td><td>Mensuelle</td><td>Tous</td></tr>
+        </tbody>
+    </table>
+    
+    <!-- ======================================================================== -->
+    <!-- 5. INDICATEURS VISUELS -->
+    <!-- ======================================================================== -->
+    <h1>5. INDICATEURS VISUELS - SÉMIOLOGIE GRAPHIQUE</h1>
+    
+    <h2>5.1 Code couleur universel</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Couleur</th>
+                <th>Signification</th>
+                <th>Utilisation</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td style="background-color: #008000; color: white;">🟢 Vert</td><td>Objectif atteint, situation favorable</td><td>Jours sans accident, cibles dépassées</td></tr>
+            <tr><td style="background-color: #FFFF00;">🟡 Jaune</td><td>Attention, proche de l'objectif</td><td>Indicateurs en légère baisse</td></tr>
+            <tr><td style="background-color: #FFA500;">🟠 Orange</td><td>Dégradation, action requise</td><td>Retard sur objectif</td></tr>
+            <tr><td style="background-color: #FF0000; color: white;">🔴 Rouge</td><td>Alerte, situation critique</td><td>Accident, non-conformité grave</td></tr>
+        </tbody>
+    </table>
+    
+    <h2>5.2 Pictogrammes</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Indicateur</th>
+                <th>Picto</th>
+                <th>Effet</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Accident</td><td>⚠️</td><td>Alerte</td></tr>
+            <tr><td>Near-miss</td><td>👁️</td><td>Vigilance</td></tr>
+            <tr><td>Formation</td><td>🎓</td><td>Progression</td></tr>
+            <tr><td>Badge</td><td>🏅</td><td>Fierté</td></tr>
+            <tr><td>Buddy</td><td>🤝</td><td>Transmission</td></tr>
+            <tr><td>Initiative</td><td>💡</td><td>Innovation</td></tr>
+        </tbody>
+    </table>
+    
+    <!-- ======================================================================== -->
+    <!-- 6. BUDGET -->
+    <!-- ======================================================================== -->
+    <h1>6. BUDGET</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Phase</th>
+                <th>Actions</th>
+                <th>Coût</th>
+                <th>Livrable</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>Phase 1 - Pilote</strong></td><td>1 équipe, co-conception, tableau, formation, expérimentation 8 semaines</td><td>4,5 k€</td><td>Retour d'expérience + modèle standardisé</td></tr>
+            <tr><td><strong>Phase 2 - Déploiement CDG</strong></td><td>50 tableaux, formation managers, écrans dynamiques, communication</td><td>53 k€</td><td>50 équipes équipées</td></tr>
+            <tr><td><strong>Phase 3 - Généralisation</strong></td><td>Généralisation CDG, Orly, province, dashboard temps réel</td><td>140 k€</td><td>Dispositif pérenne</td></tr>
+            <tr><td><strong>TOTAL 3 ANS</strong></td><td></td><td><strong>197,5 k€</strong></td><td></td></tr>
+        </tbody>
+    </table>
+    
+    <p><strong>Coût par équipe (régime permanent) :</strong> Tableau physique : 300 € (investissement) + 50 €/an (consommables) - Animation : 15 min/semaine</p>
+    
+    <!-- ======================================================================== -->
+    <!-- 7. BÉNÉFICES ATTENDUS -->
+    <!-- ======================================================================== -->
+    <h1>7. BÉNÉFICES ATTENDUS</h1>
+    
+    <h2>7.1 Bénéfices mesurables</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Indicateur</th>
+                <th>Baseline</th>
+                <th>Cible M12</th>
+                <th>Cible M24</th>
+                <th>Cible M36</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Connaissance des objectifs sécurité</td><td>35%</td><td>70%</td><td>85%</td><td>95%</td></tr>
+            <tr><td>Satisfaction sur la reconnaissance</td><td>22%</td><td>50%</td><td>70%</td><td>80%</td></tr>
+            <tr><td>Signalements near-miss</td><td>50/an</td><td>+30%</td><td>+60%</td><td>+100%</td></tr>
+            <tr><td>Participation aux défis sécurité</td><td>-</td><td>40%</td><td>60%</td><td>75%</td></tr>
+            <tr><td>Accidents (effet indirect)</td><td>-</td><td>-5%</td><td>-10%</td><td>-15%</td></tr>
+        </tbody>
+    </table>
+    
+    <!-- ======================================================================== -->
+    <!-- 8. RISQUES ET MESURES DE MITIGATION -->
+    <!-- ======================================================================== -->
+    <h1>8. RISQUES ET MESURES DE MITIGATION</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Risque</th>
+                <th>Probabilité</th>
+                <th>Gravité</th>
+                <th>Plan d'action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Effet "vitrine" (tableau décoratif, non animé)</td><td>Élevée</td><td>Élevée</td><td>Formation obligatoire des managers, audit aléatoire, lien avec évaluation</td></tr>
+            <tr><td>Compétition malsaine</td><td>Moyenne</td><td>Modérée</td><td>Pondération collective, valorisation progression, catégories multiples</td></tr>
+            <tr><td>Lassitude (effet "novice")</td><td>Élevée</td><td>Modérée</td><td>Rotation défis (3 semaines), évolution design, événements spéciaux</td></tr>
+            <tr><td>Charge de travail (mise à jour)</td><td>Moyenne</td><td>Faible</td><td>Processus simplifié (15 min/semaine), modèles pré-formatés</td></tr>
+            <tr><td>Iniquité (petites vs grandes équipes)</td><td>Faible</td><td>Faible</td><td>Indicateurs proportionnels, catégories par taille</td></tr>
+        </tbody>
+    </table>
+    
+    <!-- ======================================================================== -->
+    <!-- 9. INDICATEURS DE SUIVI -->
+    <!-- ======================================================================== -->
+    <h1>9. INDICATEURS DE SUIVI</h1>
+    
+    <div class="indicator-box">
+        <div class="indicator-item">
+            <strong>Équipes équipées</strong>
+            <span>Cible M12: 1 pilote | M24: 50 | M36: 100</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Managers formés</strong>
+            <span>Cible M12: 1 | M24: 50 | M36: 100</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Connaissance objectifs sécurité</strong>
+            <span>Baseline: 35% | Cible M24: 85% | M36: 95%</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Satisfaction reconnaissance</strong>
+            <span>Baseline: 22% | Cible M24: 70% | M36: 80%</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Signalements near-miss</strong>
+            <span>Baseline: 50/an | Cible M24: +60% | M36: +100%</span>
+        </div>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 10. EN RÉSUMÉ -->
+    <!-- ======================================================================== -->
+    <h1>10. EN RÉSUMÉ</h1>
+    
+    <div class="encadre">
+        <p style="font-size: 12pt; font-style: italic;">
+            Ce qui est visible est discuté. Ce qui est discuté est amélioré. Ce qui est amélioré est valorisé. 
+            Le management visuel transforme la sécurité, contrainte abstraite, en défi collectif concret.
+        </p>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 11. CE QUE NOUS PROPOSONS CONCRÈTEMENT -->
+    <!-- ======================================================================== -->
+    <h1>11. CE QUE NOUS PROPOSONS CONCRÈTEMENT</h1>
+    
+    <ol style="font-weight: bold; font-size: 12pt;">
+        <li>Installer un tableau physique dans chaque vestiaire d'équipe</li>
+        <li>Définir 5 indicateurs visuels clés (jours sans accident, signalements, etc.)</li>
+        <li>Mettre en place un rituel de mise à jour hebdomadaire</li>
+        <li>Créer une version numérique pour les écrans dynamiques</li>
+    </ol>
+    
+    <!-- Pied de page -->
+    <div class="footer">
+        <p>PISTE 13 - Management Visuel de la Sécurité | Version 1.0 | Mars 2026 | CDG - CSCA</p>
+    </div>
+</body>
+</html>

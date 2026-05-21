@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PISTE 17 - Le Tatouage Sécurité</title>
+    <style>
+        /* Styles généraux pour l'impression */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            line-height: 1.5;
+            color: #333;
+            background-color: white;
+            font-size: 10.5pt;
+            margin: 0;
+            padding: 15px;
+        }
+        
+        /* Styles pour l'impression PDF */
+        @media print {
+            body {
+                padding: 0.5cm;
+            }
+            .page-break {
+                page-break-before: always;
+            }
+            .no-break {
+                page-break-inside: avoid;
+            }
+            h1, h2, h3, h4 {
+                page-break-after: avoid;
+            }
+            table {
+                page-break-inside: avoid;
+            }
+        }
+        
+        /* En-tête du document */
+        .document-header {
+            border-bottom: 3px solid #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+        
+        .document-title {
+            font-size: 24pt;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .document-subtitle {
+            font-size: 14pt;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+        
+        .document-meta {
+            text-align: right;
+            color: #7f8c8d;
+            font-size: 10pt;
+        }
+        
+        .tagline {
+            background-color: #ecf0f1;
+            padding: 8px 15px;
+            border-left: 5px solid #e67e22;
+            margin-bottom: 20px;
+            font-weight: bold;
+            font-size: 12pt;
+        }
+        
+        /* Typographie */
+        h1 {
+            font-size: 18pt;
+            color: #2c3e50;
+            margin: 25px 0 10px 0;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #bdc3c7;
+        }
+        
+        h2 {
+            font-size: 14pt;
+            color: #34495e;
+            margin: 20px 0 10px 0;
+            padding-left: 5px;
+            border-left: 4px solid #e67e22;
+        }
+        
+        h3 {
+            font-size: 12pt;
+            color: #555;
+            margin: 15px 0 8px 0;
+            font-weight: bold;
+        }
+        
+        h4 {
+            font-size: 11pt;
+            color: #666;
+            margin: 12px 0 5px 0;
+            font-weight: bold;
+        }
+        
+        p {
+            margin-bottom: 8px;
+            text-align: justify;
+        }
+        
+        ul, ol {
+            margin: 8px 0 12px 25px;
+        }
+        
+        li {
+            margin-bottom: 3px;
+        }
+        
+        /* Boîtes d'information */
+        .encadre {
+            border: 1px solid #bdc3c7;
+            padding: 12px;
+            background-color: #f9f9f9;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        
+        .important {
+            background-color: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 8px 12px;
+            margin: 12px 0;
+        }
+        
+        .hypothese {
+            background-color: #d4edda;
+            border-left: 5px solid #28a745;
+            padding: 8px 12px;
+            margin: 12px 0;
+            font-style: italic;
+        }
+        
+        /* Tableaux */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0 18px 0;
+            font-size: 9.5pt;
+        }
+        
+        th {
+            background-color: #2c3e50;
+            color: white;
+            font-weight: bold;
+            padding: 6px 4px;
+            text-align: left;
+            border: 1px solid #34495e;
+        }
+        
+        td {
+            padding: 5px 4px;
+            border: 1px solid #ddd;
+            vertical-align: top;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        /* Tableau de cartographie des risques avec couleurs */
+        .risk-table td:nth-child(7) {
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-orange {
+            background-color: #FFA500 !important;
+            color: black;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-red {
+            background-color: #FF0000 !important;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-yellow {
+            background-color: #FFFF00 !important;
+            color: black;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-green {
+            background-color: #008000 !important;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        /* Grille de cotation */
+        .cotation-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 12px 0;
+        }
+        
+        .cotation-box {
+            border: 1px solid #ddd;
+            padding: 8px;
+            background-color: #f9f9f9;
+        }
+        
+        .cotation-box h4 {
+            background-color: #2c3e50;
+            color: white;
+            padding: 4px 8px;
+            margin: -8px -8px 8px -8px;
+            font-size: 11pt;
+        }
+        
+        /* Pied de page */
+        .footer {
+            margin-top: 25px;
+            padding-top: 8px;
+            border-top: 1px solid #bdc3c7;
+            font-size: 9pt;
+            color: #7f8c8d;
+            text-align: center;
+        }
+        
+        .page-break {
+            page-break-before: always;
+        }
+        
+        /* Indicateurs */
+        .indicator-box {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 12px 0;
+        }
+        
+        .indicator-item {
+            flex: 1 1 200px;
+            background-color: #ecf0f1;
+            padding: 8px;
+            border-radius: 5px;
+            border-left: 4px solid #e67e22;
+        }
+        
+        .indicator-item strong {
+            display: block;
+            font-size: 10.5pt;
+            color: #2c3e50;
+        }
+        
+        .indicator-item span {
+            font-size: 9pt;
+            color: #555;
+        }
+        
+        /* Légende des couleurs */
+        .color-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 12px 0;
+            padding: 8px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .color-box {
+            width: 20px;
+            height: 20px;
+            border: 1px solid #333;
+        }
+        
+        /* Texte centré */
+        .text-center {
+            text-align: center;
+        }
+        
+        /* Badge */
+        .badge {
+            background-color: #e67e22;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 9pt;
+            font-weight: bold;
+            display: inline-block;
+        }
+        
+        /* Simulation de marqueurs */
+        .marqueurs-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .marqueur-card {
+            border: 2px solid #2c3e50;
+            border-radius: 5px;
+            padding: 15px;
+            text-align: center;
+            background-color: #f9f9f9;
+        }
+        
+        .marqueur-emoji {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+        
+        .marqueur-titre {
+            font-weight: bold;
+            font-size: 12pt;
+            margin-bottom: 5px;
+        }
+        
+        .marqueur-desc {
+            font-size: 9pt;
+            color: #555;
+        }
+        
+        .pin-argent { color: #C0C0C0; }
+        .pin-or { color: #FFD700; }
+        .pin-couronne { color: #FFA500; }
+        
+        /* Bandeau de casque */
+        .bandeau-preview {
+            height: 30px;
+            width: 100%;
+            margin: 5px 0;
+            color: white;
+            text-align: center;
+            line-height: 30px;
+            font-weight: bold;
+        }
+        .bandeau-blanc { background-color: #FFFFFF; color: #333; border: 1px solid #333; }
+        .bandeau-vert { background-color: #008000; color: white; }
+        .bandeau-bleu { background-color: #0000FF; color: white; }
+        .bandeau-argent { background-color: #C0C0C0; color: #333; }
+        .bandeau-or { background-color: #FFD700; color: #333; }
+    </style>
+</head>
+<body>
+    <!-- En-tête du document -->
+    <div class="document-header">
+        <div>
+            <div class="document-title">PISTE 17</div>
+            <div class="document-subtitle">Le Tatouage Sécurité</div>
+        </div>
+        <div class="document-meta">
+            <div>Version 1.0</div>
+            <div>Mars 2026</div>
+            <div>CDG - CSCA</div>
+        </div>
+    </div>
+    
+    <!-- Tagline -->
+    <div class="tagline">
+        LA SÉCURITÉ COMME MARQUEUR D'IDENTITÉ
+    </div>
+    
+    <!-- Description -->
+    <p style="font-size: 11pt; font-weight: bold; text-align: center; margin: 20px 0;">
+        Marqueurs visuels de l'engagement et de l'expérience (pin's, bracelets, galons).
+    </p>
+    
+    <p>
+        Dans le monde professionnel, la sécurité est aujourd'hui largement invisible. Un conducteur peut travailler vingt ans sans accident, 
+        personne ne le sait. Il peut sauver une vie par son geste, personne ne le voit. Il peut former dix jeunes, rien ne le distingue. 
+        L'exemplarité n'est pas valorisée, faute de marqueurs visibles. Les nouveaux arrivants n'ont pas de modèles identifiables, et la fierté, 
+        ce levier d'engagement si puissant, reste inexploitée. La dix-septième piste propose de rendre la sécurité visible en la transformant 
+        en marqueur d'identité.
+    </p>
+    
+    <!-- ======================================================================== -->
+    <!-- 1. PROBLÉMATIQUE ADRESSÉE -->
+    <!-- ======================================================================== -->
+    <h1>1. PROBLÉMATIQUE ADRESSÉE</h1>
+    
+    <p><strong>Constat fondamental :</strong> Dans le monde professionnel, la sécurité est <strong>invisible</strong>.</p>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Ce qui est visible</th>
+                <th>Ce qui reste invisible</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Le grade (épaulettes)</td><td>L'exemplarité sécurité</td></tr>
+            <tr><td>L'ancienneté (médailles)</td><td>Le nombre d'accidents évités</td></tr>
+            <tr><td>La fonction (badge, casque)</td><td>Les near-miss signalés</td></tr>
+            <tr><td>L'entreprise (logo)</td><td>Les comportements vertueux</td></tr>
+        </tbody>
+    </table>
+    
+    <div class="important">
+        <strong>Paradoxe :</strong>
+        <ul>
+            <li>Un conducteur peut travailler <strong>20 ans sans accident</strong> → personne ne le sait.</li>
+            <li>Un conducteur peut <strong>sauver une vie</strong> par son geste → personne ne le voit.</li>
+            <li>Un conducteur peut <strong>former 10 jeunes</strong> → rien ne le distingue.</li>
+        </ul>
+    </div>
+    
+    <p><strong>Conséquences :</strong></p>
+    <ul>
+        <li><strong>L'exemplarité n'est pas valorisée</strong> → Pourquoi faire des efforts si personne ne le remarque ?</li>
+        <li><strong>Les nouveaux n'ont pas de modèles visibles</strong> → Ils ne savent pas qui incarne la sécurité</li>
+        <li><strong>La sécurité reste abstraite</strong> → Pas d'incarnation, pas d'identification</li>
+        <li><strong>La fierté n'est pas exploitée</strong> → On pourrait être fier, mais rien ne le montre</li>
+    </ul>
+    
+    <div class="hypothese">
+        <strong>Notre hypothèse :</strong> Les humains sont des êtres <strong>sociaux et visuels</strong>. Nous cherchons naturellement des <strong>marqueurs d'identité</strong> pour nous situer dans le groupe et reconnaître ceux qui nous ressemblent ou que nous voulons imiter.
+        <p><strong>Transformer la sécurité en marqueur d'identité visible</strong> permet de valoriser les comportements exemplaires, créer des modèles identificatoires, rendre désirable la sécurité, favoriser la transmission par l'exemple.</p>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 2. CARTOGRAPHIE DES RISQUES (MISE À JOUR POUR PISTE 17) -->
+    <!-- ======================================================================== -->
+    <h1>2. CARTOGRAPHIE DES RISQUES</h1>
+    
+    <!-- Légende des couleurs -->
+    <div class="color-legend">
+        <div class="legend-item"><div class="color-box" style="background-color: #FF0000;"></div> <strong>Rouge</strong> - Risque très élevé (intolérable)</div>
+        <div class="legend-item"><div class="color-box" style="background-color: #FFA500;"></div> <strong>Orange</strong> - Risque élevé (actions nécessaires)</div>
+        <div class="legend-item"><div class="color-box" style="background-color: #FFFF00;"></div> <strong>Jaune</strong> - Risque moyen (tolérable)</div>
+        <div class="legend-item"><div class="color-box" style="background-color: #008000;"></div> <strong>Vert</strong> - Risque faible (acceptable)</div>
+    </div>
+    
+    <table class="risk-table">
+        <thead>
+            <tr>
+                <th>Réf.</th>
+                <th>Danger</th>
+                <th>Causes</th>
+                <th>Conséquences</th>
+                <th>Gravité</th>
+                <th>Probabilité</th>
+                <th>Criticité</th>
+                <th>Barrières Piste 17</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>REC 01.1</strong></td>
+                <td>Invisibilité des comportements exemplaires</td>
+                <td>Absence de marqueurs visuels, pas de reconnaissance des accomplissements</td>
+                <td>Démotivation, perte de sens, absence de modèles</td>
+                <td>2 (Mineure)</td>
+                <td>A (Fréquent)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Pin's d'ancienneté (étoiles, couronnes), galons de manche</td>
+            </tr>
+            <tr>
+                <td><strong>REC 01.2</strong></td>
+                <td>Absence de modèles identificatoires pour les nouveaux</td>
+                <td>Pas de distinction visible des conducteurs expérimentés</td>
+                <td>Nouveaux sans repères, difficulté d'intégration</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Bandeaux de casque par niveau (blanc, vert, bleu, argent, or)</td>
+            </tr>
+            <tr>
+                <td><strong>REC 01.3</strong></td>
+                <td>Non-valorisation des signalements de near-miss</td>
+                <td>Pas de reconnaissance des contributeurs à la prévention</td>
+                <td>Sous-déclaration, perte d'information sécurité</td>
+                <td>3 (Majeure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-red">ROUGE</td>
+                <td>Bracelets "Œil de lynx", "Sentinelle", "Vigie", "Légende"</td>
+            </tr>
+            <tr>
+                <td><strong>REC 01.4</strong></td>
+                <td>Non-reconnaissance des formateurs et buddies</td>
+                <td>Rôle de transmission invisible, pas de distinction</td>
+                <td>Démotivation des formateurs, transmission insuffisante</td>
+                <td>2 (Mineure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Écusson "🤝" pour buddies, écusson "🎓" pour formateurs</td>
+            </tr>
+            <tr>
+                <td><strong>REC 01.5</strong></td>
+                <td>Absence de fierté d'appartenance</td>
+                <td>Pas de marqueurs identitaires, pas de signes de reconnaissance</td>
+                <td>Turnover, désengagement</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Marqueurs visibles, fierté individuelle et collective</td>
+            </tr>
+            <tr>
+                <td><strong>REC 02.1</strong></td>
+                <td>Méconnaissance des spécialités des conducteurs</td>
+                <td>Pas de signe distinctif pour les compétences spécifiques</td>
+                <td>Sous-utilisation des compétences, inefficacité</td>
+                <td>1 (Négligeable)</td>
+                <td>C (Rare)</td>
+                <td class="risk-green">VERT</td>
+                <td>Écussons par spécialité (🛩️ PUSH, 📦 LOADER, 🚌 BUS, ❄️ DÉGIVREUSE)</td>
+            </tr>
+            <tr>
+                <td><strong>REC 02.2</strong></td>
+                <td>Absence de valorisation des innovations</td>
+                <td>Propositions d'amélioration non reconnues</td>
+                <td>Démotivation à proposer, perte d'idées</td>
+                <td>1 (Négligeable)</td>
+                <td>C (Rare)</td>
+                <td class="risk-green">VERT</td>
+                <td>Écusson "💡" pour innovateurs, pin's spécial pour gains mesurés</td>
+            </tr>
+            <tr>
+                <td><strong>CUL 01.1</strong></td>
+                <td>Culture de l'anonymat et de l'indifférence</td>
+                <td>Personne ne sait ce que les autres accomplissent</td>
+                <td>Absence d'émulation, faible engagement</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Visibilité des accomplissements, création de référents</td>
+            </tr>
+            <tr>
+                <td><strong>CUL 01.2</strong></td>
+                <td>Transmission insuffisante entre générations</td>
+                <td>Jeunes ne savent pas vers qui se tourner</td>
+                <td>Perte de savoir-faire, erreurs évitables</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Identification visible des mentors et experts</td>
+            </tr>
+            <tr>
+                <td><strong>MOT 01.1</strong></td>
+                <td>Manque de motivation intrinsèque</td>
+                <td>Pas d'objectifs visibles à atteindre, pas de progression visible</td>
+                <td>Baisse de vigilance, accidents</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Progressivité des marqueurs, envie d'obtenir le suivant</td>
+            </tr>
+            <tr>
+                <td><strong>TURN 01.1</strong></td>
+                <td>Turnover élevé</td>
+                <td>Manque de reconnaissance, absence de fierté</td>
+                <td>Perte de compétences, coûts de recrutement</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Réduction turnover 25% → 19% (fierté, reconnaissance, appartenance)</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <!-- Échelle de cotation -->
+    <h3>Échelle de cotation utilisée</h3>
+    
+    <div class="cotation-grid">
+        <div class="cotation-box">
+            <h4>Gravité</h4>
+            <ul>
+                <li><strong>1</strong> - Négligeable</li>
+                <li><strong>2</strong> - Mineure</li>
+                <li><strong>3</strong> - Majeure</li>
+                <li><strong>4</strong> - Catastrophique</li>
+            </ul>
+        </div>
+        <div class="cotation-box">
+            <h4>Probabilité</h4>
+            <ul>
+                <li><strong>A</strong> - Fréquent (quotidien)</li>
+                <li><strong>B</strong> - Occasionnel (hebdo/mensuel)</li>
+                <li><strong>C</strong> - Rare (annuel)</li>
+                <li><strong>D</strong> - Très rare (>1 an)</li>
+                <li><strong>E</strong> - Extrêmement rare (jamais observé)</li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 3. LES SUPORTS - CATALOGUE -->
+    <!-- ======================================================================== -->
+    <h1>3. LES SUPORTS - CATALOGUE</h1>
+    
+    <h2>3.1 Pin's émaillé</h2>
+    
+    <div class="marqueurs-grid">
+        <div class="marqueur-card">
+            <div class="marqueur-emoji pin-argent">⭐</div>
+            <div class="marqueur-titre">1 an sans accident</div>
+            <div class="marqueur-desc">Étoile argent - "J'ai commencé mon parcours sécurité"</div>
+        </div>
+        <div class="marqueur-card">
+            <div class="marqueur-emoji pin-or">⭐⭐</div>
+            <div class="marqueur-titre">5 ans sans accident</div>
+            <div class="marqueur-desc">Étoiles or - "Je suis un conducteur confirmé"</div>
+        </div>
+        <div class="marqueur-card">
+            <div class="marqueur-emoji pin-couronne">👑</div>
+            <div class="marqueur-titre">10 ans sans accident</div>
+            <div class="marqueur-desc">Couronne - "Je suis un expert"</div>
+        </div>
+    </div>
+    
+    <p><strong>Coût unitaire :</strong> 3,50 € (pour 1000+ pièces)</p>
+    
+    <h2>3.2 Bandeau de casque</h2>
+    
+    <div class="marqueurs-grid">
+        <div class="marqueur-card">
+            <div class="bandeau-preview bandeau-blanc">Débutant (<1 an)</div>
+            <div class="marqueur-desc">Conducteur en période probatoire</div>
+        </div>
+        <div class="marqueur-card">
+            <div class="bandeau-preview bandeau-vert">Confirmé (1-5 ans)</div>
+            <div class="marqueur-desc">Conducteur autonome</div>
+        </div>
+        <div class="marqueur-card">
+            <div class="bandeau-preview bandeau-bleu">Expert (5-10 ans)</div>
+            <div class="marqueur-desc">Référent technique</div>
+        </div>
+        <div class="marqueur-card">
+            <div class="bandeau-preview bandeau-argent">Élite (10-15 ans)</div>
+            <div class="marqueur-desc">Formateur / Buddy</div>
+        </div>
+        <div class="marqueur-card">
+            <div class="bandeau-preview bandeau-or">Légende (>15 ans)</div>
+            <div class="marqueur-desc">Mentors, ambassadeurs</div>
+        </div>
+    </div>
+    
+    <p><strong>Coût unitaire :</strong> 1,20 €</p>
+    
+    <h2>3.3 Écusson thermocollant</h2>
+    
+    <div class="marqueurs-grid">
+        <div class="marqueur-card"><div class="marqueur-emoji">🛩️</div><div class="marqueur-titre">PUSH</div><div class="marqueur-desc">Expert poussée avion</div></div>
+        <div class="marqueur-card"><div class="marqueur-emoji">📦</div><div class="marqueur-titre">LOADER</div><div class="marqueur-desc">Expert chargement</div></div>
+        <div class="marqueur-card"><div class="marqueur-emoji">🚌</div><div class="marqueur-titre">BUS</div><div class="marqueur-desc">Expert transport passagers</div></div>
+        <div class="marqueur-card"><div class="marqueur-emoji">❄️</div><div class="marqueur-titre">DÉGIVREUSE</div><div class="marqueur-desc">Expert conditions hivernales</div></div>
+        <div class="marqueur-card"><div class="marqueur-emoji">🎓</div><div class="marqueur-titre">Formateur</div><div class="marqueur-desc">Qualifié pour former</div></div>
+        <div class="marqueur-card"><div class="marqueur-emoji">🤝</div><div class="marqueur-titre">Buddy</div><div class="marqueur-desc">Accompagnateur de nouveaux</div></div>
+        <div class="marqueur-card"><div class="marqueur-emoji">📋</div><div class="marqueur-titre">Auditeur</div><div class="marqueur-desc">Participation audits sécurité</div></div>
+        <div class="marqueur-card"><div class="marqueur-emoji">💡</div><div class="marqueur-titre">Innovateur</div><div class="marqueur-desc">Proposition retenue</div></div>
+    </div>
+    
+    <p><strong>Coût unitaire :</strong> 4,50 €</p>
+    
+    <h2>3.4 Bracelet silicone</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Accomplissement</th>
+                <th>Couleur</th>
+                <th>Message inscrit</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>10 signalements</td><td>Bleu clair</td><td>"ŒIL DE LYNX"</td></tr>
+            <tr><td>25 signalements</td><td>Bleu foncé</td><td>"SENTINELLE"</td></tr>
+            <tr><td>50 signalements</td><td>Violet</td><td>"VIGIE"</td></tr>
+            <tr><td>100 signalements</td><td>Or</td><td>"LÉGENDE"</td></tr>
+            <tr><td>Buddy de l'année</td><td>Vert</td><td>"TRANSMETTEUR"</td></tr>
+            <tr><td>Record d'équipe</td><td>Rouge</td><td>"CHAMPION"</td></tr>
+        </tbody>
+    </table>
+    
+    <p><strong>Coût unitaire :</strong> 2,00 €</p>
+    
+    <h2>3.5 Galon de manche</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Années sans accident</th>
+                <th>Galon</th>
+                <th>Emplacement</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>3 ans</td><td>1 chevron argent</td><td>Manche gauche</td></tr>
+            <tr><td>6 ans</td><td>2 chevrons argent</td><td>Manche gauche</td></tr>
+            <tr><td>9 ans</td><td>3 chevrons argent</td><td>Manche gauche</td></tr>
+            <tr><td>12 ans</td><td>1 chevron or</td><td>Manche gauche</td></tr>
+            <tr><td>15 ans</td><td>2 chevrons or</td><td>Manche gauche</td></tr>
+            <tr><td>18 ans</td><td>3 chevrons or</td><td>Manche gauche</td></tr>
+            <tr><td>20 ans</td><td>1 galon or large</td><td>Manche gauche</td></tr>
+        </tbody>
+    </table>
+    
+    <p><strong>Coût unitaire :</strong> 2,80 €</p>
+    
+    <!-- ======================================================================== -->
+    <!-- 4. BUDGET -->
+    <!-- ======================================================================== -->
+    <h1>4. BUDGET</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Phase</th>
+                <th>Actions</th>
+                <th>Coût</th>
+                <th>Livrable</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>Phase 1 - Pilote</strong></td><td>Groupe de travail, définition catalogue, création visuels, fabrication 1er lot (500 pièces), expérimentation 50 conducteurs</td><td>25 k€</td><td>Catalogue finalisé + retour d'expérience</td></tr>
+            <tr><td><strong>Phase 2 - Déploiement CDG</strong></td><td>Commande groupée 10 000 marqueurs, déploiement entreprises, communication, formation, événement lancement</td><td>72 k€</td><td>500 conducteurs équipés</td></tr>
+            <tr><td><strong>Phase 3 - Généralisation</strong></td><td>Généralisation CDG, Orly, province, renouvellement annuel</td><td>175 k€ + 30 k€/an</td><td>Dispositif pérenne</td></tr>
+            <tr><td><strong>TOTAL 3 ANS</strong></td><td></td><td><strong>272 k€</strong></td><td></td></tr>
+        </tbody>
+    </table>
+    
+    <p><strong>Coût par conducteur (investissement) :</strong> ~25 € (kit de base)</p>
+    <p><strong>Coût annuel récurrent :</strong> 30 k€ (renouvellement, nouveaux entrants)</p>
+    
+    <!-- ======================================================================== -->
+    <!-- 5. BÉNÉFICES ATTENDUS -->
+    <!-- ======================================================================== -->
+    <h1>5. BÉNÉFICES ATTENDUS</h1>
+    
+    <h2>5.1 Bénéfices mesurables</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Indicateur</th>
+                <th>Baseline</th>
+                <th>Cible M12</th>
+                <th>Cible M24</th>
+                <th>Cible M36</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Taux d'adoption (portant au moins 1 marqueur)</td><td>-</td><td>40%</td><td>60%</td><td>75%</td></tr>
+            <tr><td>Fierté déclarée ("Je suis fier de mon travail")</td><td>30%</td><td>45%</td><td>60%</td><td>70%</td></tr>
+            <tr><td>Reconnaissance perçue</td><td>22%</td><td>40%</td><td>55%</td><td>65%</td></tr>
+            <tr><td>Conducteurs identifiés comme modèles</td><td>-</td><td>50</td><td>150</td><td>300</td></tr>
+            <tr><td>Signalements near-miss (effet induit)</td><td>50/an</td><td>+20%</td><td>+40%</td><td>+60%</td></tr>
+            <tr><td>Turnover (effet induit)</td><td>25%</td><td>23%</td><td>21%</td><td>19%</td></tr>
+        </tbody>
+    </table>
+    
+    <h2>5.2 Bénéfices qualitatifs</h2>
+    
+    <ul>
+        <li><strong>Modèles identificatoires :</strong> Les nouveaux savent à qui ressembler</li>
+        <li><strong>Transmission facilitée :</strong> "Va voir celui qui a 3 chevrons, il t'expliquera"</li>
+        <li><strong>Fierté individuelle :</strong> Je peux montrer ce que j'ai accompli</li>
+        <li><strong>Fierté collective :</strong> Regardez tous ces marqueurs dans notre équipe !</li>
+        <li><strong>Culture sécurité incarnée :</strong> La sécurité a un visage, des noms, des symboles</li>
+        <li><strong>Motivation intrinsèque :</strong> J'ai envie d'obtenir le prochain marqueur</li>
+    </ul>
+    
+    <!-- ======================================================================== -->
+    <!-- 6. RETOURS D'EXPÉRIENCE -->
+    <!-- ======================================================================== -->
+    <h1>6. RETOURS D'EXPÉRIENCE</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Secteur</th>
+                <th>Réalisations</th>
+                <th>Résultats</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>Michelin</strong></td><td>Programme "Safety Champions", pin's reconnaissance, galons ancienneté</td><td>85% participation, -32% accidents en 3 ans, 15€/opérateur/an</td></tr>
+            <tr><td><strong>RATP</strong></td><td>"Médaille du mérite" pour conducteurs sans accident, cérémonie annuelle</td><td>Fierté très forte, attente grade supérieur, effet fidélisation</td></tr>
+            <tr><td><strong>Armée française</strong></td><td>Grades visibles (galons), médailles, décorations</td><td>Système simple, lisible, hiérarchisé, fonctionne depuis 200 ans</td></tr>
+        </tbody>
+    </table>
+    
+    <!-- ======================================================================== -->
+    <!-- 7. INDICATEURS DE SUIVI -->
+    <!-- ======================================================================== -->
+    <h1>7. INDICATEURS DE SUIVI</h1>
+    
+    <div class="indicator-box">
+        <div class="indicator-item">
+            <strong>Taux d'adoption</strong>
+            <span>Cible M12: 40% | M24: 60% | M36: 75%</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Fierté déclarée</strong>
+            <span>Baseline: 30% | Cible M36: 70%</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Reconnaissance perçue</strong>
+            <span>Baseline: 22% | Cible M36: 65%</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Conducteurs modèles</strong>
+            <span>Cible M36: 300</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Signalements near-miss</strong>
+            <span>Baseline: 50/an | Cible M36: +60%</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Turnover</strong>
+            <span>Baseline: 25% | Cible M36: 19%</span>
+        </div>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 8. EN RÉSUMÉ -->
+    <!-- ======================================================================== -->
+    <h1>8. EN RÉSUMÉ</h1>
+    
+    <div class="encadre">
+        <p style="font-size: 12pt; font-style: italic;">
+            Le tatouage sécurité est la piste la plus personnelle, la plus intime. Ce n'est pas un outil de contrôle. Ce n'est pas un gadget marketing. 
+            Ce n'est pas une dépense superflue. C'est un outil de reconnaissance. C'est un vecteur de fierté. C'est un marqueur d'identité. 
+            Pour 25 € par conducteur, nous pouvons offrir à chaque femme et chaque homme qui œuvre sur nos pistes la possibilité d'être fier de ce qu'il accomplit.
+        </p>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 9. CE QUE NOUS PROPOSONS CONCRÈTEMENT -->
+    <!-- ======================================================================== -->
+    <h1>9. CE QUE NOUS PROPOSONS CONCRÈTEMENT</h1>
+    
+    <ol style="font-weight: bold; font-size: 12pt;">
+        <li>Créer un catalogue de 15 marqueurs (pin's, bracelets, galons)</li>
+        <li>Définir les critères d'attribution (ancienneté, signalements, mentorat)</li>
+        <li>Lancer un pilote avec 50 conducteurs volontaires</li>
+        <li>Organiser une cérémonie de remise des premiers marqueurs</li>
+    </ol>
+    
+    <!-- Pied de page -->
+    <div class="footer">
+        <p>PISTE 17 - Le Tatouage Sécurité | Version 1.0 | Mars 2026 | CDG - CSCA</p>
+    </div>
+</body>
+</html>

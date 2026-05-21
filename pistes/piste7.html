@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PISTE 7 - Identification renforcée des engins à risque</title>
+    <style>
+        /* Styles généraux pour l'impression */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            line-height: 1.5;
+            color: #333;
+            background-color: white;
+            font-size: 10.5pt;
+            margin: 0;
+            padding: 15px;
+        }
+        
+        /* Styles pour l'impression PDF */
+        @media print {
+            body {
+                padding: 0.5cm;
+            }
+            .page-break {
+                page-break-before: always;
+            }
+            .no-break {
+                page-break-inside: avoid;
+            }
+            h1, h2, h3, h4 {
+                page-break-after: avoid;
+            }
+            table {
+                page-break-inside: avoid;
+            }
+        }
+        
+        /* En-tête du document */
+        .document-header {
+            border-bottom: 3px solid #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+        
+        .document-title {
+            font-size: 24pt;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .document-subtitle {
+            font-size: 14pt;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+        
+        .document-meta {
+            text-align: right;
+            color: #7f8c8d;
+            font-size: 10pt;
+        }
+        
+        .tagline {
+            background-color: #ecf0f1;
+            padding: 8px 15px;
+            border-left: 5px solid #e67e22;
+            margin-bottom: 20px;
+            font-weight: bold;
+            font-size: 12pt;
+        }
+        
+        /* Typographie */
+        h1 {
+            font-size: 18pt;
+            color: #2c3e50;
+            margin: 25px 0 10px 0;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #bdc3c7;
+        }
+        
+        h2 {
+            font-size: 14pt;
+            color: #34495e;
+            margin: 20px 0 10px 0;
+            padding-left: 5px;
+            border-left: 4px solid #e67e22;
+        }
+        
+        h3 {
+            font-size: 12pt;
+            color: #555;
+            margin: 15px 0 8px 0;
+            font-weight: bold;
+        }
+        
+        h4 {
+            font-size: 11pt;
+            color: #666;
+            margin: 12px 0 5px 0;
+            font-weight: bold;
+        }
+        
+        p {
+            margin-bottom: 8px;
+            text-align: justify;
+        }
+        
+        ul, ol {
+            margin: 8px 0 12px 25px;
+        }
+        
+        li {
+            margin-bottom: 3px;
+        }
+        
+        /* Boîtes d'information */
+        .encadre {
+            border: 1px solid #bdc3c7;
+            padding: 12px;
+            background-color: #f9f9f9;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        
+        .important {
+            background-color: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 8px 12px;
+            margin: 12px 0;
+        }
+        
+        .hypothese {
+            background-color: #d4edda;
+            border-left: 5px solid #28a745;
+            padding: 8px 12px;
+            margin: 12px 0;
+            font-style: italic;
+        }
+        
+        /* Tableaux */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0 18px 0;
+            font-size: 9.5pt;
+        }
+        
+        th {
+            background-color: #2c3e50;
+            color: white;
+            font-weight: bold;
+            padding: 6px 4px;
+            text-align: left;
+            border: 1px solid #34495e;
+        }
+        
+        td {
+            padding: 5px 4px;
+            border: 1px solid #ddd;
+            vertical-align: top;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        /* Tableau de cartographie des risques avec couleurs */
+        .risk-table td:nth-child(7) {
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-orange {
+            background-color: #FFA500 !important;
+            color: black;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-red {
+            background-color: #FF0000 !important;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-yellow {
+            background-color: #FFFF00 !important;
+            color: black;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .risk-green {
+            background-color: #008000 !important;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        /* Grille de cotation */
+        .cotation-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 12px 0;
+        }
+        
+        .cotation-box {
+            border: 1px solid #ddd;
+            padding: 8px;
+            background-color: #f9f9f9;
+        }
+        
+        .cotation-box h4 {
+            background-color: #2c3e50;
+            color: white;
+            padding: 4px 8px;
+            margin: -8px -8px 8px -8px;
+            font-size: 11pt;
+        }
+        
+        /* Pied de page */
+        .footer {
+            margin-top: 25px;
+            padding-top: 8px;
+            border-top: 1px solid #bdc3c7;
+            font-size: 9pt;
+            color: #7f8c8d;
+            text-align: center;
+        }
+        
+        .page-break {
+            page-break-before: always;
+        }
+        
+        /* Indicateurs */
+        .indicator-box {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 12px 0;
+        }
+        
+        .indicator-item {
+            flex: 1 1 200px;
+            background-color: #ecf0f1;
+            padding: 8px;
+            border-radius: 5px;
+            border-left: 4px solid #e67e22;
+        }
+        
+        .indicator-item strong {
+            display: block;
+            font-size: 10.5pt;
+            color: #2c3e50;
+        }
+        
+        .indicator-item span {
+            font-size: 9pt;
+            color: #555;
+        }
+        
+        /* Légende des couleurs */
+        .color-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 12px 0;
+            padding: 8px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .color-box {
+            width: 20px;
+            height: 20px;
+            border: 1px solid #333;
+        }
+        
+        /* Texte centré */
+        .text-center {
+            text-align: center;
+        }
+        
+        /* Badge */
+        .badge {
+            background-color: #e67e22;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 9pt;
+            font-weight: bold;
+            display: inline-block;
+        }
+        
+        /* Grille pour les catégories d'engins */
+        .engins-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .engin-card {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 8px;
+            background-color: #f9f9f9;
+            text-align: center;
+        }
+        
+        .engin-card h4 {
+            margin: 0 0 5px 0;
+            color: #e67e22;
+            font-size: 12pt;
+        }
+        
+        .risk-level {
+            font-size: 18pt;
+            font-weight: bold;
+        }
+        
+        /* Code couleur pour les niveaux de risque */
+        .risk-critical {
+            color: #FF0000;
+            font-weight: bold;
+        }
+        
+        .risk-high {
+            color: #FFA500;
+            font-weight: bold;
+        }
+        
+        .risk-medium {
+            color: #FFFF00;
+            font-weight: bold;
+            background-color: #333;
+            display: inline-block;
+            padding: 0 3px;
+        }
+        
+        .risk-low {
+            color: #008000;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <!-- En-tête du document -->
+    <div class="document-header">
+        <div>
+            <div class="document-title">PISTE 7</div>
+            <div class="document-subtitle">Identification renforcée des engins à risque</div>
+        </div>
+        <div class="document-meta">
+            <div>Version 1.0</div>
+            <div>Mars 2026</div>
+            <div>CDG - CSCA</div>
+        </div>
+    </div>
+    
+    <!-- Tagline -->
+    <div class="tagline">
+        VOIR L'INVISIBLE, PROTÉGER L'INATTENDU
+    </div>
+    
+    <!-- Description -->
+    <p style="font-size: 11pt; font-weight: bold; text-align: center; margin: 20px 0;">
+        Équiper les engins existants de caméras 360°, détecteurs de proximité, gyrophares LED.
+    </p>
+    
+    <p>
+        Tous les engins de piste ne se valent pas face au risque accidentel. L'analyse du parc montre que certaines catégories, 
+        comme les PUSH, LOADER, BUS ou DÉGIVREUSE, présentent une accidentologie plus élevée, liée non seulement au conducteur 
+        mais aussi aux caractéristiques techniques des machines elles-mêmes : âge avancé, motorisation thermique bruyante et 
+        fatigante, gabarit générant des angles morts critiques, ou absence d'équipements de sécurité modernes. Agir sur le 
+        conducteur et l'infrastructure ne suffit pas ; il faut aussi agir sur l'outil de travail. La septième piste propose une 
+        stratégie à plusieurs niveaux pour identifier et traiter ces engins à risque.
+    </p>
+    
+    <!-- ======================================================================== -->
+    <!-- 1. PROBLÉMATIQUE ADRESSÉE -->
+    <!-- ======================================================================== -->
+    <h1>1. PROBLÉMATIQUE ADRESSÉE</h1>
+    
+    <p><strong>Constat issu des données CSAE 2025 :</strong> Tous les engins de piste ne se valent pas face au risque accidentel.</p>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Catégorie</th>
+                <th>% Vert</th>
+                <th>Âge moyen</th>
+                <th>Accidents 2025</th>
+                <th>Risque</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>PUSH</td><td>26,6%</td><td>~12 ans</td><td>Élevé</td><td class="risk-critical">🔴 Critique</td></tr>
+            <tr><td>LOADER</td><td>18,3%</td><td>~15 ans</td><td>Élevé</td><td class="risk-critical">🔴 Critique</td></tr>
+            <tr><td>DÉGIVREUSE</td><td>0%</td><td>>20 ans</td><td>Modéré</td><td class="risk-critical">🔴 Critique</td></tr>
+            <tr><td>BUS</td><td>11,8%</td><td>~19 ans</td><td>Élevé</td><td class="risk-critical">🔴 Critique</td></tr>
+            <tr><td>GPU</td><td>1,7%</td><td>~14 ans</td><td>Modéré</td><td class="risk-high">🟠 Élevé</td></tr>
+            <tr><td>TRACTEUR BAGAGES</td><td>85,2%</td><td>~12 ans</td><td>Modéré</td><td class="risk-medium">🟡 Moyen</td></tr>
+            <tr><td>TAPIS</td><td>40,0%</td><td>~14 ans</td><td>Faible</td><td class="risk-medium">🟡 Moyen</td></tr>
+        </tbody>
+    </table>
+    
+    <div class="hypothese">
+        <strong>Notre hypothèse :</strong> Certains engins sont <strong>statistiquement plus accidentogènes</strong> pour des raisons qui ne tiennent pas seulement au conducteur :
+        <ul>
+            <li><strong>Âge avancé</strong> → freinage moins efficace, visibilité réduite, absence d'aides à la conduite</li>
+            <li><strong>Motorisation thermique</strong> → bruit, vibrations, fatigue, réponse moteur moins précise</li>
+            <li><strong>Gabarit / architecture</strong> → angles morts critiques, maniabilité réduite</li>
+            <li><strong>Absence d'équipements sécurité</strong> → caméras, détecteurs, alertes sonores</li>
+        </ul>
+    </div>
+    
+    <p><strong>Notre proposition :</strong> Agir sur <strong>l'engin lui-même</strong> comme levier de réduction du risque, en complément des actions sur le conducteur et l'infrastructure.</p>
+    
+    <!-- ======================================================================== -->
+    <!-- 2. CARTOGRAPHIE DES RISQUES (MISE À JOUR POUR PISTE 7) -->
+    <!-- ======================================================================== -->
+    <h1>2. CARTOGRAPHIE DES RISQUES</h1>
+    
+    <!-- Légende des couleurs -->
+    <div class="color-legend">
+        <div class="legend-item"><div class="color-box" style="background-color: #FF0000;"></div> <strong>Rouge</strong> - Risque très élevé (intolérable)</div>
+        <div class="legend-item"><div class="color-box" style="background-color: #FFA500;"></div> <strong>Orange</strong> - Risque élevé (actions nécessaires)</div>
+        <div class="legend-item"><div class="color-box" style="background-color: #FFFF00;"></div> <strong>Jaune</strong> - Risque moyen (tolérable)</div>
+        <div class="legend-item"><div class="color-box" style="background-color: #008000;"></div> <strong>Vert</strong> - Risque faible (acceptable)</div>
+    </div>
+    
+    <table class="risk-table">
+        <thead>
+            <tr>
+                <th>Réf.</th>
+                <th>Danger</th>
+                <th>Causes</th>
+                <th>Conséquences</th>
+                <th>Gravité</th>
+                <th>Probabilité</th>
+                <th>Criticité</th>
+                <th>Barrières Piste 7</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>EQU 01.1</strong></td>
+                <td>Angles morts critiques sur PUSH et LOADER</td>
+                <td>Conception ancienne, absence de caméras, visibilité réduite</td>
+                <td>Collisions avec avions, autres engins, piétons</td>
+                <td>3 (Majeure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-red">ROUGE</td>
+                <td>Caméras 360° sur tous les engins critiques</td>
+            </tr>
+            <tr>
+                <td><strong>EQU 01.2</strong></td>
+                <td>Absence de détection de proximité</td>
+                <td>Équipements non installés, technologie obsolète</td>
+                <td>Heurts d'obstacles, collisions lors de manœuvres</td>
+                <td>3 (Majeure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Détecteurs de proximité avant/arrière</td>
+            </tr>
+            <tr>
+                <td><strong>EQU 01.3</strong></td>
+                <td>Visibilité nocturne insuffisante</td>
+                <td>Éclairage obsolète ou absent, gyrophares insuffisants</td>
+                <td>Non-détection des dangers, collisions de nuit</td>
+                <td>3 (Majeure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Éclairage LED, gyrophares supplémentaires</td>
+            </tr>
+            <tr>
+                <td><strong>EQU 02.1</strong></td>
+                <td>Risque de renversement des LOADER</td>
+                <td>Charge instable, absence d'aide à la stabilité</td>
+                <td>Blessures graves, dommages matériels</td>
+                <td>3 (Majeure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Systèmes d'aide à la stabilité</td>
+            </tr>
+            <tr>
+                <td><strong>EQU 02.2</strong></td>
+                <td>Freinage inefficace sur engins âgés</td>
+                <td>Usure, technologie de freinage dépassée</td>
+                <td>Collisions par absence de distance d'arrêt</td>
+                <td>3 (Majeure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Rétrofit freinage, limiteurs de vitesse</td>
+            </tr>
+            <tr>
+                <td><strong>EQU 03.1</strong></td>
+                <td>Absence d'alerte sonore de recul</td>
+                <td>Système non installé, non fonctionnel</td>
+                <td>Heurts de piétons, collisions en marche arrière</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Système sonore de recul sur tous les engins</td>
+            </tr>
+            <tr>
+                <td><strong>EQU 03.2</strong></td>
+                <td>Non-perception des dimensions de l'engin</td>
+                <td>Absence de feux de gabarit, visibilité réduite</td>
+                <td>Accrochages, dommages aux infrastructures</td>
+                <td>2 (Mineure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-green">VERT</td>
+                <td>Feux de gabarit, bandeaux réfléchissants</td>
+            </tr>
+            <tr>
+                <td><strong>PAR 01.1</strong></td>
+                <td>Parc d'engins vieillissant</td>
+                <td>Investissements insuffisants, renouvellement trop lent</td>
+                <td>Accidents liés à l'obsolescence technique</td>
+                <td>2 (Mineure)</td>
+                <td>A (Fréquent)</td>
+                <td class="risk-orange">ORANGE</td>
+                <td>Plan de renouvellement accéléré sur 5 ans</td>
+            </tr>
+            <tr>
+                <td><strong>ACH 01.1</strong></td>
+                <td>Achats sans critères de sécurité</td>
+                <td>Pondération prix trop forte, absence de spécifications sécurité</td>
+                <td>Renouvellement par des engins tout aussi peu sûrs</td>
+                <td>2 (Mineure)</td>
+                <td>A (Fréquent)</td>
+                <td class="risk-yellow">JAUNE</td>
+                <td>Référentiel "Sécurité GSE", pondération 20%</td>
+            </tr>
+            <tr>
+                <td><strong>SIG 01.1</strong></td>
+                <td>Méconnaissance du niveau de risque des engins par les autres usagers</td>
+                <td>Absence de signalétique, tous les engins se ressemblent</td>
+                <td>Comportements inadaptés des autres conducteurs/piétons</td>
+                <td>2 (Mineure)</td>
+                <td>B (Occasionnelle)</td>
+                <td class="risk-green">VERT</td>
+                <td>Code couleur rouge/orange/vert sur engins critiques</td>
+            </tr>
+            <tr>
+                <td><strong>FIN 01.1</strong></td>
+                <td>Coût prohibitif du rétrofit pour les petits handlers</td>
+                <td>Budget d'investissement limité, ROI trop long</td>
+                <td>Inégalité de sécurité entre entreprises</td>
+                <td>2 (Mineure)</td>
+                <td>C (Rare)</td>
+                <td class="risk-green">VERT</td>
+                <td>Mutuelle sécurité GSE, financement mutualisé</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <!-- Échelle de cotation -->
+    <h3>Échelle de cotation utilisée</h3>
+    
+    <div class="cotation-grid">
+        <div class="cotation-box">
+            <h4>Gravité</h4>
+            <ul>
+                <li><strong>1</strong> - Négligeable</li>
+                <li><strong>2</strong> - Mineure</li>
+                <li><strong>3</strong> - Majeure</li>
+                <li><strong>4</strong> - Catastrophique</li>
+            </ul>
+        </div>
+        <div class="cotation-box">
+            <h4>Probabilité</h4>
+            <ul>
+                <li><strong>A</strong> - Fréquent (quotidien)</li>
+                <li><strong>B</strong> - Occasionnel (hebdo/mensuel)</li>
+                <li><strong>C</strong> - Rare (annuel)</li>
+                <li><strong>D</strong> - Très rare (>1 an)</li>
+                <li><strong>E</strong> - Extrêmement rare (jamais observé)</li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 3. CONCEPT D'ENSEMBLE -->
+    <!-- ======================================================================== -->
+    <h1>3. CONCEPT D'ENSEMBLE</h1>
+    
+    <h2>3.1 Principe général</h2>
+    <p><strong>Identifier les caractéristiques techniques des engins corrélées à une sur-accidentologie, et déployer des mesures correctives ciblées :</strong></p>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 15px 0;">
+        <div style="border: 1px solid #ddd; padding: 10px; background-color: #f9f9f9;">
+            <h4 style="color: #e67e22; text-align: center;">DIAGNOSTIC</h4>
+            <ul>
+                <li>Âge du parc</li>
+                <li>Accidentologie par type d'engin</li>
+                <li>Analyse comparative</li>
+            </ul>
+        </div>
+        <div style="border: 1px solid #ddd; padding: 10px; background-color: #f9f9f9;">
+            <h4 style="color: #e67e22; text-align: center;">ACTIONS CORRECTIVES</h4>
+            <ul>
+                <li>Rétrofit sécurité</li>
+                <li>Renouvellement accéléré</li>
+                <li>Signalétique renforcée</li>
+                <li>Spécifications achats</li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 4. AXE 1 - RÉTROFIT SÉCURITÉ -->
+    <!-- ======================================================================== -->
+    <h1>4. AXE 1 - RÉTROFIT SÉCURITÉ DES ENGINS EXISTANTS</h1>
+    
+    <h2>4.1 Pourquoi le rétrofit ?</h2>
+    <ul>
+        <li><strong>Lent</strong> : 10-15 ans pour renouveler une catégorie</li>
+        <li><strong>Coûteux</strong> : 300k€ à 500k€ pour un PUSH électrique neuf</li>
+        <li><strong>Incomplet</strong> : certains engins n'ont pas d'alternative électrique mature</li>
+    </ul>
+    <p><strong>Le rétrofit permet d'agir IMMÉDIATEMENT sur le parc existant.</strong></p>
+    
+    <h2>4.2 Dispositifs de rétrofit prioritaires</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Dispositif</th>
+                <th>Fonction</th>
+                <th>Cibles prioritaires</th>
+                <th>Coût unitaire estimé</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Caméras 360°</td><td>Élimination angles morts</td><td>PUSH, LOADER, BUS, DÉGIVREUSE</td><td>1 500 - 2 500€</td></tr>
+            <tr><td>Détecteurs de proximité</td><td>Alerte visuelle/sonore en cas d'obstacle</td><td>PUSH, LOADER, BUS</td><td>800 - 1 500€</td></tr>
+            <tr><td>Gyrophares supplémentaires</td><td>Visibilité renforcée</td><td>DÉGIVREUSE, GPU, vieux tracteurs</td><td>300 - 600€</td></tr>
+            <tr><td>Système sonore de recul</td><td>Alerte piétons/engins</td><td>BUS, LOADER, CHARIOT ÉLÉVATEUR</td><td>200 - 400€</td></tr>
+            <tr><td>Aide à la stabilité</td><td>Prévention renversement</td><td>LOADER, DÉGIVREUSE</td><td>2 000 - 4 000€</td></tr>
+            <tr><td>Limiteur de vitesse</td><td>Contrôle vitesse zone parking</td><td>PUSH, TRACTEUR BAGAGES</td><td>500 - 1 000€</td></tr>
+            <tr><td>Éclairage LED</td><td>Visibilité nuit</td><td>TOUS engins >10 ans</td><td>400 - 800€</td></tr>
+            <tr><td>Rétroviseurs grand angle</td><td>Champ visuel élargi</td><td>TOUS engins</td><td>150 - 300€</td></tr>
+        </tbody>
+    </table>
+    
+    <h2>4.3 Plan de déploiement par catégorie</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Catégorie</th>
+                <th>Parc total</th>
+                <th>Dispositifs prioritaires</th>
+                <th>Coût unitaire</th>
+                <th>Coût total</th>
+                <th>Priorité</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>PUSH</td><td>428</td><td>Caméras 360° + Détecteurs + Limiteur</td><td>3 500€</td><td>1,50 M€</td><td class="risk-critical">🔴 1</td></tr>
+            <tr><td>LOADER</td><td>482</td><td>Caméras 360° + Détecteurs + Aide stabilité</td><td>4 500€</td><td>2,17 M€</td><td class="risk-critical">🔴 1</td></tr>
+            <tr><td>DÉGIVREUSE</td><td>60</td><td>Caméras 360° + Gyrophares + Éclairage</td><td>3 000€</td><td>180 k€</td><td class="risk-critical">🔴 1</td></tr>
+            <tr><td>BUS</td><td>71</td><td>Caméras 360° + Détecteurs + Sonore recul</td><td>3 200€</td><td>227 k€</td><td class="risk-critical">🔴 1</td></tr>
+            <tr><td>GPU</td><td>406</td><td>Gyrophares + Éclairage</td><td>600€</td><td>244 k€</td><td class="risk-high">🟠 2</td></tr>
+            <tr><td>TRACTEUR BAGAGES</td><td>108</td><td>Limiteur + Éclairage</td><td>1 000€</td><td>108 k€</td><td class="risk-medium">🟡 3</td></tr>
+            <tr><td>TAPIS</td><td>369</td><td>Éclairage + Rétroviseurs</td><td>500€</td><td>184 k€</td><td class="risk-medium">🟡 3</td></tr>
+        </tbody>
+    </table>
+    
+    <p><strong>TOTAL INVESTISSEMENT RÉTROFIT :</strong> ~4,6 M€</p>
+    <p><strong>Coût par engin critique (PUSH, LOADER, DÉGIVREUSE, BUS) :</strong> 3 500€ en moyenne</p>
+    
+    <!-- ======================================================================== -->
+    <!-- 5. AXE 4 - SIGNALÉTIQUE RENFORCÉE -->
+    <!-- ======================================================================== -->
+    <h1>5. AXE 4 - SIGNALÉTIQUE RENFORCÉE DES ENGINS À RISQUE</h1>
+    
+    <h2>5.1 Proposition : Code couleur "Risque"</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Niveau risque</th>
+                <th>Couleur</th>
+                <th>Engins concernés</th>
+                <th>Signalétique</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>🔴 CRITIQUE</strong></td><td>Rouge</td><td>DÉGIVREUSE, PUSH >15 ans</td><td>Gyrophare rouge + Marquage "RISQUE"</td></tr>
+            <tr><td><strong>🟠 ÉLEVÉ</strong></td><td>Orange</td><td>LOADER >15 ans, BUS >15 ans</td><td>Gyrophare orange + Marquage "VIGILANCE"</td></tr>
+            <tr><td><strong>🟡 MOYEN</strong></td><td>Jaune</td><td>GPU >15 ans, TRACTEUR >15 ans</td><td>Gyrophare jaune (optionnel)</td></tr>
+            <tr><td><strong>🟢 FAIBLE</strong></td><td>Vert</td><td>Engins <5 ans, électriques récents</td><td>Aucun</td></tr>
+        </tbody>
+    </table>
+    
+    <p><strong>Coût total signalétique renforcée :</strong> ~150 000€ (pour 500 engins critiques)</p>
+    
+    <!-- ======================================================================== -->
+    <!-- 6. SYNTHÈSE DES INVESTISSEMENTS -->
+    <!-- ======================================================================== -->
+    <h1>6. SYNTHÈSE DES INVESTISSEMENTS</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Axe</th>
+                <th>Description</th>
+                <th>Coût</th>
+                <th>Délai</th>
+                <th>Porteur</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>Axe 1</strong></td><td>Rétrofit sécurité</td><td>4,6 M€</td><td>24 mois</td><td>Handlers</td></tr>
+            <tr><td><strong>Axe 2</strong></td><td>Renouvellement accéléré</td><td>18,5 M€/an</td><td>5 ans</td><td>Handlers + Aides</td></tr>
+            <tr><td><strong>Axe 3</strong></td><td>Spécifications achats</td><td>0€</td><td>12 mois</td><td>CSCA + Handlers</td></tr>
+            <tr><td><strong>Axe 4</strong></td><td>Signalétique renforcée</td><td>150 k€</td><td>6 mois</td><td>Handlers</td></tr>
+            <tr><td><strong>TOTAL</strong></td><td>Investissement unique</td><td><strong>4,75 M€</strong></td><td></td><td></td></tr>
+            <tr><td></td><td>Investissement récurrent</td><td><strong>18,5 M€/an</strong></td><td></td><td></td></tr>
+        </tbody>
+    </table>
+    
+    <p><strong>Coût par engin critique (rétrofit + signalétique) :</strong> ~3 650€</p>
+    
+    <h2>6.1 Économie annuelle potentielle</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Poste d'économie</th>
+                <th>Calcul</th>
+                <th>Économie</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Accidents matériels critiques (-20%)</td><td>41 × 20% × 15 000€</td><td>123 000€</td></tr>
+            <tr><td>Accidents corporels critiques (-20%)</td><td>20 × 20% × 45 000€</td><td>180 000€</td></tr>
+            <tr><td>Réduction immobilisation, retards, contentieux</td><td>Estimation</td><td>200 000€</td></tr>
+            <tr><td><strong>TOTAL</strong></td><td></td><td><strong>~500 000€/an</strong></td></tr>
+        </tbody>
+    </table>
+    
+    <p><strong>ROI rétrofit :</strong> 9-10 ans (insuffisant financièrement, mais objectif non financier : vies préservées, blessures évitées)</p>
+    
+    <!-- ======================================================================== -->
+    <!-- 7. COMPARAISON INTERNATIONALE -->
+    <!-- ======================================================================== -->
+    <h1>7. COMPARAISON INTERNATIONALE</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Aéroport</th>
+                <th>Réalisations</th>
+                <th>Résultats</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>Francfort (FRA)</strong></td><td>Rétrofit obligatoire caméras 360° sur PUSH >10 ans, financement 50/50</td><td>-32% collisions PUSH/avion en 2 ans, ROI 4,5 ans</td></tr>
+            <tr><td><strong>Heathrow (LHR)</strong></td><td>Programme "Safe Fleet" : rétrofit détecteurs proximité + éclairage LED</td><td>-28% accidents en zone parking, 87% conducteurs favorables</td></tr>
+            <tr><td><strong>Schiphol (AMS)</strong></td><td>Spécifications sécurité obligatoires dans appels d'offres GSE (poids 25%)</td><td>Tous nouveaux PUSH intègrent caméras 360° de série</td></tr>
+        </tbody>
+    </table>
+    
+    <!-- ======================================================================== -->
+    <!-- 8. RETOURS D'EXPÉRIENCE HORS AÉRONAUTIQUE -->
+    <!-- ======================================================================== -->
+    <h1>8. RETOURS D'EXPÉRIENCE HORS AÉRONAUTIQUE</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Secteur</th>
+                <th>Dispositifs déployés</th>
+                <th>Résultats</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>BTP - Engins de chantier</strong></td><td>Caméras de recul obligatoires, détecteurs de présence piétons, gyrophares LED</td><td>-41% accidents mortels liés aux angles morts (INRS)</td></tr>
+            <tr><td><strong>Transport routier - Poids lourds</strong></td><td>ABS obligatoire (UE), AEBS, LDWS</td><td>-60% accidents par l'arrière</td></tr>
+        </tbody>
+    </table>
+    
+    <!-- ======================================================================== -->
+    <!-- 9. FINANCEMENT INNOVANT PROPOSÉ -->
+    <!-- ======================================================================== -->
+    <h1>9. FINANCEMENT INNOVANT PROPOSÉ</h1>
+    
+    <h2>9.1 Mutuelle sécurité GSE</h2>
+    <p><strong>Principe :</strong> Fonds mutualisé alimenté par cotisations handlers + contribution ADP + subvention DGAC/DSAC</p>
+    <p><strong>Exemple :</strong> 4,6 M€ rétrofit, 50% pris en charge = 2,3 M€, réparti sur 20 handlers = 115 000€/entreprise, amorti sur 3 ans = ~38 000€/an/entreprise</p>
+    
+    <h2>9.2 Leasing sécurité</h2>
+    <p><strong>Principe :</strong> Prestataire finance le rétrofit, handlers paient un loyer mensuel</p>
+    <p><strong>Avantage :</strong> Pas d'investissement initial, lissage de la charge</p>
+    
+    <!-- ======================================================================== -->
+    <!-- 10. RISQUES ET MESURES DE MITIGATION -->
+    <!-- ======================================================================== -->
+    <h1>10. RISQUES ET MESURES DE MITIGATION</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Risque</th>
+                <th>Probabilité</th>
+                <th>Gravité</th>
+                <th>Plan d'action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Coût d'investissement (handlers)</td><td>Élevée</td><td>Critique</td><td>Fonds mutualisé ; Leasing sécurité ; Aides publiques</td></tr>
+            <tr><td>Obsolescence rapide (rétrofit)</td><td>Moyenne</td><td>Modérée</td><td>Prioriser engins à durée de vie résiduelle >5 ans ; Solutions non intrusives, démontables</td></tr>
+            <tr><td>Non-standardisation (parc hétérogène)</td><td>Élevée</td><td>Modérée</td><td>Étude d'ingénierie préalable ; Solutions universelles quand possible</td></tr>
+            <tr><td>Acceptation conducteurs</td><td>Faible</td><td>Faible</td><td>Implication dans choix dispositifs ; Démonstration bénéfices</td></tr>
+            <tr><td>Maintenance des équipements</td><td>Moyenne</td><td>Faible</td><td>Intégration contrat maintenance ; Garantie constructeur</td></tr>
+        </tbody>
+    </table>
+    
+    <!-- ======================================================================== -->
+    <!-- 11. FEUILLE DE ROUTE PROPOSÉE -->
+    <!-- ======================================================================== -->
+    <h1>11. FEUILLE DE ROUTE PROPOSÉE</h1>
+    
+    <h2>Phase 1 - Diagnostic & Pilote (0-6 mois)</h2>
+    <ul>
+        <li>Audit détaillé du parc (âges, équipements sécurité)</li>
+        <li>Analyse croisée accidents vs caractéristiques engins</li>
+        <li>Sélection panel pilote (20 PUSH + 20 LOADER)</li>
+        <li>Rétrofit pilote (caméras 360° + détecteurs)</li>
+        <li>Mesure d'impact (satisfaction, incidents)</li>
+        <li>Décision déploiement</li>
+    </ul>
+    
+    <h2>Phase 2 - Déploiement rétrofit (6-24 mois)</h2>
+    <ul>
+        <li>Mise en place fonds mutualisé</li>
+        <li>Appel d'offres rétrofit (lots par catégorie)</li>
+        <li>Déploiement PUSH (428 engins)</li>
+        <li>Déploiement LOADER (482 engins)</li>
+        <li>Déploiement DÉGIVREUSE/BUS (131 engins)</li>
+        <li>Déploiement signalétique renforcée</li>
+    </ul>
+    
+    <h2>Phase 3 - Spécifications & Renouvellement (12-36 mois)</h2>
+    <ul>
+        <li>Rédaction référentiel "Sécurité GSE"</li>
+        <li>Intégration dans appels d'offres</li>
+        <li>Campagne sensibilisation achats</li>
+        <li>Plan de renouvellement prioritaire</li>
+        <li>Extension aux aéroports de province</li>
+    </ul>
+    
+    <!-- ======================================================================== -->
+    <!-- 12. INDICATEURS DE SUIVI -->
+    <!-- ======================================================================== -->
+    <h1>12. INDICATEURS DE SUIVI</h1>
+    
+    <h2>12.1 Indicateurs de déploiement</h2>
+    
+    <div class="indicator-box">
+        <div class="indicator-item">
+            <strong>% PUSH équipés caméras 360°</strong>
+            <span>Cible M12: 50% | M24: 100% | M36: 100%</span>
+        </div>
+        <div class="indicator-item">
+            <strong>% LOADER équipés détecteurs</strong>
+            <span>Cible M12: 30% | M24: 100% | M36: 100%</span>
+        </div>
+        <div class="indicator-item">
+            <strong>% DÉGIVREUSE <15 ans</strong>
+            <span>Cible M12: 20% | M24: 50% | M36: 80%</span>
+        </div>
+        <div class="indicator-item">
+            <strong>% BUS <12 ans</strong>
+            <span>Cible M12: 30% | M24: 60% | M36: 80%</span>
+        </div>
+        <div class="indicator-item">
+            <strong>% appels d'offres avec critères sécurité</strong>
+            <span>Cible M12: 0% | M24: 50% | M36: 100%</span>
+        </div>
+    </div>
+    
+    <h2>12.2 Indicateurs d'impact</h2>
+    
+    <div class="indicator-box">
+        <div class="indicator-item">
+            <strong>Accidents PUSH</strong>
+            <span>Cible M24: -20% | Cible M36: -35%</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Accidents LOADER</strong>
+            <span>Cible M24: -20% | Cible M36: -35%</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Collisions liées aux angles morts</strong>
+            <span>Cible M24: -30% | Cible M36: -50%</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Accidents de nuit</strong>
+            <span>Cible M24: -15% | Cible M36: -25%</span>
+        </div>
+        <div class="indicator-item">
+            <strong>Satisfaction conducteurs (visibilité)</strong>
+            <span>Cible M24: +30 pts | Cible M36: +40 pts</span>
+        </div>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 13. SYNTHÈSE - AVANTAGES COMPARATIFS -->
+    <!-- ======================================================================== -->
+    <h1>13. SYNTHÈSE - AVANTAGES COMPARATIFS</h1>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 15px 0;">
+        <div style="border: 1px solid #ddd; padding: 10px; background-color: #f9f9f9;">
+            <h4 style="color: #e67e22;">Pour le conducteur</h4>
+            <ul>
+                <li><strong>Visibilité améliorée</strong> → moins de stress</li>
+                <li><strong>Sécurité passive renforcée</strong> → protection</li>
+                <li><strong>Conduite plus facile</strong> → caméras, détecteurs</li>
+                <li><strong>Fierté</strong> de conduire un engin "sécurisé"</li>
+            </ul>
+        </div>
+        <div style="border: 1px solid #ddd; padding: 10px; background-color: #f9f9f9;">
+            <h4 style="color: #e67e22;">Pour l'entreprise</h4>
+            <ul>
+                <li><strong>Accidents évités</strong> → coûts directs et indirects</li>
+                <li><strong>Immobilisation réduite</strong> → disponibilité parc</li>
+                <li><strong>Image</strong> auprès des clients (compagnies)</li>
+                <li><strong>Attractivité</strong> pour les recrutements</li>
+            </ul>
+        </div>
+        <div style="border: 1px solid #ddd; padding: 10px; background-color: #f9f9f9;">
+            <h4 style="color: #e67e22;">Pour la plateforme</h4>
+            <ul>
+                <li><strong>Parc global plus sûr</strong></li>
+                <li><strong>Harmonisation</strong> des équipements</li>
+                <li><strong>Culture sécurité</strong> renforcée</li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 14. CONDITIONS DE RÉUSSITE -->
+    <!-- ======================================================================== -->
+    <h1>14. CONDITIONS DE RÉUSSITE</h1>
+    
+    <h2>Facteurs clés</h2>
+    <ol>
+        <li><strong>FINANCEMENT MUTUALISÉ</strong> : Le coût du rétrofit ne peut pas reposer uniquement sur les handlers.</li>
+        <li><strong>VOLONTARISME INITIAL</strong> : Un pilote réussi avec des volontaires convaincra les réticents.</li>
+        <li><strong>MESURE DE L'IMPACT</strong> : Il faut pouvoir démontrer le bénéfice en termes d'accidents évités.</li>
+        <li><strong>STANDARDISATION</strong> : Éviter la dispersion des solutions, privilégier des équipements éprouvés.</li>
+        <li><strong>MAINTENANCE</strong> : Les équipements ajoutés doivent être maintenus dans la durée.</li>
+    </ol>
+    
+    <h2>Pièges à éviter</h2>
+    <ol>
+        <li><strong>ATTENDRE LE RENOUVELLEMENT</strong> : Le parc mettra 10-15 ans à se renouveler. Trop long.</li>
+        <li><strong>ÉQUIPER SANS FORMER</strong> : Un conducteur doit être formé à l'utilisation des nouveaux équipements.</li>
+        <li><strong>OUBLIER L'ERGONOMIE</strong> : Un dispositif mal placé ou mal conçu sera désactivé.</li>
+        <li><strong>NÉGLIGER LES PETITES ENTREPRISES</strong> : Le coût peut être prohibitif pour les petits acteurs.</li>
+    </ol>
+    
+    <!-- ======================================================================== -->
+    <!-- 15. EN RÉSUMÉ -->
+    <!-- ======================================================================== -->
+    <h1>15. EN RÉSUMÉ</h1>
+    
+    <div class="encadre">
+        <p style="font-size: 12pt; font-style: italic;">
+            Nous demandons aux conducteurs d'être vigilants, mais nous les installons dans des engins conçus il y a 20 ans, 
+            sans caméra, sans détecteur, avec des angles morts mortels. Ce n'est pas acceptable. Le rétrofit sécurité n'est 
+            pas une option, c'est une obligation morale et opérationnelle. Nous ne pouvons pas attendre 15 ans que le parc 
+            se renouvelle naturellement pour protéger nos conducteurs.
+        </p>
+    </div>
+    
+    <!-- ======================================================================== -->
+    <!-- 16. CE QUE NOUS PROPOSONS CONCRÈTEMENT -->
+    <!-- ======================================================================== -->
+    <h1>16. CE QUE NOUS PROPOSONS CONCRÈTEMENT</h1>
+    
+    <ol style="font-weight: bold; font-size: 12pt;">
+        <li>Équiper en priorité les PUSH, LOADER, BUS de caméras 360° et détecteurs</li>
+        <li>Mettre en place un fonds mutualisé pour financer le rétrofit</li>
+        <li>Établir un plan de renouvellement accéléré des engins les plus anciens</li>
+        <li>Créer un code couleur signalant le niveau de risque des engins</li>
+    </ol>
+    
+    <!-- Pied de page -->
+    <div class="footer">
+        <p>PISTE 7 - Identification renforcée des engins à risque | Version 1.0 | Mars 2026 | CDG - CSCA</p>
+    </div>
+</body>
+</html>
